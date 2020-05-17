@@ -6,10 +6,9 @@ class Play extends Phaser.Scene {
     preload() {
         // load images / title sprite
         // preload.image('fileName', 'location')
-        this.load.image('ground', './assets/iceRoad.png');
+        this.load.image('ground', './assets/ground.png');
         this.load.image('background', './assets/background.png');
         this.load.image('ice', './assets/ice.png');
-        this.load.image('hole', './assets/hole.png');
         this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 0});
         this.load.image('snow_1', './assets/snow_1.png');
         this.load.image('snow_2', './assets/snow_2.png');
@@ -47,30 +46,23 @@ class Play extends Phaser.Scene {
         this.speed = 1;
         // add ice 
         this.iceSpeed = -60;
+        this.iceCount = 1;
         this.ice01 = this.physics.add.sprite(game.config.width+10, 357, 'ice');
         this.ice02 = this.physics.add.sprite(game.config.width+200, 357, 'ice');
 
         // define our objects
-        this.seal = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height/2 -50, 'seal');
+        this.seal = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.75, 'seal');
         this.snow_1 = this.add.tileSprite(0, 0, 640, 480, 'snow_1').setOrigin(0, 0);
         //set the gravity
-        if(this.seal.tilePositionY > 10){
-            this.seal.setGravityY(100);
-        }else{
-            this.seal.setGravityY(1000);
-        }
-            
+        this.seal.setGravityY(1000);
         // place the ground
-        this.ground = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height/2, 'ground');
-
-        // place hole sprite
-        this.hole01 = this.physics.add.sprite(game.config.width, 380, 'hole');
-
+        this.ground = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*1.3, 'ground');
+        // size the ground
+        this.ground.displayWidth = this.sys.game.config.width * 1.1;
         // make the ground stay in place
-        this.ground.setImmovableY();
+        this.ground.setImmovable();
         
         // add the colliders
-        this.physics.add.collider(this.seal, this.hole01);
         this.physics.add.collider(this.ice01, this.ground);
         this.physics.add.collider(this.ice02, this.ground);
         this.physics.add.collider(this.seal, this.ground);
@@ -131,7 +123,7 @@ class Play extends Phaser.Scene {
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-            this.scene.start("menuScene");
+            this.scene.start("underwaterScene");
         }
 
         // score
@@ -140,11 +132,9 @@ class Play extends Phaser.Scene {
         }
 
         // ice status
-        this.ice01.setVelocityX(-100);
-        this.ice02.setVelocityX(-100);
-
-        // hole status
-        this.hole01.setVelocityX(-100);
+        this.ice01.setVelocityX(this.iceSpeed);
+        this.ice02.setVelocityX(this.iceSpeed);
+        this.iceCount += 1;
 
         let overConfig = {
             fontFamily: 'Bradley Hand',
@@ -158,13 +148,6 @@ class Play extends Phaser.Scene {
             fixedWidth: 500
         }
 
-        // hole detection
-        if( this.hole01.body.touching.up ){
-            this.bgm.stop();
-            this.scene.start("underwaterScene");
-        }
-
-        // collision detection
         if( this.seal.body.touching.right ){
             this.gameOver = true;
             this.add.text(game.config.width/2, game.config.height/2 - 32, 'GAME OVER', overConfig).setOrigin(0.5);
@@ -189,12 +172,11 @@ class Play extends Phaser.Scene {
         // speed up method
         this.count += 1;
         if( this.count%17==1 ) {
-        //    this.speed *= 1.01;
-        //    this.iceSpeed *= 1.01;
+            this.speed *= 1.01;
+            this.iceSpeed *= 1.01;
         }
 
-        // background snow movements
-        this.ground.tilePositionX -= 200;
+        // background movements
         this.background.tilePositionX += this.speed;
         this.snow_1.tilePositionY += -5;
         this.snow_2.tilePositionY += -2.5;
@@ -203,14 +185,12 @@ class Play extends Phaser.Scene {
         this.snow_2.tilePositionX += 1;
         this.snow_3.tilePositionX += 1;
 
-        // infinite ice wrap physics object(s) .wrap(gameObject, padding)
+        // wrap physics object(s) .wrap(gameObject, padding)
         this.physics.world.wrap(this.ice01, Phaser.Math.Between(10, 200));
         this.physics.world.wrap(this.ice02, Phaser.Math.Between(200, 360));
 
-        // infinite hole wrap physics object(s) .wrap(gameObject, padding)
-        this.physics.world.wrap(this.hole01, Phaser.Math.Between(10, 200));
-
         // display score
         this.scoreLeft.text = this.playerScore + 'Meters';
+
     }
 }

@@ -14,7 +14,7 @@ let config = {
             debug: false
         }
     },
-    scene: [ Menu, Play ]
+    scene: [ Menu, Play, Underwater ]
 
 }
 
@@ -22,4 +22,4 @@ let config = {
 let game = new Phaser.Game(config);
 
 // reserve keyboard vars
-let keyUP, keyLEFT, keyDown;
+let keyUP, keyLEFT, keyDOWN;
