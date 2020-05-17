@@ -32,7 +32,7 @@ class Menu extends Phaser.Scene {
         let centerY = game.config.height/2;
         let textSpacer = 64;
 
-        this.add.text(centerX, centerY-textSpacer, 'Sliding Seal', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY-textSpacer, 'The Seal', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '30px';
         this.add.text(centerX, centerY, 'Use [↑] to jump & avoid the ice cubes!', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#FFFFFF';
@@ -45,10 +45,10 @@ class Menu extends Phaser.Scene {
 
     update() {
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-        this.sound.volume = 0.4;
-        this.sound.play('start');
-        this.scene.start("playScene");    
-        this.bgm.stop();
+            this.sound.volume = 0.4;
+            this.sound.play('start');
+            this.scene.start("playScene");    
+            this.bgm.stop();
         }
     }   
 }
