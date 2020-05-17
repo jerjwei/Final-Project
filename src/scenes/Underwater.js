@@ -6,7 +6,7 @@ class Underwater extends Phaser.Scene {
 
     preload() {
         // load images / title sprite
-        this.load.image('ground', './assets/ground.png');
+        this.load.image('ground', './assets/iceRoad.png');
         this.load.image('background', './assets/background.png');
         this.load.spritesheet('seal', './assets/slide.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 9});
 
@@ -20,7 +20,7 @@ class Underwater extends Phaser.Scene {
         // place tile sprite
         this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setOrigin(0, 0);
         // place the ground
-        this.ground = this.physics.add.sprite(this.sys.game.config.width/2, -50, 'ground');
+        this.ground = this.physics.add.sprite(this.sys.game.config.width/2, 50, 'ground');
         // make the ground stay in place
         this.ground.setImmovable();
 
