@@ -7,9 +7,10 @@ class Level1 extends Phaser.Scene {
         // load images / title sprite
         // preload.image('fileName', 'location')
         this.load.image('ground', './assets/iceRoad.png');
+        //this.load.image('background', './assets/background.png');
         this.load.image('ice', './assets/ice.png');
-        this.load.image('spider', './assets/hole.png');
         this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 0});
+        this.load.image('hole', './assets/hole.png');
         this.load.spritesheet('seal', './assets/slide.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -18,12 +19,10 @@ class Level1 extends Phaser.Scene {
     }
 
     create() {
-        // variables and settings
         this.cameras.main.backgroundColor.setTo(0,0,0);
-        this.DRAG = 380;
-        this.jumpTime = 0;
-        this.score = 0;
-        this.gravitynum = -1000;
+
+        // count 
+        this.count = 1;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -40,37 +39,28 @@ class Level1 extends Phaser.Scene {
         // game over flag
         this.gameOver = false;
 
-        // define our objects
-        // seal
-        this.seal = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.27, 'seal');
-        this.seal.setCollideWorldBounds(true);
-        this.seal.setGravityY(this.gravitynum);
-        this.seal.setFlipY(true);
-        // ice
-        this.ice = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.28, 'ice');
-        this.ice.setImmovable();
-        // spider
-        this.spider = this.physics.add.sprite(this.sys.game.config.width*2/3, this.sys.game.config.height*0.28, 'spider');
-        this.spider.setImmovable();
-        // place the ground
-        this.ground = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.2, 'ground');
-        this.ground.displayWidth = this.sys.game.config.width * 0.5;
-        this.ground.setImmovable();
-        // place the borders
-        this. borderup = this.physics.add.sprite(this.sys.game.config.width/2, 0, 'ground');
-        this.borderup.displayWidth = this.sys.game.config.width * 1.1;
-        this.borderup.setImmovable();
-        this. borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height, 'ground');
-        this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
-        this.borderdown.setImmovable();
+        // add ice 
+        this.iceSpeed = -60;
+        this.iceCount = 1;
 
+        // define our objects
+        this.seal = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.6, 'seal');
+
+        //set the gravity
+        this.seal.setGravityY(1000);
+        // place the ground
+        this.ground = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.87, 'ground');
+        // size the ground
+        this.ground.displayWidth = this.sys.game.config.width * 1.1;
+        // make the ground stay in place
+        this.ground.setImmovable();
         
         // add the colliders
         this.physics.add.collider(this.seal, this.ground);
-        this.physics.add.collider(this.seal, this.borderup);
-        this.physics.add.collider(this.seal, this.borderdown);
-        //this.physics.add.collider(this.seal, this.ice);
-        
+
+
+        // jump method
+        this.jumpTime = 1;
 
         // animations
         // walk animation
@@ -101,10 +91,20 @@ class Level1 extends Phaser.Scene {
             },
             fixedWidth: 150
         }
-        this.scoreS = this.add.text(70, 25, this.score, scoreConfig);
-        // instruction text
-        //this.arrowUp = this.add.text(this.sys.game.config.width / 4, 290, '↑', scoreConfig);
+        this.arrowUp = this.add.text(this.sys.game.config.width / 4, 290, '↑', scoreConfig);
     }
+
+    jump() {
+        this.seal.setVelocityY(-400);
+        this.seal.anims.play('jumping');
+        this.jumpTime++;
+    }
+
+    walk(){
+        this.seal.anims.play('walking', true);
+    }
+
+    
 
     update() {
         // check key input for restart
@@ -112,10 +112,9 @@ class Level1 extends Phaser.Scene {
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-            this.scene.start("menuScene");
+            this.scene.start("underwaterScene");
         }
 
-        // game over settings
         let overConfig = {
             fontFamily: 'Bradley Hand',
             fontSize: '25px',
@@ -127,90 +126,37 @@ class Level1 extends Phaser.Scene {
             },
             fixedWidth: 500
         }
-        if( this.score == 3 ){
+
+        if( this.seal.body.touching.right ){
             this.gameOver = true;
             this.add.text(game.config.width/2, game.config.height/2 - 32, 'GAME OVER', overConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [↑] to Restart or [←] for Menu', overConfig).setOrigin(0.5);
             this.bgm.stop();
         }
 
-        // move methods
-        if( keyLEFT.isDown ){
-            this.seal.body.setVelocityX(-200);
-            this.seal.setFlipX(true);
-        }else if ( keyRIGHT.isDown ){
-            this.seal.body.setVelocityX(200);
-            this.seal.setFlipX(false);
-        }else {
-            this.seal.body.setDragX(this.DRAG);
+        // jump methods
+        if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyUP) ){
+            this.arrowUp.destroy();
+            this.jump();
+            this.sound.play('jse');
+            this.sound.volume = 0.4;
         }
-        
-        // single/double-jump twice method
-        if( this.seal.flipY ){
-            if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyDOWN) ){
-                //this.arrowUp.destroy();
-                this.jump();
-                this.sound.play('jse');
-                this.sound.volume = 0.4;
-            }
-            if( this.seal.body.touching.up ){
-                this.jumpTime = 0;
-                this.walk();
-            }else if(this.jumpTime < 1){
-                this.seal.anims.play('jumping',true);
-            }
-        } else{
-            if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyUP) ){
-                this.jumpup();
-                this.sound.play('jse');
-                this.sound.volume = 0.4;
-            }
-            if( this.seal.body.touching.down ){
-                this.jumpTime = 0;
-                this.walk();
-            }else if(this.jumpTime < 1){
-                this.seal.anims.play('jumping',true);
-            }
+        if( this.seal.body.touching.down ){
+            this.jumpTime = 0;
+            this.walk();
+        }else if(this.jumpTime < 1){
+            this.seal.anims.play('jumping',true);
         }
 
-        // ice collect method
-        if(this.physics.world.overlap(this.seal, this.ice)){
-            this.icecollect();
+        // speed up method
+        this.count += 1;
+        if( this.count%17==1 ) {
+            this.speed *= 1.01;
+            this.iceSpeed *= 1.01;
         }
 
-        // reverse while collide with spiders
-        if(this.physics.world.overlap(this.seal, this.spider)){
-            this.reverse();
-        }
+        // background movements
 
         // wrap physics object(s) .wrap(gameObject, padding)
-    }
-
-    jump() {
-        this.seal.setVelocityY(350);
-        this.seal.anims.play('jumping');
-        this.jumpTime++;
-    }
-
-    jumpup(){
-        this.seal.setVelocityY(-350);
-        this.seal.anims.play('jumping');
-        this.jumpTime++;
-    }
-
-    walk(){
-        this.seal.anims.play('walking', true);
-    }
-
-    icecollect(){
-        this.ice.destroy();
-        this.score += 1;
-        this.scoreS.text = this.score;
-    }
-
-    reverse(){
-        this.spider.destroy();
-        this.seal.setFlipY(false);
-        this.seal.setGravityY(-this.gravitynum);
     }
 }
