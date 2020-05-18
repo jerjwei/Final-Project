@@ -132,7 +132,7 @@ class Level1 extends Phaser.Scene {
     update() {
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyUP)) {
-            this.scene.restart();
+            this.scene.start("lvl2");
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("menuScene");
@@ -152,8 +152,8 @@ class Level1 extends Phaser.Scene {
         }
         if( this.score == 3 ){
             this.gameOver = true;
-            this.add.text(game.config.width/2, game.config.height/2 - 32, 'GAME OVER', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [↑] to Restart or [←] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 - 32, 'You have got all three candies!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [↑] to Level2 or [←] for Menu', overConfig).setOrigin(0.5);
             this.bgm.stop();
         }
 
@@ -213,7 +213,6 @@ class Level1 extends Phaser.Scene {
         }else if(this.physics.world.overlap(this.girl, this.spider3)){
             this.reverse(this.spider3);
         }
-
         // wrap physics object(s) .wrap(gameObject, padding)
     }
 
