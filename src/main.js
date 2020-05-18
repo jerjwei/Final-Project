@@ -14,7 +14,7 @@ let config = {
             debug: false
         }
     },
-    scene: [ Menu, Play ]
+    scene: [ Menu, Level1 ]
 
 }
 
