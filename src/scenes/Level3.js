@@ -39,7 +39,7 @@ class Level3 extends Phaser.Scene {
         this.bgm = this.sound.add('playscenebackground', {config});
         this.bgm.play();
         this.bgm.loop = true;
-        this.bgm.volume = 0.4;
+        this.bgm.volume = 0.6;
     
         // game over flag
         this.gameOver = false;
@@ -159,6 +159,7 @@ class Level3 extends Phaser.Scene {
     update() {
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
+            this.bgm.stop();
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {

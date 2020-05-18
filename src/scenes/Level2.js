@@ -20,7 +20,7 @@ class Level2 extends Phaser.Scene {
         this.bgm = this.sound.add('bgm', {config});
         this.bgm.play();
         this.bgm.loop = true;
-        this.bgm.volume = 0.4;
+        this.bgm.volume = 0.6;
 
         // variables and settings
         this.cameras.main.backgroundColor.setTo(0,0,0);
@@ -134,6 +134,7 @@ class Level2 extends Phaser.Scene {
     update() {
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
+            this.bgm.stop();
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
