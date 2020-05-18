@@ -7,7 +7,6 @@ class Level1 extends Phaser.Scene {
         // load images / title sprite
         // preload.image('fileName', 'location')
         this.load.image('ground', './assets/iceRoad.png');
-        //this.load.image('background', './assets/background.png');
         this.load.image('ice', './assets/ice.png');
         this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 0});
         this.load.image('hole', './assets/hole.png');
@@ -20,9 +19,6 @@ class Level1 extends Phaser.Scene {
 
     create() {
         this.cameras.main.backgroundColor.setTo(0,0,0);
-
-        // count 
-        this.count = 1;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -147,15 +143,6 @@ class Level1 extends Phaser.Scene {
         }else if(this.jumpTime < 1){
             this.seal.anims.play('jumping',true);
         }
-
-        // speed up method
-        this.count += 1;
-        if( this.count%17==1 ) {
-            this.speed *= 1.01;
-            this.iceSpeed *= 1.01;
-        }
-
-        // background movements
 
         // wrap physics object(s) .wrap(gameObject, padding)
     }
