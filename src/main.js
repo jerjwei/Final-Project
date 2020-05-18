@@ -14,7 +14,7 @@ let config = {
             debug: false
         }
     },
-    scene: [ Menu, Play, Underwater ]
+    scene: [ Menu, Play ]
 
 }
 
