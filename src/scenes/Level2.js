@@ -12,9 +12,16 @@ class Level2 extends Phaser.Scene {
 
         // preload.music
         this.load.audio('jse', './assets/jumpsoundeffect.mp3');
+        this.load.audio('bgm', './assets/bgm.mp3');
     }
 
     create() {
+        // background music
+        this.bgm = this.sound.add('bgm', {config});
+        this.bgm.play();
+        this.bgm.loop = true;
+        this.bgm.volume = 0.4;
+
         // variables and settings
         this.cameras.main.backgroundColor.setTo(0,0,0);
         this.DRAG = 380;
@@ -145,7 +152,7 @@ class Level2 extends Phaser.Scene {
             this.gameOver = true;
             this.add.text(game.config.width/2, game.config.height/2 - 32, 'You have got all three candies!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
-            //this.bgm.stop();
+            this.bgm.stop();
         }
 
         // move methods

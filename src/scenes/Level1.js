@@ -13,7 +13,7 @@ class Level1 extends Phaser.Scene {
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
-        this.load.audio('playscenebackground', './assets/07 Funny Companion().mp3');
+        this.load.audio('playscenebackground', './assets/bgm.mp3');
         this.load.audio('jse', './assets/jumpsoundeffect.mp3');
     }
 
