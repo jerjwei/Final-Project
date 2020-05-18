@@ -28,6 +28,7 @@ class Level2 extends Phaser.Scene {
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
+        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         // girl
         this.girl = this.physics.add.sprite(10, this.sys.game.config.height*0.45, 'girl');
@@ -118,14 +119,22 @@ class Level2 extends Phaser.Scene {
             fixedWidth: 150
         }
         this.scoreS = this.add.text(70, 25, this.score, scoreConfig);
+        scoreConfig.fontSize = '20px';
+        scoreConfig.fixedWidth = 300;
+        this.restart = this.add.text(120, 40, '[R] to restart lvl2', scoreConfig);
     }
 
     update() {
         // check key input for restart
+        if (Phaser.Input.Keyboard.JustDown(keyR)){
+            this.scene.restart();
+        }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
+            this.bgm.stop();
             this.scene.start("lvl3");
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
+            this.bgm.stop();
             this.scene.start("menuScene");
         }
 
@@ -145,7 +154,6 @@ class Level2 extends Phaser.Scene {
             this.gameOver = true;
             this.add.text(game.config.width/2, game.config.height/2 - 32, 'You have got all three candies!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
-            //this.bgm.stop();
         }
 
         // move methods
