@@ -39,8 +39,6 @@ class Level1 extends Phaser.Scene {
         // game over flag
         this.gameOver = false;
 
-        // background speed
-        this.speed = 1;
         // add ice 
         this.iceSpeed = -60;
         this.iceCount = 1;
@@ -93,7 +91,6 @@ class Level1 extends Phaser.Scene {
             },
             fixedWidth: 150
         }
-        this.scoreLeft = this.add.text(69, 45, this.playerScore, scoreConfig);
         this.arrowUp = this.add.text(this.sys.game.config.width / 4, 290, '↑', scoreConfig);
     }
 
@@ -116,11 +113,6 @@ class Level1 extends Phaser.Scene {
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.scene.start("underwaterScene");
-        }
-
-        // score
-        if ( !this.gameOver){
-            this.playerScore = Phaser.Math.CeilTo(this.speed*10-10.5);
         }
 
         let overConfig = {
@@ -166,9 +158,5 @@ class Level1 extends Phaser.Scene {
         // background movements
 
         // wrap physics object(s) .wrap(gameObject, padding)
-
-        // display score
-        this.scoreLeft.text = this.playerScore + 'Meters';
-
     }
 }
