@@ -8,6 +8,7 @@ class Level1 extends Phaser.Scene {
         // preload.image('fileName', 'location')
         this.load.image('ground', './assets/iceRoad.png');
         this.load.image('ice', './assets/ice.png');
+        this.load.image('spider', './assets/hole.png');
         this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 0});
         this.load.spritesheet('seal', './assets/slide.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 9});
 
@@ -22,6 +23,7 @@ class Level1 extends Phaser.Scene {
         this.DRAG = 380;
         this.jumpTime = 0;
         this.score = 0;
+        this.gravitynum = -1000;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -42,20 +44,23 @@ class Level1 extends Phaser.Scene {
         // seal
         this.seal = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.27, 'seal');
         this.seal.setCollideWorldBounds(true);
-        this.seal.setGravityY(-1000);
+        this.seal.setGravityY(this.gravitynum);
+        this.seal.setFlipY(true);
         // ice
         this.ice = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.28, 'ice');
         this.ice.setImmovable();
-
+        // spider
+        this.spider = this.physics.add.sprite(this.sys.game.config.width*2/3, this.sys.game.config.height*0.28, 'spider');
+        this.spider.setImmovable();
         // place the ground
         this.ground = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.2, 'ground');
         this.ground.displayWidth = this.sys.game.config.width * 0.5;
         this.ground.setImmovable();
         // place the borders
-        this. borderup = this.physics.add.sprite(this.sys.game.config.width/2, -11, 'ground');
+        this. borderup = this.physics.add.sprite(this.sys.game.config.width/2, 0, 'ground');
         this.borderup.displayWidth = this.sys.game.config.width * 1.1;
         this.borderup.setImmovable();
-        this. borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height+11, 'ground');
+        this. borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height, 'ground');
         this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
         this.borderdown.setImmovable();
 
@@ -101,26 +106,16 @@ class Level1 extends Phaser.Scene {
         //this.arrowUp = this.add.text(this.sys.game.config.width / 4, 290, '↑', scoreConfig);
     }
 
-    jump() {
-        this.seal.setVelocityY(350);
-        this.seal.anims.play('jumping');
-        this.jumpTime++;
-    }
-
-    walk(){
-        this.seal.anims.play('walking', true);
-    }
-
-
     update() {
         // check key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyUP)) {
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
-            this.scene.start("underwaterScene");
+            this.scene.start("menuScene");
         }
 
+        // game over settings
         let overConfig = {
             fontFamily: 'Bradley Hand',
             fontSize: '25px',
@@ -132,38 +127,50 @@ class Level1 extends Phaser.Scene {
             },
             fixedWidth: 500
         }
-
-        if( this.seal.body.touching.right ){
-            //this.gameOver = true;
-            //this.add.text(game.config.width/2, game.config.height/2 - 32, 'GAME OVER', overConfig).setOrigin(0.5);
-            //this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [↑] to Restart or [←] for Menu', overConfig).setOrigin(0.5);
-            //this.bgm.stop();
+        if( this.score == 3 ){
+            this.gameOver = true;
+            this.add.text(game.config.width/2, game.config.height/2 - 32, 'GAME OVER', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [↑] to Restart or [←] for Menu', overConfig).setOrigin(0.5);
+            this.bgm.stop();
         }
 
         // move methods
         if( keyLEFT.isDown ){
             this.seal.body.setVelocityX(-200);
-            this.seal.setFlip(true, false);
+            this.seal.setFlipX(true);
         }else if ( keyRIGHT.isDown ){
             this.seal.body.setVelocityX(200);
-            this.seal.resetFlip();
+            this.seal.setFlipX(false);
         }else {
-            //this.seal.body.setVelocityX(0);
             this.seal.body.setDragX(this.DRAG);
         }
         
         // single/double-jump twice method
-        if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyDOWN) ){
-            //this.arrowUp.destroy();
-            this.jump();
-            this.sound.play('jse');
-            this.sound.volume = 0.4;
-        }
-        if( this.seal.body.touching.up ){
-            this.jumpTime = 0;
-            this.walk();
-        }else if(this.jumpTime < 1){
-            this.seal.anims.play('jumping',true);
+        if( this.seal.flipY ){
+            if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyDOWN) ){
+                //this.arrowUp.destroy();
+                this.jump();
+                this.sound.play('jse');
+                this.sound.volume = 0.4;
+            }
+            if( this.seal.body.touching.up ){
+                this.jumpTime = 0;
+                this.walk();
+            }else if(this.jumpTime < 1){
+                this.seal.anims.play('jumping',true);
+            }
+        } else{
+            if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyUP) ){
+                this.jumpup();
+                this.sound.play('jse');
+                this.sound.volume = 0.4;
+            }
+            if( this.seal.body.touching.down ){
+                this.jumpTime = 0;
+                this.walk();
+            }else if(this.jumpTime < 1){
+                this.seal.anims.play('jumping',true);
+            }
         }
 
         // ice collect method
@@ -171,12 +178,39 @@ class Level1 extends Phaser.Scene {
             this.icecollect();
         }
 
+        // reverse while collide with spiders
+        if(this.physics.world.overlap(this.seal, this.spider)){
+            this.reverse();
+        }
+
         // wrap physics object(s) .wrap(gameObject, padding)
+    }
+
+    jump() {
+        this.seal.setVelocityY(350);
+        this.seal.anims.play('jumping');
+        this.jumpTime++;
+    }
+
+    jumpup(){
+        this.seal.setVelocityY(-350);
+        this.seal.anims.play('jumping');
+        this.jumpTime++;
+    }
+
+    walk(){
+        this.seal.anims.play('walking', true);
     }
 
     icecollect(){
         this.ice.destroy();
         this.score += 1;
         this.scoreS.text = this.score;
+    }
+
+    reverse(){
+        this.spider.destroy();
+        this.seal.setFlipY(false);
+        this.seal.setGravityY(-this.gravitynum);
     }
 }
