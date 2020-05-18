@@ -1,6 +1,6 @@
-class Play extends Phaser.Scene {
+class Level1 extends Phaser.Scene {
     constructor() {
-        super("playScene");
+        super("lvl1");
     }
 
     preload() {
@@ -10,9 +10,6 @@ class Play extends Phaser.Scene {
         //this.load.image('background', './assets/background.png');
         this.load.image('ice', './assets/ice.png');
         this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 0});
-        this.load.image('snow_1', './assets/snow_1.png');
-        this.load.image('snow_2', './assets/snow_2.png');
-        this.load.image('snow_3', './assets/snow_3.png');
         this.load.image('hole', './assets/hole.png');
         this.load.spritesheet('seal', './assets/slide.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 9});
 
@@ -25,14 +22,10 @@ class Play extends Phaser.Scene {
         // count 
         this.count = 1;
 
-        // place tile sprite
-        //this.background = this.add.tileSprite(0, 0, 640, 480, 'background').setOrigin(0, 0);
-        this.snow_2 = this.add.tileSprite(0, 0, 640, 480, 'snow_2').setOrigin(0, 0);
-        this.snow_3 = this.add.tileSprite(0, 0, 640, 480, 'snow_3').setOrigin(0, 0);
-
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
     
         // background music
@@ -49,14 +42,10 @@ class Play extends Phaser.Scene {
         // add ice 
         this.iceSpeed = -60;
         this.iceCount = 1;
-        this.ice01 = this.physics.add.sprite(game.config.width+10, this.sys.game.config.height*0.87-35, 'ice');
-        this.ice02 = this.physics.add.sprite(game.config.width+200, this.sys.game.config.height*0.87-35, 'ice');
-
-        this.hole = this.physics.add.sprite(game.config.width+200, this.sys.game.config.height*0.87-35, 'ice');
 
         // define our objects
         this.seal = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.6, 'seal');
-        this.snow_1 = this.add.tileSprite(0, 0, 640, 480, 'snow_1').setOrigin(0, 0);
+
         //set the gravity
         this.seal.setGravityY(1000);
         // place the ground
@@ -67,11 +56,8 @@ class Play extends Phaser.Scene {
         this.ground.setImmovable();
         
         // add the colliders
-        this.physics.add.collider(this.ice01, this.ground);
-        this.physics.add.collider(this.ice02, this.ground);
         this.physics.add.collider(this.seal, this.ground);
-        this.physics.add.collider(this.seal, this.ice01);
-        this.physics.add.collider(this.seal, this.ice02);
+
 
         // jump method
         this.jumpTime = 1;
@@ -134,11 +120,6 @@ class Play extends Phaser.Scene {
         if ( !this.gameOver){
             this.playerScore = Phaser.Math.CeilTo(this.speed*10-10.5);
         }
-
-        // ice status
-        this.ice01.setVelocityX(this.iceSpeed);
-        this.ice02.setVelocityX(this.iceSpeed);
-        this.iceCount += 1;
 
         let overConfig = {
             fontFamily: 'Bradley Hand',
