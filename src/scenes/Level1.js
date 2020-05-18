@@ -19,6 +19,8 @@ class Level1 extends Phaser.Scene {
     }
 
     create() {
+        this.cameras.main.backgroundColor.setTo(0,0,0);
+
         // count 
         this.count = 1;
 
@@ -164,7 +166,7 @@ class Level1 extends Phaser.Scene {
         // background movements
 
         // wrap physics object(s) .wrap(gameObject, padding)
-        
+
         // display score
         this.scoreLeft.text = this.playerScore + 'Meters';
 
