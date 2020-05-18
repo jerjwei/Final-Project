@@ -6,11 +6,11 @@ class Level1 extends Phaser.Scene {
     preload() {
         // load images / title sprite
         // preload.image('fileName', 'location')
-        this.load.image('ground', './assets/iceRoad.png');
-        this.load.image('ice', './assets/ice.png');
+        this.load.image('ground', './assets/platform.png');
+        this.load.image('candy', './assets/ice.png');
         this.load.image('spider', './assets/spider.png');
-        this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 0});
-        this.load.spritesheet('girl', './assets/player.png', {frameWidth: 80, frameHeight: 47, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
         this.load.audio('playscenebackground', './assets/07 Funny Companion().mp3');
@@ -42,20 +42,40 @@ class Level1 extends Phaser.Scene {
 
         // define our objects
         // girl
-        this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.27, 'girl');
+        this.girl = this.physics.add.sprite(10, this.sys.game.config.height*0.45, 'girl');
         this.girl.setCollideWorldBounds(true);
         this.girl.setGravityY(this.gravitynum);
         this.girl.setFlipY(true);
-        // ice
-        this.ice = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.28, 'ice');
-        this.ice.setImmovable();
+        this.girl.setFlipX(true);
+        // candy
+        this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.27, this.sys.game.config.height*0.64, 'candy');
+        this.candy2 = this.physics.add.sprite(this.sys.game.config.width*0.6, this.sys.game.config.height*0.7, 'candy');
+        this.candy3 = this.physics.add.sprite(this.sys.game.config.width*0.93, this.sys.game.config.height*0.64, 'candy');
+        this.candy1.setImmovable();
+        this.candy2.setImmovable();
+        this.candy3.setImmovable();
         // spider
-        this.spider = this.physics.add.sprite(this.sys.game.config.width*2/3, this.sys.game.config.height*0.28, 'spider');
-        this.spider.setImmovable();
+        this.spider1 = this.physics.add.sprite(this.sys.game.config.width/5, this.sys.game.config.height*0.4, 'spider');
+        this.spider1.setFlipY(true);
+        this.spider2 = this.physics.add.sprite(this.sys.game.config.width*4/5, this.sys.game.config.height*0.4, 'spider');
+        this.spider2.setFlipY(true);
+        this.spider3 = this.physics.add.sprite(this.sys.game.config.width*3/5, this.sys.game.config.height*0.88, 'spider');
+        this.spider1.setImmovable();
+        this.spider2.setImmovable();
+        this.spider3.setImmovable();
         // place the ground
-        this.ground = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.2, 'ground');
-        this.ground.displayWidth = this.sys.game.config.width * 0.5;
-        this.ground.setImmovable();
+        this.ground01 = this.physics.add.sprite(100, this.sys.game.config.height*0.33, 'ground');
+        this.ground01.displayWidth = 400;
+        this.ground02 = this.physics.add.sprite(this.sys.game.config.width*0.7, this.sys.game.config.height*0.33, 'ground');
+        this.ground02.displayWidth = 400;
+        this.ground03 = this.physics.add.sprite(this.sys.game.config.width*0.27, this.sys.game.config.height*0.7, 'ground');
+        this.ground03.displayWidth = 400;
+        this.ground04 = this.physics.add.sprite(this.sys.game.config.width*0.9, this.sys.game.config.height*0.7, 'ground');
+        this.ground04.displayWidth = 400;
+        this.ground01.setImmovable();
+        this.ground02.setImmovable();
+        this.ground03.setImmovable();
+        this.ground04.setImmovable();
         // place the borders
         this. borderup = this.physics.add.sprite(this.sys.game.config.width/2, 0, 'ground');
         this.borderup.displayWidth = this.sys.game.config.width * 1.1;
@@ -66,10 +86,13 @@ class Level1 extends Phaser.Scene {
 
         
         // add the colliders
-        this.physics.add.collider(this.girl, this.ground);
+        this.physics.add.collider(this.girl, this.ground01);
+        this.physics.add.collider(this.girl, this.ground02);
+        this.physics.add.collider(this.girl, this.ground03);
+        this.physics.add.collider(this.girl, this.ground04);
         this.physics.add.collider(this.girl, this.borderup);
         this.physics.add.collider(this.girl, this.borderdown);
-        //this.physics.add.collider(this.girl, this.ice);
+        //this.physics.add.collider(this.girl, this.candy);
         
 
         // animations
@@ -92,8 +115,8 @@ class Level1 extends Phaser.Scene {
         this.playerScore = 0;
         let scoreConfig = {
             fontFamily: 'Comic Sans MS',
-            fontSize: '30px',
-            color: '#17306A',
+            fontSize: '40px',
+            color: '#FFFFFF',
             align: 'middle',
             padding: {
                 top: 5,
@@ -137,10 +160,10 @@ class Level1 extends Phaser.Scene {
         // move methods
         if( keyLEFT.isDown ){
             this.girl.body.setVelocityX(-200);
-            this.girl.setFlipX(true);
+            this.girl.setFlipX(false);
         }else if ( keyRIGHT.isDown ){
             this.girl.body.setVelocityX(200);
-            this.girl.setFlipX(false);
+            this.girl.setFlipX(true);
         }else {
             this.girl.body.setDragX(this.DRAG);
         }
@@ -157,7 +180,7 @@ class Level1 extends Phaser.Scene {
                 this.jumpTime = 0;
                 this.walk();
             }else if(this.jumpTime < 1){
-                this.girl.anims.play('jumping',true);
+                //this.girl.anims.play('jumping',true);
             }
         } else{
             if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyUP) ){
@@ -169,18 +192,26 @@ class Level1 extends Phaser.Scene {
                 this.jumpTime = 0;
                 this.walk();
             }else if(this.jumpTime < 1){
-                this.girl.anims.play('jumping',true);
+                //this.girl.anims.play('jumping',true);
             }
         }
 
-        // ice collect method
-        if(this.physics.world.overlap(this.girl, this.ice)){
-            this.icecollect();
+        // candy collect method
+        if(this.physics.world.overlap(this.girl, this.candy1)){
+            this.candycollect(this.candy1);
+        }else if(this.physics.world.overlap(this.girl, this.candy2)){
+            this.candycollect(this.candy2);
+        }else if(this.physics.world.overlap(this.girl, this.candy3)){
+            this.candycollect(this.candy3);
         }
 
         // reverse while collide with spiders
-        if(this.physics.world.overlap(this.girl, this.spider)){
-            this.reverse();
+        if(this.physics.world.overlap(this.girl, this.spider1)){
+            this.reverse(this.spider1);
+        }else if(this.physics.world.overlap(this.girl, this.spider2)){
+            this.reverse(this.spider2);
+        }else if(this.physics.world.overlap(this.girl, this.spider3)){
+            this.reverse(this.spider3);
         }
 
         // wrap physics object(s) .wrap(gameObject, padding)
@@ -188,29 +219,34 @@ class Level1 extends Phaser.Scene {
 
     jump() {
         this.girl.setVelocityY(350);
-        this.girl.anims.play('jumping');
+        //this.girl.anims.play('jumping');
         this.jumpTime++;
     }
 
     jumpup(){
         this.girl.setVelocityY(-350);
-        this.girl.anims.play('jumping');
+        //this.girl.anims.play('jumping');
         this.jumpTime++;
     }
 
     walk(){
-        this.girl.anims.play('walking', true);
+        //this.girl.anims.play('walking', true);
     }
 
-    icecollect(){
-        this.ice.destroy();
+    candycollect(candy){
+        candy.destroy();
         this.score += 1;
         this.scoreS.text = this.score;
     }
 
-    reverse(){
-        this.spider.destroy();
-        this.girl.setFlipY(false);
-        this.girl.setGravityY(-this.gravitynum);
+    reverse(spider){
+        spider.destroy();
+        if(this.girl.flipY){
+            this.girl.setFlipY(false);
+        }else{
+            this.girl.setFlipY(true);
+        }
+        this.gravitynum = 0 - this.gravitynum;
+        this.girl.setGravityY(this.gravitynum);
     }
 }
