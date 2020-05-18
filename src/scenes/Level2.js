@@ -5,8 +5,8 @@ class Level2 extends Phaser.Scene {
 
     preload() {
         this.load.image('ground', './assets/platform.png');
-        this.load.image('candy', './assets/ice.png');
         this.load.image('spider', './assets/spider.png');
+        this.load.image('candy', './assets/candy.jpg');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -32,13 +32,11 @@ class Level2 extends Phaser.Scene {
         this.girl.setGravityY(this.gravitynum);
         this.girl.setFlipY(true);
         this.girl.setFlipX(true);
+        
         // candy
-        this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.27, this.sys.game.config.height*0.64, 'candy');
-        this.candy2 = this.physics.add.sprite(this.sys.game.config.width*0.6, this.sys.game.config.height*0.7, 'candy');
-        this.candy3 = this.physics.add.sprite(this.sys.game.config.width*0.93, this.sys.game.config.height*0.64, 'candy');
+        this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.5, 'candy');
         this.candy1.setImmovable();
-        this.candy2.setImmovable();
-        this.candy3.setImmovable();
+
         // spider
         this.spider1 = this.physics.add.sprite(this.sys.game.config.width/5, this.sys.game.config.height*0.4, 'spider');
         this.spider1.setFlipY(true);
@@ -50,19 +48,25 @@ class Level2 extends Phaser.Scene {
         this.spider3.setImmovable();
 
         // ground setup
-        this.ground01 = this.physics.add.sprite(0, this.sys.game.config.height*0.33, 'ground');
-        this.ground02 = this.physics.add.sprite(this.sys.game.config.width*0.55, this.sys.game.config.height*0.33, 'ground');
-        this.ground03 = this.physics.add.sprite(this.sys.game.config.width*0.27, this.sys.game.config.height*0.66, 'ground');
-        this.ground04 = this.physics.add.sprite(this.sys.game.config.width*0.80, this.sys.game.config.height*0.66, 'ground');
+        this.ground01 = this.physics.add.sprite(this.sys.game.config.width*0.35, this.sys.game.config.height*0.2, 'ground');
+        this.ground02 = this.physics.add.sprite(this.sys.game.config.width*0.65, this.sys.game.config.height*0.2, 'ground');
+        this.ground03 = this.physics.add.sprite(this.sys.game.config.width*0, this.sys.game.config.height*0.5, 'ground');
+        this.ground04 = this.physics.add.sprite(this.sys.game.config.width*0.35, this.sys.game.config.height*0.8, 'ground');
+        this.ground05 = this.physics.add.sprite(this.sys.game.config.width*0.65, this.sys.game.config.height*0.8, 'ground');
+        this.ground06 = this.physics.add.sprite(this.sys.game.config.width, this.sys.game.config.height*0.5, 'ground');
         this.ground01.setImmovable();
         this.ground02.setImmovable();
         this.ground03.setImmovable();
         this.ground04.setImmovable();
+        this.ground05.setImmovable();
+        this.ground06.setImmovable();
         // add the colliders
         this.physics.add.collider(this.girl, this.ground01);
         this.physics.add.collider(this.girl, this.ground02);
         this.physics.add.collider(this.girl, this.ground03);
         this.physics.add.collider(this.girl, this.ground04);
+        this.physics.add.collider(this.girl, this.ground05);
+        this.physics.add.collider(this.girl, this.ground06);
 
         // place the borders
         this.borderup = this.physics.add.sprite(this.sys.game.config.width/2, 0, 'ground');
@@ -71,6 +75,11 @@ class Level2 extends Phaser.Scene {
         this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height, 'ground');
         this.borderdown.displayWidth = this.sys.game.config.width * 3;
         this.borderdown.setImmovable();
+        this.physics.add.collider(this.girl, this.borderup);
+        this.physics.add.collider(this.girl, this.borderdown);
+
+        // game over flag
+        this.gameOver = false;
 
         // animations
         // walk animation
@@ -105,6 +114,15 @@ class Level2 extends Phaser.Scene {
     }
 
     update() {
+        // check key input for restart
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyUP)) {
+            this.scene.start("lvl3");
+        }
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+            this.scene.start("menuScene");
+        }
+
+        // game over settings
         let overConfig = {
             fontFamily: 'Bradley Hand',
             fontSize: '25px',
@@ -115,6 +133,12 @@ class Level2 extends Phaser.Scene {
                 bottom: 5,
             },
             fixedWidth: 500
+        }
+        if( this.score == 1 ){
+            this.gameOver = true;
+            this.add.text(game.config.width/2, game.config.height/2 - 32, 'You have got all three candies!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [↑] to Level2 or [←] for Menu', overConfig).setOrigin(0.5);
+            this.bgm.stop();
         }
 
         // move methods
