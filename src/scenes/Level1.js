@@ -7,7 +7,7 @@ class Level1 extends Phaser.Scene {
         // load images / title sprite
         // preload.image('fileName', 'location')
         this.load.image('ground', './assets/platform.png');
-        this.load.image('candy', './assets/ice.png');
+        this.load.image('candy', './assets/candy.jpg');
         this.load.image('spider', './assets/spider.png');
         this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 0});
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
@@ -30,6 +30,8 @@ class Level1 extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+        keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
     
         // background music
         this.bgm = this.sound.add('playscenebackground', {config});
@@ -131,10 +133,10 @@ class Level1 extends Phaser.Scene {
 
     update() {
         // check key input for restart
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyUP)) {
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
             this.scene.start("lvl2");
         }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             this.scene.start("menuScene");
         }
 
@@ -153,7 +155,7 @@ class Level1 extends Phaser.Scene {
         if( this.score == 3 ){
             this.gameOver = true;
             this.add.text(game.config.width/2, game.config.height/2 - 32, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [↑] to Level2 or [←] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [N] to Level2 or [M] for Menu', overConfig).setOrigin(0.5);
             this.bgm.stop();
         }
 

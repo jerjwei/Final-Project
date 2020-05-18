@@ -26,6 +26,8 @@ class Level2 extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+        keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
 
         // girl
         this.girl = this.physics.add.sprite(10, this.sys.game.config.height*0.45, 'girl');
@@ -35,8 +37,10 @@ class Level2 extends Phaser.Scene {
         this.girl.setFlipX(true);
         
         // candy
-        this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.5, 'candy');
+        this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.35, 'candy');
         this.candy1.setImmovable();
+        this.candy2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.65, 'candy');
+        this.candy2.setImmovable();
 
         // flower (can transfer player)
         this.flower1 = this.physics.add.sprite(this.sys.game.config.width*0.35, this.sys.game.config.height*0.23, 'flower');
@@ -70,10 +74,6 @@ class Level2 extends Phaser.Scene {
         this.physics.add.collider(this.girl, this.ground04);
         this.physics.add.collider(this.girl, this.ground05);
         this.physics.add.collider(this.girl, this.ground06);
-        this.physics.add.collider(this.girl, this.flower1);
-        this.physics.add.collider(this.girl, this.flower2);
-        this.physics.add.collider(this.girl, this.flower3);
-        this.physics.add.collider(this.girl, this.flower4);
 
         // place the borders
         this.borderup = this.physics.add.sprite(this.sys.game.config.width/2, 0, 'ground');
@@ -108,8 +108,8 @@ class Level2 extends Phaser.Scene {
         this.playerScore = 0;
         let scoreConfig = {
             fontFamily: 'Comic Sans MS',
-            fontSize: '30px',
-            color: '#17306A',
+            fontSize: '40px',
+            color: '#FFFFFF',
             align: 'middle',
             padding: {
                 top: 5,
@@ -121,17 +121,11 @@ class Level2 extends Phaser.Scene {
     }
 
     update() {
-        if(this.flower1.body.touching.left){
-            this.girl.destroy();
-            this.girl = this.physics.add.sprite(0, this.sys.game.config.height*0.5, 'girl');
-            this.girl.setCollideWorldBounds(true);
-            this.girl.setGravityY(1000);
-        }
         // check key input for restart
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyUP)) {
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
             this.scene.start("lvl3");
         }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             this.scene.start("menuScene");
         }
 
@@ -147,19 +141,20 @@ class Level2 extends Phaser.Scene {
             },
             fixedWidth: 500
         }
-        if( this.score == 1 ){
+        if( this.score == 2 ){
             this.gameOver = true;
             this.add.text(game.config.width/2, game.config.height/2 - 32, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [↑] to Level3 or [←] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
+            //this.bgm.stop();
         }
 
         // move methods
         if( keyLEFT.isDown ){
             this.girl.body.setVelocityX(-200);
-            this.girl.setFlipX(true);
+            this.girl.setFlipX(false);
         }else if ( keyRIGHT.isDown ){
             this.girl.body.setVelocityX(200);
-            this.girl.setFlipX(false);
+            this.girl.setFlipX(true);
         }else {
             this.girl.body.setDragX(this.DRAG);
         }
@@ -197,45 +192,13 @@ class Level2 extends Phaser.Scene {
             this.candycollect(this.candy1);
         }else if(this.physics.world.overlap(this.girl, this.candy2)){
             this.candycollect(this.candy2);
-        }else if(this.physics.world.overlap(this.girl, this.candy3)){
-            this.candycollect(this.candy3);
         }
 
-        // reverse while collide with spiders
-        if(this.physics.world.overlap(this.girl, this.spider1)){
-            this.reverse(this.spider1);
-        }else if(this.physics.world.overlap(this.girl, this.spider2)){
-            this.reverse(this.spider2);
-        }else if(this.physics.world.overlap(this.girl, this.spider3)){
-            this.reverse(this.spider3);
-        }
-
-        // single/double-jump twice method
-        if( this.girl.flipY ){
-            if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyDOWN) ){
-                //this.arrowUp.destroy();
-                this.jump();
-                this.sound.play('jse');
-                this.sound.volume = 0.4;
-            }
-            if( this.girl.body.touching.up ){
-                this.jumpTime = 0;
-                this.walk();
-            }else if(this.jumpTime < 1){
-                //this.girl.anims.play('jumping',true);
-            }
-        } else{
-            if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyUP) ){
-                this.jumpup();
-                this.sound.play('jse');
-                this.sound.volume = 0.4;
-            }
-            if( this.girl.body.touching.down ){
-                this.jumpTime = 0;
-                this.walk();
-            }else if(this.jumpTime < 1){
-                //this.girl.anims.play('jumping',true);
-            }
+        // transfer while collide with flowers
+        if(this.physics.world.overlap(this.girl, this.flower1)){
+            this.transfer(this.flower1,this.flower3, this.sys.game.config.width*0.35, this.sys.game.config.height*0.77);
+        }else if(this.physics.world.overlap(this.girl, this.flower4)){
+            this.transfer(this.flower4,this.flower2, this.sys.game.config.width*0.65, this.sys.game.config.height*0.23);
         }
     }
     jump() {
@@ -260,7 +223,16 @@ class Level2 extends Phaser.Scene {
         this.scoreS.text = this.score;
     }
 
-    // background movements
-
-    // wrap physics object(s) .wrap(gameObject, padding)
+    transfer(flower1,flower2, x, y){
+        flower1.destroy();
+        flower2.destroy();
+        this.girl.setPosition(x, y);
+        if(x == this.sys.game.config.width*0.35){
+            this.girl.setFlipY(false);
+        }else{
+            this.girl.setFlipY(true);
+        }
+        this.gravitynum = 0 - this.gravitynum;
+        this.girl.setGravityY(this.gravitynum);      
+    }
 }

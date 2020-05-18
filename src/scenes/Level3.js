@@ -7,7 +7,7 @@ class Level3 extends Phaser.Scene {
         // load images / title sprite
         // preload.image('fileName', 'location')
         this.load.image('ground', './assets/platform.png');
-        this.load.image('candy', './assets/ice.png');
+        this.load.image('candy', './assets/candy.jpg');
         this.load.image('spider', './assets/spider.png');
         this.load.image('flower', './assets/flower.png');
         this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 0});
@@ -31,6 +31,8 @@ class Level3 extends Phaser.Scene {
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
+        keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
     
         // background music
         this.bgm = this.sound.add('playscenebackground', {config});
@@ -152,10 +154,7 @@ class Level3 extends Phaser.Scene {
 
     update() {
         // check key input for restart
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyUP)) {
-            this.scene.start("lvl2");
-        }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             this.scene.start("menuScene");
         }
 
@@ -174,7 +173,7 @@ class Level3 extends Phaser.Scene {
         if( this.score == 3 ){
             this.gameOver = true;
             this.add.text(game.config.width/2, game.config.height/2 - 32, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [←] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [M] for Menu', overConfig).setOrigin(0.5);
             this.bgm.stop();
         }
 
@@ -231,9 +230,9 @@ class Level3 extends Phaser.Scene {
             this.reverse(this.spider1);
         }
 
-        // transport while collide with flowers
+        // transfer while collide with flowers
         if(this.physics.world.overlap(this.girl, this.flower1)){
-            this.transmit(this.flower1,this.flower2);
+            this.transfer(this.flower1,this.flower2);
         }
 
         // wrap physics object(s) .wrap(gameObject, padding)
@@ -272,15 +271,12 @@ class Level3 extends Phaser.Scene {
         this.girl.setGravityY(this.gravitynum);
     }
 
-    transmit(flower1,flower2){
+    transfer(flower1,flower2){
         flower1.destroy();
         flower2.destroy();
         this.girl.setPosition( this.sys.game.config.width*0.15, this.sys.game.config.height*0.82);
         this.girl.setFlipY(true);
         this.gravitynum = 0 - this.gravitynum;
-        this.girl.setGravityY(this.gravitynum);
-        if(this.girl.body.touching.up){
-            //this.girl.setVisible(true);
-        }        
+        this.girl.setGravityY(this.gravitynum);      
     }
 }

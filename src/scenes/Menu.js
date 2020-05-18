@@ -35,9 +35,10 @@ class Menu extends Phaser.Scene {
         this.add.text(centerX, centerY-textSpacer, 'WATS IN UR Dream', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '30px';
         this.add.text(centerX, centerY, 'Use [↑]or[↓] to jump, use [←]or[→] to move.', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY+textSpacer, 'Touch spider to reverse / Touch flower to transfer', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#FFFFFF';
         menuConfig.color = '#000';
-        this.add.text(centerX, centerY+textSpacer, 'Press [←] for to start', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY+2*textSpacer, 'Press [←] for to start', menuConfig).setOrigin(0.5);
 
         // define keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -47,7 +48,7 @@ class Menu extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
             this.sound.volume = 0.4;
             this.sound.play('start');
-            this.scene.start("lvl2");    
+            this.scene.start("lvl1");    
             this.bgm.stop();
         }
     }   
