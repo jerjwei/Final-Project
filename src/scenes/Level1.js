@@ -162,18 +162,9 @@ class Level1 extends Phaser.Scene {
         }
 
         // background movements
-        // this.background.tilePositionX += this.speed;
-        this.snow_1.tilePositionY += -5;
-        this.snow_2.tilePositionY += -2.5;
-        this.snow_3.tilePositionY += -1;
-        this.snow_1.tilePositionX += 1;
-        this.snow_2.tilePositionX += 1;
-        this.snow_3.tilePositionX += 1;
 
         // wrap physics object(s) .wrap(gameObject, padding)
-        this.physics.world.wrap(this.ice01, Phaser.Math.Between(10, 200));
-        this.physics.world.wrap(this.ice02, Phaser.Math.Between(200, 360));
-
+        
         // display score
         this.scoreLeft.text = this.playerScore + 'Meters';
 
