@@ -32,9 +32,9 @@ class Menu extends Phaser.Scene {
         let centerY = game.config.height/2;
         let textSpacer = 64;
 
-        this.add.text(centerX, centerY-textSpacer, 'Dreaming Girl', menuConfig).setOrigin(0.5);
-        menuConfig.fontSize = '28px';
-        this.add.text(centerX, centerY, 'Use [⬆][⬇][⬅][➡] to control and collect the coins!', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY-textSpacer, 'WATS IN UR Dream', menuConfig).setOrigin(0.5);
+        menuConfig.fontSize = '30px';
+        this.add.text(centerX, centerY, 'Use [↑]or[↓] to jump, use [←]or[→] to move.', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#FFFFFF';
         menuConfig.color = '#000';
         this.add.text(centerX, centerY+textSpacer, 'Press [←] for to start', menuConfig).setOrigin(0.5);
