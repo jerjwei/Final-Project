@@ -32,10 +32,12 @@ class Menu extends Phaser.Scene {
         let centerY = game.config.height/2;
         let textSpacer = 64;
 
-        this.add.text(centerX, centerY-textSpacer, 'WATS IN UR Dream', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY-2*textSpacer, 'Secret Garden', menuConfig).setOrigin(0.5);
         menuConfig.fontSize = '30px';
-        this.add.text(centerX, centerY, 'Use [↑]or[↓] to jump, use [←]or[→] to move.', menuConfig).setOrigin(0.5);
-        this.add.text(centerX, centerY+textSpacer, 'Touch spider to reverse / Touch flower to transfer', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY-textSpacer, 'Use [↑]or[↓] to jump, use [←]or[→] to move.', menuConfig).setOrigin(0.5);
+        menuConfig.color = '#69FCF3';
+        this.add.text(centerX, centerY, 'Touch spider to reverse / Touch flower to transfer', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY+textSpacer, 'Collect all the candies!', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#FFFFFF';
         menuConfig.color = '#000';
         this.add.text(centerX, centerY+2*textSpacer, 'Press [←] for to start', menuConfig).setOrigin(0.5);

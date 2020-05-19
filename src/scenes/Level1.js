@@ -164,8 +164,8 @@ class Level1 extends Phaser.Scene {
         }
         if( this.score == 3 ){
             this.gameOver = true;
-            this.add.text(game.config.width/2, game.config.height/2 - 32, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [N] to Level2 or [M] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [N] to Level2 or [M] for Menu', overConfig).setOrigin(0.5);
         }
 
         // move methods
@@ -184,7 +184,7 @@ class Level1 extends Phaser.Scene {
             if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyDOWN) ){
                 //this.arrowUp.destroy();
                 this.jump();
-                this.sound.play('jse');
+                //this.sound.play('jse');
                 this.sound.volume = 0.4;
             }
             if( this.girl.body.touching.up ){

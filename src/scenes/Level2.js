@@ -38,7 +38,7 @@ class Level2 extends Phaser.Scene {
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
         // girl
-        this.girl = this.physics.add.sprite(10, this.sys.game.config.height*0.45, 'girl');
+        this.girl = this.physics.add.sprite(10, this.sys.game.config.height*0.65, 'girl');
         this.girl.setCollideWorldBounds(true);
         this.girl.setGravityY(this.gravitynum);
         this.girl.setFlipY(true);
@@ -160,8 +160,8 @@ class Level2 extends Phaser.Scene {
         }
         if( this.score == 2 ){
             this.gameOver = true;
-            this.add.text(game.config.width/2, game.config.height/2 - 32, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2 + 32, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
         }
 
         // move methods
@@ -180,7 +180,7 @@ class Level2 extends Phaser.Scene {
             if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyDOWN) ){
                 //this.arrowUp.destroy();
                 this.jump();
-                this.sound.play('jse');
+                //this.sound.play('jse');
                 this.sound.volume = 0.4;
             }
             if( this.girl.body.touching.up ){
