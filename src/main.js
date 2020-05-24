@@ -1,6 +1,6 @@
 // Date:          2020/05/16
 // Group member:  Jia Wei, Rui Chen, Sunny Yan, Zihao Liu
-// Game Name:     Seal
+// Game Name:     Secret Garden
 
 // game configuration object
 let config = {
