@@ -8,6 +8,7 @@ class Level2 extends Phaser.Scene {
         this.load.image('border_up', './assets/border_up.png');
         this.load.image('border_left', './assets/border_left.png');
         this.load.image('border_right', './assets/border_right.png');
+        this.load.image('xian', './assets/lvl2_sprites/xian.png');
         this.load.image('spider', './assets/spider.png');
         this.load.image('candy', './assets/candy.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
@@ -53,6 +54,10 @@ class Level2 extends Phaser.Scene {
         this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.9, this.sys.game.config.height*0.2, 'candy');
         this.candy1.setImmovable();
         this.candy1.scale = 0.7;
+
+        // xian
+        this.xian = this.physics.add.sprite(this.sys.game.config.width/3, this.sys.game.config.height*0.2, 'xian');
+        this.xian.setImmovable();
 
         // spider
         this.spider = this.physics.add.sprite(this.sys.game.config.width/3, this.sys.game.config.height*0.4, 'spider');
@@ -263,6 +268,7 @@ class Level2 extends Phaser.Scene {
     }
 
     rotate(spider){
+        this.xian.destroy();
         spider.destroy();
         this.anglenum += 90;
         if(this.anglenum >= 360){
