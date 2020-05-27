@@ -29,6 +29,7 @@ class Level1 extends Phaser.Scene {
         this.DRAG = 500;
         this.score = 0;
         this.gravitynum = 1500;
+        this.anglenum = 0;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -54,8 +55,6 @@ class Level1 extends Phaser.Scene {
         this.girl = this.physics.add.sprite(100, this.sys.game.config.height*0.75, 'girl');
         this.girl.setCollideWorldBounds(true);
         this.girl.setGravityY(this.gravitynum);
-        this.girl.setFlipY(false);
-        this.girl.setFlipX(false);
 
         // candy
         this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.77, this.sys.game.config.height*0.2, 'candy');
@@ -132,6 +131,10 @@ class Level1 extends Phaser.Scene {
     }
 
     update() {
+        // check angle within 360 degrees
+        if(this.anglenum >= 360) this.anglenum -= 360;
+        
+
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.bgm.stop();
@@ -164,35 +167,59 @@ class Level1 extends Phaser.Scene {
             this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [N] to Level2 or [M] for Menu', overConfig).setOrigin(0.5);
         }
 
-        // move methods
-        if( keyLEFT.isDown ){
-            this.girl.body.setVelocityX(-200);
-            this.girl.setFlipX(true);
-        }else if ( keyRIGHT.isDown ){
-            this.girl.body.setVelocityX(200);
-            this.girl.setFlipX(false);
-        }else {
-            this.girl.body.setDragX(this.DRAG);
+        // move methods 
+        // up and down borders
+        if(this.anglenum == 0){
+            if( keyLEFT.isDown ){
+                this.girl.body.setVelocityX(-200);
+                this.girl.setFlipX(true);
+            }else if ( keyRIGHT.isDown ){
+                this.girl.body.setVelocityX(200);
+                this.girl.setFlipX(false);
+            }else {
+                this.girl.body.setDragX(this.DRAG);
+            }
+        }else if(this.anglenum == 180){
+            if( keyLEFT.isDown ){
+                this.girl.body.setVelocityX(-200);
+                this.girl.setFlipX(false);
+            }else if ( keyRIGHT.isDown ){
+                this.girl.body.setVelocityX(200);
+                this.girl.setFlipX(true);
+            }else {
+                this.girl.body.setDragX(this.DRAG);
+            }
+        }else if(this.anglenum == 90){
+            if( keyUP.isDown ){
+                this.girl.body.setVelocityY(-200);
+                this.girl.setFlipX(false);
+            }else if ( keyDOWN.isDown ){
+                this.girl.body.setVelocityY(200);
+                this.girl.setFlipX(true);
+            }else {
+                this.girl.body.setDragY(this.DRAG);
+            }
+        }else{ 
+            // left and right borders
+            if( keyUP.isDown ){
+                this.girl.body.setVelocityY(-200);
+                this.girl.setFlipX(false);
+            }else if ( keyDOWN.isDown ){
+                this.girl.body.setVelocityY(200);
+                this.girl.setFlipX(true);
+            }else {
+                this.girl.body.setDragY(this.DRAG);
+            }
         }
         
         // gravity-change method
-        if( this.girl.flipY ){
-            if( Phaser.Input.Keyboard.JustDown(keyS) ){
-                //this.arrowUp.destroy();
-                this.changeGravity();
-                this.sound.play('jse');
-                this.sound.volume = 0.4;
-            }else if( this.girl.body.touching.up ){
-                this.walk();
-            }
+        if( Phaser.Input.Keyboard.JustDown(keyS) ){
+            //this.arrowUp.destroy();
+            this.changeGravity();
+            this.sound.play('jse');
+            this.sound.volume = 0.4;
         }else{
-            if( Phaser.Input.Keyboard.JustDown(keyS) ){
-                this.changeGravity();
-                this.sound.play('jse');
-                this.sound.volume = 0.4;
-            }else if( this.girl.body.touching.down ){
-                this.walk();
-            }
+            this.walk();
         }
 
         // candy collect method
@@ -202,13 +229,22 @@ class Level1 extends Phaser.Scene {
     }
 
     changeGravity() {
-        if(this.girl.flipY){
-            this.girl.setFlipY(false);
-        }else{
-            this.girl.setFlipY(true);
+        if(this.anglenum >= 360){
+            this.anglenum -= 360;
         }
-        this.gravitynum = 0 - this.gravitynum;
-        this.girl.setGravityY(this.gravitynum);
+        if(this.anglenum == 0 || this.anglenum == 180){
+            this.anglenum += 180;
+            this.girl.angle = this.anglenum;
+            this.gravitynum = 0 - this.gravitynum;
+            this.girl.setGravityY(this.gravitynum);
+            this.girl.setGravityX(0);
+        }else if(this.anglenum == 90 || this.anglenum == 270){
+            this.anglenum += 180;
+            this.girl.angle = this.anglenum;
+            this.gravitynum = 0 - this.gravitynum;
+            this.girl.setGravityX(this.gravitynum);
+            this.girl.setGravityY(0);
+        } 
     }
 
     walk(){
