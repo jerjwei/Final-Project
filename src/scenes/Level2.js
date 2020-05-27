@@ -11,6 +11,8 @@ class Level2 extends Phaser.Scene {
         this.load.image('xian', './assets/lvl2_sprites/xian.png');
         this.load.image('spider', './assets/spider.png');
         this.load.image('candy', './assets/candy.png');
+        this.load.image('door', './assets/lvl2_sprites/door.png');
+        this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -44,16 +46,22 @@ class Level2 extends Phaser.Scene {
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
+        // candy
+        this.door = this.physics.add.sprite(this.sys.game.config.width*0.917, this.sys.game.config.height*0.2, 'door');
+        this.door.setImmovable();
+        this.door.angle += 270;
+        this.door.scale = 0.7;
+
         // girl
         this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
         this.girl.setCollideWorldBounds(true);
         this.girl.setGravityY(this.gravityYnum);
         this.girl.setFlipX(true);
-        
-        // candy
-        this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.9, this.sys.game.config.height*0.2, 'candy');
-        this.candy1.setImmovable();
-        this.candy1.scale = 0.7;
+
+        // taizi
+        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.94, this.sys.game.config.height*0.2, 'taizi');
+        this.taizi.setImmovable();
+        this.physics.add.collider(this.girl, this.taizi);
 
         // xian
         this.xian = this.physics.add.sprite(this.sys.game.config.width/3, this.sys.game.config.height*0.2, 'xian');
@@ -159,6 +167,10 @@ class Level2 extends Phaser.Scene {
             this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
         }
 
+        if( this.taizi.body.touching.left ){
+            this.score++;
+        }
+            
         // move methods 
         if(this.anglenum == 0){ // down border
             if( keyLEFT.isDown ){
