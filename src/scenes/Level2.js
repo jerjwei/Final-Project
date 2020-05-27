@@ -235,26 +235,6 @@ class Level2 extends Phaser.Scene {
             this.candycollect(this.candy1);
         }
 
-        // gravity-change method
-        if( this.girl.flipY ){
-            if( Phaser.Input.Keyboard.JustDown(keyS) ){
-                //this.arrowUp.destroy();
-                this.changeGravity();
-                this.sound.play('jse');
-                this.sound.volume = 0.4;
-            }else if( this.girl.body.touching.up ){
-                this.walk();
-            }
-        }else{
-            if( Phaser.Input.Keyboard.JustDown(keyS) ){
-                this.changeGravity();
-                this.sound.play('jse');
-                this.sound.volume = 0.4;
-            }else if( this.girl.body.touching.down ){
-                this.walk();
-            }
-        }
-
         // transfer while collide with flowers
         /*if(this.physics.world.overlap(this.girl, this.flower1)){
             this.transfer(this.flower1,this.flower3, this.sys.game.config.width*0.35, this.sys.game.config.height*0.77);

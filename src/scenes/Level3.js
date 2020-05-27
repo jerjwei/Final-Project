@@ -4,12 +4,13 @@ class Level3 extends Phaser.Scene {
     }
 
     preload() {
-        // load images / title sprite
-        // preload.image('fileName', 'location')
-        this.load.image('ground', './assets/platform.png');
-        this.load.image('candy', './assets/candy.jpg');
-        this.load.image('spider', './assets/spider.png');
-        this.load.image('flower', './assets/flower.png');
+        this.load.image('border_down', './assets/border_down.png');
+        this.load.image('border_up', './assets/border_up.png');
+        this.load.image('border_left', './assets/border_left.png');
+        this.load.image('border_right', './assets/border_right.png');
+        this.load.image('candy', './assets/candy.png');
+        this.load.image('ci_2', './assets/lvl3_sprites/ci_2.png');
+        this.load.image('plat', './assets/lvl1_terrain/ground_short.png');
         this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 0});
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
@@ -20,17 +21,17 @@ class Level3 extends Phaser.Scene {
 
     create() {
         // variables and settings
-        this.cameras.main.backgroundColor.setTo(0,0,0);
-        this.DRAG = 380;
-        this.jumpTime = 0;
+        this.DRAG = 500;
         this.score = 0;
-        this.gravitynum = -1000;
+        this.gravityYnum = 2000;
+        this.anglenum = 0;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -46,78 +47,105 @@ class Level3 extends Phaser.Scene {
 
         // define our objects
         // girl
-        this.girl = this.physics.add.sprite(1270, this.sys.game.config.height*0.68, 'girl');
+        this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
         this.girl.setCollideWorldBounds(true);
-        this.girl.setGravityY(this.gravitynum);
-        this.girl.setFlipY(true);
+        this.girl.setGravityY(this.gravityYnum);
+        this.girl.setFlipX(true);
+
         // candy
-        this.candy1 = this.physics.add.sprite(this.sys.game.config.width/3, this.sys.game.config.height*0.25, 'candy');
-        this.candy2 = this.physics.add.sprite(this.sys.game.config.width*0.45, this.sys.game.config.height*0.8, 'candy');
-        this.candy3 = this.physics.add.sprite(this.sys.game.config.width*0.8, this.sys.game.config.height*0.3, 'candy');
+        this.candy1 = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.4, 'candy');
+        this.candy2 = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.6, 'candy');
         this.candy1.setImmovable();
         this.candy2.setImmovable();
-        this.candy3.setImmovable();
-        // spider
-        this.spider1 = this.physics.add.sprite(this.sys.game.config.width*0.55, this.sys.game.config.height*0.15, 'spider');
-        this.spider1.setFlipY(true);
-        this.spider1.setImmovable();
-        //flower
-        this.flower1 = this.physics.add.sprite(this.sys.game.config.width*0.15, this.sys.game.config.height*0.28, 'flower');
-        this.flower1.setImmovable();
-        this.flower2 = this.physics.add.sprite(this.sys.game.config.width*0.15, this.sys.game.config.height*0.82, 'flower');
-        this.flower2.setFlipY(true);
-        this.flower2.setImmovable();
-        // place the ground
-        this.ground01 = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.55, 'ground');
-        this.ground01.displayWidth = 400;
-        this.ground02 = this.physics.add.sprite(this.sys.game.config.width*0.85, this.sys.game.config.height*0.55, 'ground');
-        this.ground02.displayWidth = 400;
-        this.platform01 = this.physics.add.sprite(this.sys.game.config.width*0.15, this.sys.game.config.height*0.4, 'ground');
-        this.platform01.displayWidth = 150;
-        this.platform02 = this.physics.add.sprite(this.sys.game.config.width*0.15, this.sys.game.config.height*0.7, 'ground');
-        this.platform02.displayWidth = 150;
-        this.platform03 = this.physics.add.sprite(this.sys.game.config.width*0.33, this.sys.game.config.height*0.2, 'ground');
-        this.platform03.displayWidth = 150;
-        this.platform04 = this.physics.add.sprite(this.sys.game.config.width*0.55, this.sys.game.config.height*0.1, 'ground');
-        this.platform04.displayWidth = 150;
-        this.platform05 = this.physics.add.sprite(this.sys.game.config.width*0.55, this.sys.game.config.height*0.45, 'ground');
-        this.platform05.displayWidth = 150;
-        this.platform06 = this.physics.add.sprite(this.sys.game.config.width*0.45, this.sys.game.config.height*0.7, 'ground');
-        this.platform06.displayWidth = 150;
-        this.platform07 = this.physics.add.sprite(this.sys.game.config.width*0.8, this.sys.game.config.height*0.35, 'ground');
-        this.platform07.displayWidth = 150;
-        this.ground01.setImmovable();
-        this.ground02.setImmovable();
-        this.platform01.setImmovable();
-        this.platform02.setImmovable();
-        this.platform03.setImmovable();
-        this.platform04.setImmovable();
-        this.platform05.setImmovable();
-        this.platform06.setImmovable();
-        this.platform07.setImmovable();
+
+        // ci
+        this.ci_up1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.13, 'ci_2');
+        this.ci_up2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.13, 'ci_2');
+        this.ci_up3 = this.physics.add.sprite(this.sys.game.config.width*0.92, this.sys.game.config.height*0.13, 'ci_2');
+        this.ci_up1.angle += 180;
+        this.ci_up2.angle += 180;
+        this.ci_up3.angle += 180;
+        this.ci_down1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.87, 'ci_2');
+        this.ci_down2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.87, 'ci_2');
+        this.ci_down3 = this.physics.add.sprite(this.sys.game.config.width*0.92, this.sys.game.config.height*0.87, 'ci_2');
+        this.ci_up1.setImmovable();
+        this.ci_up2.setImmovable();
+        this.ci_up3.setImmovable();
+        this.ci_down1.setImmovable();
+        this.ci_down2.setImmovable();
+        this.ci_down3.setImmovable();
+        // add the colliders
+        this.physics.add.collider(this.girl, this.ci_up1);
+        this.physics.add.collider(this.girl, this.ci_up2);
+        this.physics.add.collider(this.girl, this.ci_up3);
+        this.physics.add.collider(this.girl, this.ci_down1);
+        this.physics.add.collider(this.girl, this.ci_down2);
+        this.physics.add.collider(this.girl, this.ci_down3);
+
+        // platforms
+        // up plats
+        this.plat1 = this.physics.add.sprite(this.sys.game.config.width*0.28, this.sys.game.config.height*0.13, 'plat');
+        this.plat2 = this.physics.add.sprite(this.sys.game.config.width*0.72, this.sys.game.config.height*0.13, 'plat');
+        this.plat1.angle += 180;
+        this.plat2.angle += 180;
+        // mid plats
+        this.plat3 = this.physics.add.sprite(this.sys.game.config.width*0.15, this.sys.game.config.height*0.5, 'plat');
+        this.plat4 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.5, 'plat');
+        this.plat5 = this.physics.add.sprite(this.sys.game.config.width*0.85, this.sys.game.config.height*0.5, 'plat');
+        // down plats
+        this.plat6 = this.physics.add.sprite(this.sys.game.config.width*0.28, this.sys.game.config.height*0.87, 'plat');
+        this.plat7 = this.physics.add.sprite(this.sys.game.config.width*0.72, this.sys.game.config.height*0.87, 'plat');
+        // longer plat
+        this.plat1.displayWidth *= 1.24;
+        this.plat2.displayWidth *= 1.24;
+        this.plat3.displayWidth *= 1;
+        this.plat4.displayWidth *= 1;
+        this.plat5.displayWidth *= 1;
+        this.plat6.displayWidth *= 1.24;
+        this.plat7.displayWidth *= 1.24;
+        // setImmovable
+        this.plat1.setImmovable();
+        this.plat2.setImmovable();
+        this.plat3.setImmovable();
+        this.plat4.setImmovable();
+        this.plat5.setImmovable();
+        this.plat6.setImmovable();
+        this.plat7.setImmovable();
+        // add the colliders
+        this.physics.add.collider(this.girl, this.plat1);
+        this.physics.add.collider(this.girl, this.plat2);
+        this.physics.add.collider(this.girl, this.plat3);
+        this.physics.add.collider(this.girl, this.plat4);
+        this.physics.add.collider(this.girl, this.plat5);
+        this.physics.add.collider(this.girl, this.plat6);
+        this.physics.add.collider(this.girl, this.plat7);
+
         // place the borders
-        this. borderup = this.physics.add.sprite(this.sys.game.config.width/2, 0, 'ground');
+        // down border
+        this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
+        this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
+        this.borderdown.setImmovable(); 
+        
+        //right border
+        this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
+        this.borderright.displayHeight = this.sys.game.config.height * 1.1;
+        this.borderright.setImmovable();
+
+        // up border
+        this.borderup = this.physics.add.sprite(this.sys.game.config.width/2, 32, 'border_up');
         this.borderup.displayWidth = this.sys.game.config.width * 1.1;
         this.borderup.setImmovable();
-        this. borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height, 'ground');
-        this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
-        this.borderdown.setImmovable();
 
-        
+        //left border
+        this.borderleft = this.physics.add.sprite(32, this.sys.game.config.height/2, 'border_left');
+        this.borderleft.displayHeight = this.sys.game.config.height * 1.1;
+        this.borderleft.setImmovable();
+
         // add the colliders
-        this.c1 = this.physics.add.collider(this.girl, this.ground01);
-        this.physics.add.collider(this.girl, this.ground02);
-        this.c2 = this.physics.add.collider(this.girl, this.platform01);
-        this.c3 = this.physics.add.collider(this.girl, this.platform02);
-        this.physics.add.collider(this.girl, this.platform03);
-        this.physics.add.collider(this.girl, this.platform04);
-        this.physics.add.collider(this.girl, this.platform05);
-        this.physics.add.collider(this.girl, this.platform06);
-        this.physics.add.collider(this.girl, this.platform07);
         this.physics.add.collider(this.girl, this.borderup);
         this.physics.add.collider(this.girl, this.borderdown);
-        //this.physics.add.collider(this.girl, this.candy);
-        
+        this.physics.add.collider(this.girl, this.borderleft);
+        this.physics.add.collider(this.girl, this.borderright);
 
         // animations
         // walk animation
@@ -143,8 +171,8 @@ class Level3 extends Phaser.Scene {
             color: '#FFFFFF',
             align: 'middle',
             padding: {
-                top: 5,
-                bottom: 5,
+                top: 35,
+                bottom: 25,
             },
             fixedWidth: 150
         }
@@ -158,6 +186,11 @@ class Level3 extends Phaser.Scene {
 
     update() {
         // check key input for restart
+        if (this.gameOver){
+            this.bgm.stop();
+            this.scene.restart();
+        }
+
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.bgm.stop();
             this.scene.restart();
@@ -179,50 +212,74 @@ class Level3 extends Phaser.Scene {
             },
             fixedWidth: 500
         }
-        if( this.score == 3 ){
+        if( this.score == 2 ){
             this.gameOver = true;
+            this.scene.pause();
             this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
         }
+        if( this.gameOver ){
+            this.gameOver = true;
+            this.scene.pause();
+            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You Died!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
+        }
 
-        // move methods
-        if( keyLEFT.isDown ){
-            this.girl.body.setVelocityX(-200);
-            this.girl.setFlipX(false);
-        }else if ( keyRIGHT.isDown ){
-            this.girl.body.setVelocityX(200);
-            this.girl.setFlipX(true);
-        }else {
-            this.girl.body.setDragX(this.DRAG);
+        // move methods 
+        if(this.anglenum == 0){ // down border
+            if( keyLEFT.isDown ){
+                this.girl.body.setVelocityX(-200);
+                this.girl.setFlipX(true);
+            }else if ( keyRIGHT.isDown ){
+                this.girl.body.setVelocityX(200);
+                this.girl.setFlipX(false);
+            }else {
+                this.girl.body.setDragX(this.DRAG);
+            }
+        }else if(this.anglenum == 180){ // up border
+            if( keyLEFT.isDown ){
+                this.girl.body.setVelocityX(-200);
+                this.girl.setFlipX(false);
+            }else if ( keyRIGHT.isDown ){
+                this.girl.body.setVelocityX(200);
+                this.girl.setFlipX(true);
+            }else {
+                this.girl.body.setDragX(this.DRAG);
+            }
+        }else if(this.anglenum == 90){ // left border
+            if( keyUP.isDown ){
+                this.girl.body.setVelocityY(-200);
+                this.girl.setFlipX(true);
+            }else if ( keyDOWN.isDown ){
+                this.girl.body.setVelocityY(200);
+                this.girl.setFlipX(false);
+            }else {
+                this.girl.body.setDragY(this.DRAG);
+            }
+        }else if(this.anglenum == 270){ // right border
+            if( keyUP.isDown ){
+                this.girl.body.setVelocityY(-200);
+                this.girl.setFlipX(false);
+            }else if ( keyDOWN.isDown ){
+                this.girl.body.setVelocityY(200);
+                this.girl.setFlipX(true);
+            }else {
+                this.girl.body.setDragY(this.DRAG);
+            }
         }
         
-        // single/double-jump twice method
-        if( this.girl.flipY ){
-            if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyDOWN) ){
-                //this.arrowUp.destroy();
-                this.jump();
-                //this.sound.play('jse');
-                this.sound.volume = 0.4;
-            }
-            if( this.girl.body.touching.up ){
-                this.jumpTime = 0;
-                this.walk();
-            }else if(this.jumpTime < 1){
-                //this.girl.anims.play('jumping',true);
-            }
-        } else{
-            if( this.jumpTime<1 && Phaser.Input.Keyboard.JustDown(keyUP) ){
-                this.jumpup();
-                this.sound.play('jse');
-                this.sound.volume = 0.4;
-            }
-            if( this.girl.body.touching.down ){
-                this.jumpTime = 0;
-                this.walk();
-            }else if(this.jumpTime < 1){
-                //this.girl.anims.play('jumping',true);
-            }
+        // gravity-change method
+        if( Phaser.Input.Keyboard.JustDown(keyS) ){
+            //this.arrowUp.destroy();
+            this.changeGravity();
+            this.sound.play('jse');
+            this.sound.volume = 0.4;
+        }else{
+            this.walk();
         }
+
+        if( this.ci_up1.body.touching.down || this.ci_up2.body.touching.down || this.ci_up3.body.touching.down || this.ci_down1.body.touching.up || this.ci_down2.body.touching.up || this.ci_down3.body.touching.up)
+            this.gameOver = true;
 
         // candy collect method
         if(this.physics.world.overlap(this.girl, this.candy1)){
@@ -246,20 +303,25 @@ class Level3 extends Phaser.Scene {
         // wrap physics object(s) .wrap(gameObject, padding)
     }
 
-    jump() {
-        this.girl.setVelocityY(350);
-        //this.girl.anims.play('jumping');
-        this.jumpTime++;
-    }
-
-    jumpup(){
-        this.girl.setVelocityY(-350);
-        //this.girl.anims.play('jumping');
-        this.jumpTime++;
-    }
-
-    walk(){
-        //this.girl.anims.play('walking', true);
+    changeGravity() {
+        this.anglenum += 180;
+        this.girl.angle = this.anglenum;
+        if(this.anglenum >= 360){
+            this.anglenum -= 360;
+        }
+        if(this.anglenum == 0){
+            this.girl.setGravityX(0);
+            this.girl.setGravityY(this.gravityYnum);
+        }else if(this.anglenum == 180){
+            this.girl.setGravityX(0);
+            this.girl.setGravityY(-this.gravityYnum);
+        }else if(this.anglenum == 90){
+            this.girl.setGravityY(0);
+            this.girl.setGravityX(-this.gravityXnum);
+        }else if(this.anglenum == 270){
+            this.girl.setGravityY(0);
+            this.girl.setGravityX(this.gravityXnum);
+        }
     }
 
     candycollect(candy){
@@ -268,23 +330,7 @@ class Level3 extends Phaser.Scene {
         this.scoreS.text = this.score;
     }
 
-    reverse(spider){
-        spider.destroy();
-        if(this.girl.flipY){
-            this.girl.setFlipY(false);
-        }else{
-            this.girl.setFlipY(true);
-        }
-        this.gravitynum = 0 - this.gravitynum;
-        this.girl.setGravityY(this.gravitynum);
-    }
-
-    transfer(flower1,flower2){
-        flower1.destroy();
-        flower2.destroy();
-        this.girl.setPosition( this.sys.game.config.width*0.15, this.sys.game.config.height*0.82);
-        this.girl.setFlipY(true);
-        this.gravitynum = 0 - this.gravitynum;
-        this.girl.setGravityY(this.gravitynum);      
+    walk(){
+        //this.girl.anims.play('walking', true);
     }
 }
