@@ -6,7 +6,6 @@ class Level1 extends Phaser.Scene {
     preload() {
         // load images / title sprite
         // preload.image('fileName', 'location')
-        this.load.image('ground', './assets/platform.png');
         this.load.image('border_down', './assets/border_down.png');
         this.load.image('border_up', './assets/border_up.png');
         this.load.image('border_left', './assets/border_left.png');
@@ -28,7 +27,8 @@ class Level1 extends Phaser.Scene {
         this.cameras.main.backgroundColor.setTo(0,0,0);
         this.DRAG = 500;
         this.score = 0;
-        this.gravitynum = 1500;
+        this.gravityYnum = 1500;
+        this.gravityXnum = 1500;
         this.anglenum = 0;
 
         // define keyboard keys
@@ -54,20 +54,18 @@ class Level1 extends Phaser.Scene {
         // girl
         this.girl = this.physics.add.sprite(100, this.sys.game.config.height*0.75, 'girl');
         this.girl.setCollideWorldBounds(true);
-        this.girl.setGravityY(this.gravitynum);
+        this.girl.setGravityY(this.gravityYnum);
 
         // candy
         this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.77, this.sys.game.config.height*0.2, 'candy');
         this.candy1.scale = 0.7;
         this.candy1.setImmovable();
 
-
         // place the ground
         this.level1_upperGround = this.physics.add.sprite(this.sys.game.config.width*0.3, this.sys.game.config.height*0.2, 'level1_upperGround');
         this.level1_bottomGround = this.physics.add.sprite(this.sys.game.config.width*0.7, this.sys.game.config.height*0.85, 'level1_bottomGround');
         this.level1_upperGround.setImmovable();
         this.level1_bottomGround.setImmovable();
-
 
         // place the borders
         // down border
@@ -89,7 +87,6 @@ class Level1 extends Phaser.Scene {
         this.borderleft = this.physics.add.sprite(32, this.sys.game.config.height/2, 'border_left');
         this.borderleft.displayHeight = this.sys.game.config.height * 1.1;
         this.borderleft.setImmovable();
-
         
         // add the colliders
         this.physics.add.collider(this.girl, this.level1_upperGround);
@@ -98,7 +95,6 @@ class Level1 extends Phaser.Scene {
         this.physics.add.collider(this.girl, this.borderdown);
         this.physics.add.collider(this.girl, this.borderleft);
         this.physics.add.collider(this.girl, this.borderright);
-        //this.physics.add.collider(this.girl, this.candy);
         
         // animations
         // walk animation
@@ -120,7 +116,7 @@ class Level1 extends Phaser.Scene {
                 top: 35,
                 bottom: 25,
             },
-            fixedWidth: 250
+            fixedWidth: 100
         }
         this.scoreS = this.add.text(70, 25, this.score, scoreConfig);
         scoreConfig.fontSize = '20px';
@@ -133,7 +129,6 @@ class Level1 extends Phaser.Scene {
     update() {
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
-        
 
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
@@ -168,8 +163,7 @@ class Level1 extends Phaser.Scene {
         }
 
         // move methods 
-        // up and down borders
-        if(this.anglenum == 0){
+        if(this.anglenum == 0){ // down border
             if( keyLEFT.isDown ){
                 this.girl.body.setVelocityX(-200);
                 this.girl.setFlipX(true);
@@ -179,7 +173,7 @@ class Level1 extends Phaser.Scene {
             }else {
                 this.girl.body.setDragX(this.DRAG);
             }
-        }else if(this.anglenum == 180){
+        }else if(this.anglenum == 180){ // up border
             if( keyLEFT.isDown ){
                 this.girl.body.setVelocityX(-200);
                 this.girl.setFlipX(false);
@@ -189,7 +183,7 @@ class Level1 extends Phaser.Scene {
             }else {
                 this.girl.body.setDragX(this.DRAG);
             }
-        }else if(this.anglenum == 90){
+        }else if(this.anglenum == 90){ // right border
             if( keyUP.isDown ){
                 this.girl.body.setVelocityY(-200);
                 this.girl.setFlipX(false);
@@ -199,8 +193,7 @@ class Level1 extends Phaser.Scene {
             }else {
                 this.girl.body.setDragY(this.DRAG);
             }
-        }else{ 
-            // left and right borders
+        }else{ // left border
             if( keyUP.isDown ){
                 this.girl.body.setVelocityY(-200);
                 this.girl.setFlipX(false);
@@ -229,22 +222,24 @@ class Level1 extends Phaser.Scene {
     }
 
     changeGravity() {
+        this.anglenum += 180;
+        this.girl.angle = this.anglenum;
         if(this.anglenum >= 360){
             this.anglenum -= 360;
         }
-        if(this.anglenum == 0 || this.anglenum == 180){
-            this.anglenum += 180;
-            this.girl.angle = this.anglenum;
-            this.gravitynum = 0 - this.gravitynum;
-            this.girl.setGravityY(this.gravitynum);
+        if(this.anglenum == 0){
             this.girl.setGravityX(0);
-        }else if(this.anglenum == 90 || this.anglenum == 270){
-            this.anglenum += 180;
-            this.girl.angle = this.anglenum;
-            this.gravitynum = 0 - this.gravitynum;
-            this.girl.setGravityX(this.gravitynum);
+            this.girl.setGravityY(this.gravityYnum);
+        }else if(this.anglenum == 180){
+            this.girl.setGravityX(0);
+            this.girl.setGravityY(-this.gravityYnum);
+        }else if(this.anglenum == 90){
             this.girl.setGravityY(0);
-        } 
+            this.girl.setGravityX(-this.gravityXnum);
+        }else if(this.anglenum == 270){
+            this.girl.setGravityY(0);
+            this.girl.setGravityX(this.gravityXnum);
+        }
     }
 
     walk(){
