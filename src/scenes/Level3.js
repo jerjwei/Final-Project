@@ -11,7 +11,6 @@ class Level3 extends Phaser.Scene {
         this.load.image('candy', './assets/candy.png');
         this.load.image('ci_2', './assets/lvl3_sprites/ci_2.png');
         this.load.image('plat', './assets/lvl1_terrain/ground_short.png');
-        this.load.spritesheet('jump', './assets/jump1.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 0});
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -44,6 +43,7 @@ class Level3 extends Phaser.Scene {
     
         // game over flag
         this.gameOver = false;
+        this.youDie = false;
 
         // define our objects
         // girl
@@ -149,7 +149,7 @@ class Level3 extends Phaser.Scene {
 
         // animations
         // walk animation
-        this.anims.create({
+        /*this.anims.create({
             key: 'walking',
             frames: 'girl',
             frameRate: 10,
@@ -161,7 +161,7 @@ class Level3 extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('jump', { start: 0, end: 0, first: 0}),
             frameRate:30,
             repeat: -1
-        });
+        });*/
 
         // score display
         this.playerScore = 0;
@@ -186,18 +186,22 @@ class Level3 extends Phaser.Scene {
 
     update() {
         // check key input for restart
-        if (this.gameOver){
-            this.bgm.stop();
-            this.scene.restart();
-        }
-
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.bgm.stop();
             this.scene.restart();
         }
+
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
+            this.bgm.stop();
+            this.scene.start("lvl3");
+        }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             this.bgm.stop();
             this.scene.start("menuScene");
+        }
+        if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
+            this.bgm.stop();
+            this.scene.restart();
         }
 
         // game over settings
@@ -214,13 +218,13 @@ class Level3 extends Phaser.Scene {
         }
         if( this.score == 2 ){
             this.gameOver = true;
-            this.scene.pause();
             this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
         }
-        if( this.gameOver ){
+        if( this.youDie ){
             this.gameOver = true;
-            this.scene.pause();
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
             this.add.text(game.config.width*2/3, game.config.height*3/4, 'You Died!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
         }
@@ -279,7 +283,7 @@ class Level3 extends Phaser.Scene {
         }
 
         if( this.ci_up1.body.touching.down || this.ci_up2.body.touching.down || this.ci_up3.body.touching.down || this.ci_down1.body.touching.up || this.ci_down2.body.touching.up || this.ci_down3.body.touching.up)
-            this.gameOver = true;
+            this.youDie = true;
 
         // candy collect method
         if(this.physics.world.overlap(this.girl, this.candy1)){
