@@ -34,6 +34,7 @@ class Level2 extends Phaser.Scene {
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -45,11 +46,11 @@ class Level2 extends Phaser.Scene {
         this.girl.setFlipX(true);
         
         // candy
-        this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.35, 'candy');
+        this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.9, this.sys.game.config.height*0.2, 'candy');
         this.candy1.setImmovable();
 
         // spider
-        this.spider = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.9, 'spider');
+        this.spider = this.physics.add.sprite(this.sys.game.config.width/3, this.sys.game.config.height*0.4, 'spider');
         this.spider.setImmovable();
 
 
@@ -122,10 +123,10 @@ class Level2 extends Phaser.Scene {
         if(this.girl.angle == 0){
             if( keyLEFT.isDown ){
                 this.girl.body.setVelocityX(-200);
-                this.girl.setFlipX(false);
+                this.girl.setFlipX(true);
             }else if ( keyRIGHT.isDown ){
                 this.girl.body.setVelocityX(200);
-                this.girl.setFlipX(true);
+                this.girl.setFlipX(false);
             }else {
                 this.girl.body.setDragX(this.DRAG);
             }
@@ -133,10 +134,10 @@ class Level2 extends Phaser.Scene {
             // left and right borders
             if( keyUP.isDown ){
                 this.girl.body.setVelocityY(-200);
-                this.girl.setFlipX(true);
+                this.girl.setFlipX(false);
             }else if ( keyDOWN.isDown ){
                 this.girl.body.setVelocityY(200);
-                this.girl.setFlipX(false);
+                this.girl.setFlipX(true);
             }else {
                 this.girl.body.setDragY(this.DRAG);
             }
@@ -156,13 +157,33 @@ class Level2 extends Phaser.Scene {
 
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider)){
-            this.rotate();
+            this.rotate(this.spider);
 
         }
 
         // candy collect method
         if(this.physics.world.overlap(this.girl, this.candy1)){
             this.candycollect(this.candy1);
+        }
+
+        // gravity-change method
+        if( this.girl.flipY ){
+            if( Phaser.Input.Keyboard.JustDown(keyS) ){
+                //this.arrowUp.destroy();
+                this.changeGravity();
+                this.sound.play('jse');
+                this.sound.volume = 0.4;
+            }else if( this.girl.body.touching.up ){
+                this.walk();
+            }
+        }else{
+            if( Phaser.Input.Keyboard.JustDown(keyS) ){
+                this.changeGravity();
+                this.sound.play('jse');
+                this.sound.volume = 0.4;
+            }else if( this.girl.body.touching.down ){
+                this.walk();
+            }
         }
 
         // transfer while collide with flowers
@@ -177,7 +198,8 @@ class Level2 extends Phaser.Scene {
         //this.girl.anims.play('walking', true);
     }
 
-    rotate(){
+    rotate(spider){
+        spider.destroy();
         this.anglenum += 90;
         if(this.anglenum >= 360){
             this.anglenum -= 360;
@@ -187,8 +209,14 @@ class Level2 extends Phaser.Scene {
         this.girl.setGravityX(this.gravitynum);
     }
 
-    switch(){
-
+    changeGravity() {
+        if(this.girl.flipY){
+            this.girl.setFlipY(false);
+        }else{
+            this.girl.setFlipY(true);
+        }
+        this.gravitynum = 0 - this.gravitynum;
+        this.girl.setGravityY(this.gravitynum);
     }
 
     candycollect(candy){
