@@ -126,7 +126,7 @@ class Level4 extends Phaser.Scene {
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
             this.bgm.stop();
-            this.scene.start("lvl3");
+            this.scene.start("lvl5");
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             this.bgm.stop();
@@ -151,8 +151,8 @@ class Level4 extends Phaser.Scene {
         }
         if( this.score == 1 ){
             this.gameOver = true;
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfigconfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [M] for Menu', overConfigconfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfigconfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to level5 or [M] for Menu', overConfigconfig).setOrigin(0.5);
         }
         if( this.youDie ){
             this.gameOver = true;

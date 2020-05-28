@@ -24,7 +24,8 @@ class Level5 extends Phaser.Scene {
         this.load.image('grassL', './assets/lvl5_terrain/level5_shortRight.png');
         this.load.image('door', './assets/lvl2_sprites/door.png');
         this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
-        this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
+        this.load.image('girl', './assets/player.png');
+        //this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
         this.load.audio('bgm', './assets/bgm.mp3');        
@@ -32,6 +33,7 @@ class Level5 extends Phaser.Scene {
     }
 
     create() {
+        this.scale.setGameSize(1280, 720);
         // background music
         this.bgm = this.sound.add('bgm', {config});
         this.bgm.play();
@@ -62,20 +64,20 @@ class Level5 extends Phaser.Scene {
         this.youDie = false;
 
         // define our objects
-        // girl
-        this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
-        this.girl.setCollideWorldBounds(true);
-        this.girl.setGravityY(this.gravityYnum);
-        this.girl.setFlipX(true);
-
         // door
         this.door = this.physics.add.sprite(this.sys.game.config.width*0.84, this.sys.game.config.height*0.15, 'door');
         this.door.angle += 270;
         this.door.scale = 0.8;
         this.door.setImmovable();
 
+        // girl
+        this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
+        this.girl.setCollideWorldBounds(true);
+        this.girl.setGravityY(this.gravityYnum);
+        this.girl.setFlipX(true);
+
         // taizi
-        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.882, this.sys.game.config.height*0.15, 'taizi');
+        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.882-1, this.sys.game.config.height*0.15, 'taizi');
         this.taizi.setImmovable();
         this.physics.add.collider(this.girl, this.taizi);
 
@@ -85,7 +87,7 @@ class Level5 extends Phaser.Scene {
 
         // ci
         // ci_1
-        this.ci_1 = this.physics.add.sprite(this.sys.game.config.width*0.32, this.sys.game.config.height*0.133, 'ci_3');
+        this.ci_1 = this.physics.add.sprite(this.sys.game.config.width*0.32, this.sys.game.config.height*0.13, 'ci_3');
         this.ci_1.displayHeight=this.ci_1.height*1.1
         this.ci_1.angle+=180;
         this.ci_1.setImmovable();
@@ -93,7 +95,7 @@ class Level5 extends Phaser.Scene {
 
         // implement grasses and terrains
         // terrain1
-        this.terrain1 = this.physics.add.sprite(this.sys.game.config.width*0.35, this.sys.game.config.height*0.68, 'midLengthGround');
+        this.terrain1 = this.physics.add.sprite(this.sys.game.config.width*0.35, this.sys.game.config.height*0.6485, 'midLengthGround');
         this.terrain1.setImmovable();
         this.physics.add.collider(this.girl, this.terrain1);
         // terrain2
@@ -229,7 +231,7 @@ class Level5 extends Phaser.Scene {
         }
 
         // win or lose condition
-        if( this.taizi.body.touching.left ){
+        if( this.taizi.body.touching.left || this.taizi.body.touching.up || this.taizi.body.touching.down ){
             this.score++;
         }
 
@@ -247,8 +249,8 @@ class Level5 extends Phaser.Scene {
         }
         if( this.score == 1 ){
             this.gameOver = true;
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [N] to Level6 or [M] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level6 or [M] for Menu', overConfig).setOrigin(0.5);
         }
             
         // move methods 
@@ -350,12 +352,14 @@ class Level5 extends Phaser.Scene {
             this.girl.setGravityX(0);
             this.girl.setGravityY(this.gravityYnum);
         }else if(this.anglenum == 90){
+            this.girl.body.setSize(73,50);
             this.girl.setGravityY(0);
             this.girl.setGravityX(-this.gravityXnum);
         }else if(this.anglenum == 180){
             this.girl.setGravityX(0);
             this.girl.setGravityY(-this.gravityYnum);
         }else if(this.anglenum == 270){
+            this.girl.body.setSize(73,50);
             this.girl.setGravityY(0);
             this.girl.setGravityX(this.gravityXnum);
         }

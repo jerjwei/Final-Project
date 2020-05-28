@@ -245,8 +245,8 @@ class Level6 extends Phaser.Scene {
         // win or lose condition
         if( this.score == 2 ){
             this.gameOver = true;
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
         }
         if( this.youDie ){
             this.gameOver = true;

@@ -248,7 +248,7 @@ class Level3 extends Phaser.Scene {
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
             this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [N] to level4 or [M] for Menu', overConfig).setOrigin(0.5);
         }
 
         // move methods 
