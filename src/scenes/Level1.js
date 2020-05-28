@@ -70,24 +70,26 @@ class Level1 extends Phaser.Scene {
         this.level1_bottomGround.setImmovable();
 
         // place the borders
-       // down border
-       this.realB = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.95, 'real_border_down');
-       this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
-       this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
-       this.borderdown.displayHeight = this.borderdown.height * 1.5;
-       this.realB.setImmovable(); 
+        // down border
+        this.realB = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.95, 'real_border_down');
+        this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
+        this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
+        this.borderdown.displayHeight = this.borderdown.height * 1.5;
+        this.realB.setImmovable(); 
         
-        //right border
+        // right border
         this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
         this.borderright.displayHeight = this.sys.game.config.height * 1.1;
         this.borderright.setImmovable();
 
         // up border
-        this.borderup = this.physics.add.sprite(this.sys.game.config.width/2, 32, 'border_up');
+        this.realBup = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.05, 'real_border_down');
+        this.borderup = this.physics.add.sprite(this.sys.game.config.width/2, 36, 'border_up');
         this.borderup.displayWidth = this.sys.game.config.width * 1.1;
-        this.borderup.setImmovable();
+        this.borderup.displayHeight = this.borderup.height * 1.5;
+        this.realBup.setImmovable();
 
-        //left border
+        // left border
         this.borderleft = this.physics.add.sprite(32, this.sys.game.config.height/2, 'border_left');
         this.borderleft.displayHeight = this.sys.game.config.height * 1.1;
         this.borderleft.setImmovable();
@@ -95,7 +97,7 @@ class Level1 extends Phaser.Scene {
         // add the colliders
         this.physics.add.collider(this.girl, this.level1_upperGround);
         this.physics.add.collider(this.girl, this.level1_bottomGround);
-        this.physics.add.collider(this.girl, this.borderup);
+        this.physics.add.collider(this.girl, this.realBup);
         this.physics.add.collider(this.girl, this.realB);
         this.physics.add.collider(this.girl, this.borderleft);
         this.physics.add.collider(this.girl, this.borderright);
