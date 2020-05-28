@@ -35,12 +35,6 @@ class Level3 extends Phaser.Scene {
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     
-        // background music
-        this.bgm = this.sound.add('playscenebackground', {config});
-        this.bgm.play();
-        this.bgm.loop = true;
-        this.bgm.volume = 0.6;
-    
         // game over flag
         this.gameOver = false;
         this.youDie = false;
@@ -59,15 +53,15 @@ class Level3 extends Phaser.Scene {
         this.candy2.setImmovable();
 
         // ci
-        this.ci_up1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.13, 'ci_2');
-        this.ci_up2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.13, 'ci_2');
-        this.ci_up3 = this.physics.add.sprite(this.sys.game.config.width*0.92, this.sys.game.config.height*0.13, 'ci_2');
+        this.ci_up1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.11, 'ci_2');
+        this.ci_up2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.11, 'ci_2');
+        this.ci_up3 = this.physics.add.sprite(this.sys.game.config.width*0.92, this.sys.game.config.height*0.11, 'ci_2');
         this.ci_up1.angle += 180;
         this.ci_up2.angle += 180;
         this.ci_up3.angle += 180;
-        this.ci_down1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.87, 'ci_2');
-        this.ci_down2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.87, 'ci_2');
-        this.ci_down3 = this.physics.add.sprite(this.sys.game.config.width*0.92, this.sys.game.config.height*0.87, 'ci_2');
+        this.ci_down1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.89, 'ci_2');
+        this.ci_down2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.89, 'ci_2');
+        this.ci_down3 = this.physics.add.sprite(this.sys.game.config.width*0.92, this.sys.game.config.height*0.89, 'ci_2');
         this.ci_up1.setImmovable();
         this.ci_up2.setImmovable();
         this.ci_up3.setImmovable();
@@ -185,26 +179,10 @@ class Level3 extends Phaser.Scene {
     }
 
     update() {
-        // check key input for restart
-        if (Phaser.Input.Keyboard.JustDown(keyR)){
-            this.bgm.stop();
-            this.scene.restart();
-        }
+        // check angle within 360 degrees
+        if(this.anglenum >= 360) this.anglenum -= 360;
 
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
-            this.bgm.stop();
-            this.scene.start("lvl3");
-        }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
-            this.bgm.stop();
-            this.scene.start("menuScene");
-        }
-        if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
-            this.bgm.stop();
-            this.scene.restart();
-        }
-
-        // game over settings
+        // text configuration setting
         let overConfig = {
             fontFamily: 'Bradley Hand',
             fontSize: '25px',
@@ -216,17 +194,52 @@ class Level3 extends Phaser.Scene {
             },
             fixedWidth: 500
         }
-        if( this.score == 2 ){
-            this.gameOver = true;
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
-        }
+
+        // check key input for restart
         if( this.youDie ){
-            this.gameOver = true;
+            this.physics.pause();
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You Died!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2+60, 'You Died!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2+110, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
+        }
+        if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.restart();
+            });
+        }else if(this.youDie && Phaser.Input.Keyboard.JustDown(keyM)){
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
+        }
+        if (Phaser.Input.Keyboard.JustDown(keyR)){
+            this.scene.restart();
+        }
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("lvl4");
+            });
+        }
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
+        }
+
+        // game over settings
+        if( this.score == 2 ){
+            this.gameOver = true;
+            this.physics.pause();
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
+            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
         }
 
         // move methods 
