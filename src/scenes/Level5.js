@@ -8,16 +8,22 @@ class Level5 extends Phaser.Scene {
         this.load.image('border_up', './assets/border_up.png');
         this.load.image('border_left', './assets/border_left.png');
         this.load.image('border_right', './assets/border_right.png');
+        this.load.image('real_border_down', './assets/realBorderdown.png');
         this.load.image('candy', './assets/candy.png');
         this.load.image('ci_2', './assets/lvl3_sprites/ci_2.png');
         this.load.image('ci_3', './assets/lvl4_sprites/ci_3.png');
+        this.load.image('ci_3_ver', './assets/lvl5_terrain/ci_390.png');
         this.load.image('plat', './assets/lvl1_terrain/ground_short.png');
         this.load.image('xian', './assets/lvl2_sprites/xian.png');
         this.load.image('spider', './assets/spider.png');
-        this.load.image('longPlain', './assets/lvl4_sprites/level4_upper.png');
-        this.load.image('midPlain', './assets/lvl4_sprites/level4_middle.png');
         this.load.image('mid', './assets/lvl4_sprites/level4_middleUpper.png');
         this.load.image('bottom', './assets/lvl4_sprites/level4_bottomGround.png');
+        this.load.image('midLengthGround', './assets/lvl5_terrain/level5_longGround.png');
+        this.load.image('longLengthGround', './assets/lvl5_terrain/level5_mostRight.png');
+        this.load.image('grassR', './assets/lvl5_terrain/level5_shortLeft.png');
+        this.load.image('grassL', './assets/lvl5_terrain/level5_shortRight.png');
+        this.load.image('door', './assets/lvl2_sprites/door.png');
+        this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -62,9 +68,16 @@ class Level5 extends Phaser.Scene {
         this.girl.setGravityY(this.gravityYnum);
         this.girl.setFlipX(true);
 
-        // candy
-        this.candy1 = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.4, 'candy');
-        this.candy1.setImmovable();
+        // door
+        this.door = this.physics.add.sprite(this.sys.game.config.width*0.84, this.sys.game.config.height*0.15, 'door');
+        this.door.angle += 270;
+        this.door.scale = 0.8;
+        this.door.setImmovable();
+
+        // taizi
+        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.882, this.sys.game.config.height*0.15, 'taizi');
+        this.taizi.setImmovable();
+        this.physics.add.collider(this.girl, this.taizi);
 
         // xian
         this.xian = this.physics.add.sprite(this.sys.game.config.width*0.16, this.sys.game.config.height*0.1, 'xian');
@@ -73,29 +86,64 @@ class Level5 extends Phaser.Scene {
         // ci
         // ci_1
         this.ci_1 = this.physics.add.sprite(this.sys.game.config.width*0.32, this.sys.game.config.height*0.133, 'ci_3');
-        this.ci_2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.5, 'ci_3');
-        this.ci_3 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.5, 'ci_3');
         this.ci_1.displayHeight=this.ci_1.height*1.1
         this.ci_1.angle+=180;
-        this.ci_2.angle+=180;
-        this.ci_3.angle+=180;
         this.ci_1.setImmovable();
         this.physics.add.collider(this.girl, this.ci_1);
 
-        // implement terrains
+        // implement grasses and terrains
         // terrain1
-        this.terrain1 = this.physics.add.sprite(this.sys.game.config.width*0.14, this.sys.game.config.height*0.12, 'mid')
-        this.terrain1.angle+=180;
-        this.terrain1.displayWidth = this.terrain1.width*1.3;
-        this.terrain1.displayHeight = this.terrain1.height*1.3;
+        this.terrain1 = this.physics.add.sprite(this.sys.game.config.width*0.35, this.sys.game.config.height*0.68, 'midLengthGround');
         this.terrain1.setImmovable();
         this.physics.add.collider(this.girl, this.terrain1);
         // terrain2
-        this.terrain2 = this.physics.add.sprite(this.sys.game.config.width*0.36, this.sys.game.config.height*0.75, 'longPlain')
-        this.terrain2.angle+=90;
-        //this.terrain2.displayWidth = this.terrain2.width*0.8;
+        this.terrain2 = this.physics.add.sprite(this.sys.game.config.width*0.687, this.sys.game.config.height*0.35, 'midLengthGround');
+        this.terrain2.displayHeight = this.terrain2.height * 1.2;
         this.terrain2.setImmovable();
         this.physics.add.collider(this.girl, this.terrain2);
+        // terrain3
+        this.terrain3 = this.physics.add.sprite(this.sys.game.config.width*0.963, this.sys.game.config.height*0.5, 'longLengthGround');
+        this.terrain3.setImmovable();
+        this.physics.add.collider(this.girl, this.terrain3);
+        // grass1
+        this.grass1 = this.physics.add.sprite(this.sys.game.config.width*0.14, this.sys.game.config.height*0.12, 'mid');
+        this.grass1.angle+=180;
+        this.grass1.displayWidth = this.grass1.width*1.3;
+        this.grass1.displayHeight = this.grass1.height*1.3;
+        this.grass1.setImmovable();
+        this.physics.add.collider(this.girl, this.grass1);
+        // grass2 middle left
+        this.grass2 = this.physics.add.sprite(this.sys.game.config.width*0.405, this.sys.game.config.height*0.445, 'grassR');
+        this.grass2.displayWidth = this.grass2.width*1.1;
+        this.grass2.setImmovable();
+        this.physics.add.collider(this.girl, this.grass2);
+        // grass3 middle left
+        this.grass3 = this.physics.add.sprite(this.sys.game.config.width*0.405, this.sys.game.config.height*0.845, 'grassR');
+        this.grass3.displayWidth = this.grass3.width*1.1;
+        this.grass3.setImmovable();
+        this.physics.add.collider(this.girl, this.grass3);
+        // grass4 middle right
+        this.grass4 = this.physics.add.sprite(this.sys.game.config.width*0.63, this.sys.game.config.height*0.05, 'grassL');
+        this.grass4.displayWidth = this.grass4.width*1.1;
+        this.grass4.setImmovable();
+        this.physics.add.collider(this.girl, this.grass4);
+        // grass5 middle right
+        this.grass5 = this.physics.add.sprite(this.sys.game.config.width*0.63, this.sys.game.config.height*0.57, 'grassL');
+        this.grass5.displayWidth = this.grass5.width*1.1;
+        this.grass5.displayHeight = this.grass5.height*1.1;
+        this.grass5.setImmovable();
+        this.physics.add.collider(this.girl, this.grass5);
+        // grass6 rigther most
+        this.grass6 = this.physics.add.sprite(this.sys.game.config.width*0.91, this.sys.game.config.height*0.2, 'grassL');
+        this.grass6.displayWidth = this.grass6.width*1.1;
+        this.grass6.setImmovable();
+        this.physics.add.collider(this.girl, this.grass6);
+        // grass7 rigther most
+        this.grass7 = this.physics.add.sprite(this.sys.game.config.width*0.91, this.sys.game.config.height*0.8, 'grassL');
+        this.grass7.displayWidth = this.grass7.width*1.1;
+        this.grass7.displayHeight = this.grass7.height*1.1;
+        this.grass7.setImmovable();
+        this.physics.add.collider(this.girl, this.grass7);
 
         // spider
         this.spider = this.physics.add.sprite(this.sys.game.config.width*0.16, this.sys.game.config.height*0.3, 'spider');
@@ -104,9 +152,11 @@ class Level5 extends Phaser.Scene {
 
         // place the borders
         // down border
+        this.realB = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.95, 'real_border_down');
         this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
         this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
-        this.borderdown.setImmovable(); 
+        this.borderdown.displayHeight = this.borderdown.height * 1.5;
+        this.realB.setImmovable(); 
         
         //right border
         this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
@@ -125,7 +175,7 @@ class Level5 extends Phaser.Scene {
 
         // add the colliders
         this.physics.add.collider(this.girl, this.borderup);
-        this.physics.add.collider(this.girl, this.borderdown);
+        this.physics.add.collider(this.girl, this.realB);
         this.physics.add.collider(this.girl, this.borderleft);
         this.physics.add.collider(this.girl, this.borderright);
 
@@ -176,6 +226,11 @@ class Level5 extends Phaser.Scene {
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             this.bgm.stop();
             this.scene.start("menuScene");
+        }
+
+        // win or lose condition
+        if( this.taizi.body.touching.left ){
+            this.score++;
         }
 
         // game over settings
@@ -249,7 +304,6 @@ class Level5 extends Phaser.Scene {
             this.walk();
         }
         
-        
         // walk animation -- we don't have it now
         /*if( this.girl.flipY ){
             if( this.girl.body.touching.up ){
@@ -263,7 +317,7 @@ class Level5 extends Phaser.Scene {
 
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider)){
-            //this.rotate(this.spider);
+            this.rotate(this.spider);
 
         }
 
