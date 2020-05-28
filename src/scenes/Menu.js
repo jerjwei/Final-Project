@@ -35,22 +35,22 @@ class Menu extends Phaser.Scene {
         let textSpacer = 64;
 
         this.add.text(centerX, centerY-2*textSpacer, 'Secret Garden', menuConfig).setOrigin(0.5);
-        menuConfig.fontSize = '30px';
-        this.add.text(centerX, centerY-textSpacer, 'Use [↑]or[↓] to jump, use [←]or[→] to move.', menuConfig).setOrigin(0.5);
+        menuConfig.fontSize = '25px';
+        this.add.text(centerX, centerY-textSpacer, 'Use [←]or[→]or[↑]or[↓] to move. Press [S] to reverse gravity.', menuConfig).setOrigin(0.5);
         menuConfig.color = '#69FCF3';
-        this.add.text(centerX, centerY, 'Touch spider to reverse / Touch flower to transfer', menuConfig).setOrigin(0.5);
+        menuConfig.fontSize = '30px';
+        this.add.text(centerX, centerY, 'Touch spider to rotate 90 degrees. / Touch flower to transfer.', menuConfig).setOrigin(0.5);
         this.add.text(centerX, centerY+textSpacer, 'Collect all the candies!', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#FFFFFF';
         menuConfig.color = '#000';
-        this.add.text(centerX, centerY+2*textSpacer, 'Press [←] for to start', menuConfig).setOrigin(0.5);
+        this.add.text(centerX, centerY+2*textSpacer, 'Click to start', menuConfig).setOrigin(0.5);
 
         // define keys
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
+        pointer = this.input.activePointer;
     }
 
     update() {
-
-        if (Phaser.Input.Keyboard.JustDown(keyLEFT)) {
+        if (pointer.isDown) {
             this.sound.volume = 0.4;
             //this.sound.play('start');
             this.scene.start("lvl1");    
