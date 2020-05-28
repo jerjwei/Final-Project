@@ -35,12 +35,6 @@ class Level3 extends Phaser.Scene {
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     
-        // background music
-        this.bgm = this.sound.add('playscenebackground', {config});
-        this.bgm.play();
-        this.bgm.loop = true;
-        this.bgm.volume = 0.6;
-    
         // game over flag
         this.gameOver = false;
         this.youDie = false;
@@ -185,23 +179,38 @@ class Level3 extends Phaser.Scene {
     }
 
     update() {
+        // check angle within 360 degrees
+        if(this.anglenum >= 360) this.anglenum -= 360;
+
         // check key input for restart
+        if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.restart();
+            });
+        }
+        /*if( this.youDie ){
+            this.gameOver = true;
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
+            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You Died!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
+        }*/
         if (Phaser.Input.Keyboard.JustDown(keyR)){
-            this.bgm.stop();
             this.scene.restart();
         }
-
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
-            this.bgm.stop();
-            this.scene.start("lvl3");
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("lvl4");
+            });
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
-            this.bgm.stop();
-            this.scene.start("menuScene");
-        }
-        if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
-            this.bgm.stop();
-            this.scene.restart();
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
         }
 
         // game over settings
@@ -220,13 +229,6 @@ class Level3 extends Phaser.Scene {
             this.gameOver = true;
             this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
-        }
-        if( this.youDie ){
-            this.gameOver = true;
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You Died!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
         }
 
         // move methods 
