@@ -182,20 +182,38 @@ class Level3 extends Phaser.Scene {
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
 
+        // text configuration setting
+        let overConfig = {
+            fontFamily: 'Bradley Hand',
+            fontSize: '25px',
+            color: '#3E5CA3',
+            align: 'right',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 500
+        }
+
         // check key input for restart
+        if( this.youDie ){
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
+            this.add.text(game.config.width/2, game.config.height/2+60, 'You Died!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2+110, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
+        }
         if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
             this.cameras.main.fadeOut(1000);
             this.cameras.main.once('camerafadeoutcomplete', () => {
                 this.scene.restart();
             });
+        }else if(this.youDie && Phaser.Input.Keyboard.JustDown(keyM)){
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
         }
-        /*if( this.youDie ){
-            this.gameOver = true;
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You Died!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
-        }*/
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
         }
@@ -214,19 +232,11 @@ class Level3 extends Phaser.Scene {
         }
 
         // game over settings
-        let overConfig = {
-            fontFamily: 'Bradley Hand',
-            fontSize: '25px',
-            color: '#3E5CA3',
-            align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 500
-        }
         if( this.score == 2 ){
             this.gameOver = true;
+            this.physics.pause();
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
             this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
         }
