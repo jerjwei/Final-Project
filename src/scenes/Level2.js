@@ -162,8 +162,8 @@ class Level2 extends Phaser.Scene {
         if( this.score == 1 ){
             this.gameOver = true;
             this.physics.pause();
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
             this.add.text(game.config.width/2, game.config.height/2, 'You have passed level2!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
         }

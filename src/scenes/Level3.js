@@ -53,15 +53,15 @@ class Level3 extends Phaser.Scene {
         this.candy2.setImmovable();
 
         // ci
-        this.ci_up1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.13, 'ci_2');
-        this.ci_up2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.13, 'ci_2');
-        this.ci_up3 = this.physics.add.sprite(this.sys.game.config.width*0.92, this.sys.game.config.height*0.13, 'ci_2');
+        this.ci_up1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.11, 'ci_2');
+        this.ci_up2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.11, 'ci_2');
+        this.ci_up3 = this.physics.add.sprite(this.sys.game.config.width*0.92, this.sys.game.config.height*0.11, 'ci_2');
         this.ci_up1.angle += 180;
         this.ci_up2.angle += 180;
         this.ci_up3.angle += 180;
-        this.ci_down1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.87, 'ci_2');
-        this.ci_down2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.87, 'ci_2');
-        this.ci_down3 = this.physics.add.sprite(this.sys.game.config.width*0.92, this.sys.game.config.height*0.87, 'ci_2');
+        this.ci_down1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.89, 'ci_2');
+        this.ci_down2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.89, 'ci_2');
+        this.ci_down3 = this.physics.add.sprite(this.sys.game.config.width*0.92, this.sys.game.config.height*0.89, 'ci_2');
         this.ci_up1.setImmovable();
         this.ci_up2.setImmovable();
         this.ci_up3.setImmovable();
@@ -197,6 +197,7 @@ class Level3 extends Phaser.Scene {
 
         // check key input for restart
         if( this.youDie ){
+            this.physics.pause();
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
             this.add.text(game.config.width/2, game.config.height/2+60, 'You Died!', overConfig).setOrigin(0.5);

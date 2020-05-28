@@ -53,7 +53,7 @@ class Menu extends Phaser.Scene {
         if (pointer.isDown) {
             this.sound.volume = 0.4;
             //this.sound.play('start');
-            this.scene.start("lvl1");    
+            this.scene.start("lvl3");    
             this.bgm.stop();
         }
     }   
