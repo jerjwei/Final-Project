@@ -30,6 +30,7 @@ class Level1 extends Phaser.Scene {
         this.gravityYnum = 1500;
         this.gravityXnum = 1500;
         this.anglenum = 0;
+        this.collidecheck = false;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -127,6 +128,9 @@ class Level1 extends Phaser.Scene {
     }
 
     update() {
+        // switch once until the girl collide with something
+        this.checkswitch();
+
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
 
@@ -214,14 +218,16 @@ class Level1 extends Phaser.Scene {
         }
         
         // gravity-change method
-        if( Phaser.Input.Keyboard.JustDown(keyS) ){
-            //this.arrowUp.destroy();
+        if( !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyS) ){
+            this.collidecheck = true;
             this.changeGravity();
             this.sound.play('jse');
             this.sound.volume = 0.4;
         }else{
             this.walk();
         }
+
+        
 
         // candy collect method
         if(this.physics.world.overlap(this.girl, this.candy1)){
@@ -258,5 +264,17 @@ class Level1 extends Phaser.Scene {
         candy.destroy();
         this.score += 1;
         this.scoreS.text = this.score;
+    }
+
+    checkswitch(){
+        if(this.anglenum == 0 && this.girl.body.touching.down){
+            this.collidecheck = false;
+        }else if(this.anglenum == 180 && this.girl.body.touching.up){
+            this.collidecheck = false;
+        }else if(this.anglenum == 90 && this.girl.body.touching.left){
+            this.collidecheck = false;
+        }else if(this.anglenum == 270 && this.girl.body.touching.right){
+            this.collidecheck = false;
+        }
     }
 }
