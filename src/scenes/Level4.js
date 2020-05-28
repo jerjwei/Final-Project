@@ -126,7 +126,7 @@ class Level4 extends Phaser.Scene {
 
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
             this.bgm.stop();
-            this.scene.start("lvl3");
+            this.scene.start("lvl5");
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             this.bgm.stop();

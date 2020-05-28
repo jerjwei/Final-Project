@@ -33,6 +33,7 @@ class Level5 extends Phaser.Scene {
     }
 
     create() {
+        this.scale.setGameSize(1280, 720);
         // background music
         this.bgm = this.sound.add('bgm', {config});
         this.bgm.play();
@@ -76,7 +77,7 @@ class Level5 extends Phaser.Scene {
         this.girl.setFlipX(true);
 
         // taizi
-        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.882, this.sys.game.config.height*0.15, 'taizi');
+        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.882-1, this.sys.game.config.height*0.15, 'taizi');
         this.taizi.setImmovable();
         this.physics.add.collider(this.girl, this.taizi);
 
@@ -94,7 +95,7 @@ class Level5 extends Phaser.Scene {
 
         // implement grasses and terrains
         // terrain1
-        this.terrain1 = this.physics.add.sprite(this.sys.game.config.width*0.35, this.sys.game.config.height*0.68, 'midLengthGround');
+        this.terrain1 = this.physics.add.sprite(this.sys.game.config.width*0.35, this.sys.game.config.height*0.6485, 'midLengthGround');
         this.terrain1.setImmovable();
         this.physics.add.collider(this.girl, this.terrain1);
         // terrain2
@@ -230,7 +231,7 @@ class Level5 extends Phaser.Scene {
         }
 
         // win or lose condition
-        if( this.taizi.body.touching.left ){
+        if( this.taizi.body.touching.left || this.taizi.body.touching.up || this.taizi.body.touching.down ){
             this.score++;
         }
 
