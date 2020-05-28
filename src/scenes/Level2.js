@@ -275,17 +275,19 @@ class Level2 extends Phaser.Scene {
         if(this.anglenum >= 360){
             this.anglenum -= 360;
         }
-        this.girl.setRotation(this.anglenum);  // use matter instead of physics rotate.
+        this.girl.angle = this.anglenum;
         if(this.anglenum == 0){
             this.girl.setGravityX(0);
             this.girl.setGravityY(this.gravityYnum);
         }else if(this.anglenum == 90){
+            this.girl.body.setSize(73,50);
             this.girl.setGravityY(0);
             this.girl.setGravityX(-this.gravityXnum);
         }else if(this.anglenum == 180){
             this.girl.setGravityX(0);
             this.girl.setGravityY(-this.gravityYnum);
         }else if(this.anglenum == 270){
+            this.girl.body.setSize(73,50);
             this.girl.setGravityY(0);
             this.girl.setGravityX(this.gravityXnum);
         }
