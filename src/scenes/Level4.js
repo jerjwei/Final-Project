@@ -67,9 +67,6 @@ class Level4 extends Phaser.Scene {
         this.bottom.setImmovable();
         this.physics.add.collider(this.girl, this.bottom);
 
-
-
-
         // place the borders
         // down border
         this.borderdown = this.physics.add.sprite(720*0.5, 1280-33, 'border_right');
@@ -152,7 +149,7 @@ class Level4 extends Phaser.Scene {
             },
             fixedWidth: 500
         }
-        if( this.score == 2 ){
+        if( this.score == 1 ){
             this.gameOver = true;
             this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfigconfig).setOrigin(0.5);
             this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [M] for Menu', overConfigconfig).setOrigin(0.5);
