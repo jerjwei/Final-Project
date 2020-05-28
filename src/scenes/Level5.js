@@ -24,7 +24,8 @@ class Level5 extends Phaser.Scene {
         this.load.image('grassL', './assets/lvl5_terrain/level5_shortRight.png');
         this.load.image('door', './assets/lvl2_sprites/door.png');
         this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
-        this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
+        this.load.image('girl', './assets/player.png');
+        //this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
         this.load.audio('bgm', './assets/bgm.mp3');        
@@ -62,17 +63,17 @@ class Level5 extends Phaser.Scene {
         this.youDie = false;
 
         // define our objects
-        // girl
-        this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
-        this.girl.setCollideWorldBounds(true);
-        this.girl.setGravityY(this.gravityYnum);
-        this.girl.setFlipX(true);
-
         // door
         this.door = this.physics.add.sprite(this.sys.game.config.width*0.84, this.sys.game.config.height*0.15, 'door');
         this.door.angle += 270;
         this.door.scale = 0.8;
         this.door.setImmovable();
+
+        // girl
+        this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
+        this.girl.setCollideWorldBounds(true);
+        this.girl.setGravityY(this.gravityYnum);
+        this.girl.setFlipX(true);
 
         // taizi
         this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.882, this.sys.game.config.height*0.15, 'taizi');
@@ -85,7 +86,7 @@ class Level5 extends Phaser.Scene {
 
         // ci
         // ci_1
-        this.ci_1 = this.physics.add.sprite(this.sys.game.config.width*0.32, this.sys.game.config.height*0.133, 'ci_3');
+        this.ci_1 = this.physics.add.sprite(this.sys.game.config.width*0.32, this.sys.game.config.height*0.13, 'ci_3');
         this.ci_1.displayHeight=this.ci_1.height*1.1
         this.ci_1.angle+=180;
         this.ci_1.setImmovable();
@@ -350,12 +351,14 @@ class Level5 extends Phaser.Scene {
             this.girl.setGravityX(0);
             this.girl.setGravityY(this.gravityYnum);
         }else if(this.anglenum == 90){
+            this.girl.body.setSize(73,50);
             this.girl.setGravityY(0);
             this.girl.setGravityX(-this.gravityXnum);
         }else if(this.anglenum == 180){
             this.girl.setGravityX(0);
             this.girl.setGravityY(-this.gravityYnum);
         }else if(this.anglenum == 270){
+            this.girl.body.setSize(73,50);
             this.girl.setGravityY(0);
             this.girl.setGravityX(this.gravityXnum);
         }
