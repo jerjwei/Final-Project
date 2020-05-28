@@ -14,8 +14,7 @@ let config = {
             debug: false
         }
     },
-    scene: [ Menu, Level1, Level2, Level3 ]
-
+    scene: [ Level6, Menu, Level1, Level2, Level3, Level5 ]
 }
 
 // main game object

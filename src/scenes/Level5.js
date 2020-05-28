@@ -1,6 +1,6 @@
-class Level2 extends Phaser.Scene {
+class Level5 extends Phaser.Scene {
     constructor() {
-        super("lvl2");
+        super("lvl5");
     }
 
     preload() {
@@ -8,16 +8,21 @@ class Level2 extends Phaser.Scene {
         this.load.image('border_up', './assets/border_up.png');
         this.load.image('border_left', './assets/border_left.png');
         this.load.image('border_right', './assets/border_right.png');
+        this.load.image('candy', './assets/candy.png');
+        this.load.image('ci_2', './assets/lvl3_sprites/ci_2.png');
+        this.load.image('ci_3', './assets/lvl4_sprites/ci_3.png');
+        this.load.image('plat', './assets/lvl1_terrain/ground_short.png');
         this.load.image('xian', './assets/lvl2_sprites/xian.png');
         this.load.image('spider', './assets/spider.png');
-        this.load.image('candy', './assets/candy.png');
-        this.load.image('door', './assets/lvl2_sprites/door.png');
-        this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
+        this.load.image('longPlain', './assets/lvl4_sprites/level4_upper.png');
+        this.load.image('midPlain', './assets/lvl4_sprites/level4_middle.png');
+        this.load.image('mid', './assets/lvl4_sprites/level4_middleUpper.png');
+        this.load.image('bottom', './assets/lvl4_sprites/level4_bottomGround.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
+        this.load.audio('bgm', './assets/bgm.mp3');        
         this.load.audio('jse', './assets/jumpsoundeffect.mp3');
-        this.load.audio('bgm', './assets/bgm.mp3');
     }
 
     create() {
@@ -37,38 +42,64 @@ class Level2 extends Phaser.Scene {
         this.anglenum = 0;
 
         // define keyboard keys
+        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+    
+        // game over flag
+        this.gameOver = false;
+        this.youDie = false;
 
-        // door
-        this.door = this.physics.add.sprite(this.sys.game.config.width*0.917, this.sys.game.config.height*0.2, 'door');
-        this.door.setImmovable();
-        this.door.angle += 270;
-        this.door.scale = 0.7;
-
+        // define our objects
         // girl
         this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
         this.girl.setCollideWorldBounds(true);
         this.girl.setGravityY(this.gravityYnum);
         this.girl.setFlipX(true);
 
-        // taizi
-        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.94, this.sys.game.config.height*0.2, 'taizi');
-        this.taizi.setImmovable();
-        this.physics.add.collider(this.girl, this.taizi);
+        // candy
+        this.candy1 = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.4, 'candy');
+        this.candy1.setImmovable();
 
         // xian
-        this.xian = this.physics.add.sprite(this.sys.game.config.width/3, this.sys.game.config.height*0.2, 'xian');
+        this.xian = this.physics.add.sprite(this.sys.game.config.width*0.16, this.sys.game.config.height*0.1, 'xian');
         this.xian.setImmovable();
 
+        // ci
+        // ci_1
+        this.ci_1 = this.physics.add.sprite(this.sys.game.config.width*0.32, this.sys.game.config.height*0.133, 'ci_3');
+        this.ci_2 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.5, 'ci_3');
+        this.ci_3 = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.5, 'ci_3');
+        this.ci_1.displayHeight=this.ci_1.height*1.1
+        this.ci_1.angle+=180;
+        this.ci_2.angle+=180;
+        this.ci_3.angle+=180;
+        this.ci_1.setImmovable();
+        this.physics.add.collider(this.girl, this.ci_1);
+
+        // implement terrains
+        // terrain1
+        this.terrain1 = this.physics.add.sprite(this.sys.game.config.width*0.14, this.sys.game.config.height*0.12, 'mid')
+        this.terrain1.angle+=180;
+        this.terrain1.displayWidth = this.terrain1.width*1.3;
+        this.terrain1.displayHeight = this.terrain1.height*1.3;
+        this.terrain1.setImmovable();
+        this.physics.add.collider(this.girl, this.terrain1);
+        // terrain2
+        this.terrain2 = this.physics.add.sprite(this.sys.game.config.width*0.36, this.sys.game.config.height*0.75, 'longPlain')
+        this.terrain2.angle+=90;
+        //this.terrain2.displayWidth = this.terrain2.width*0.8;
+        this.terrain2.setImmovable();
+        this.physics.add.collider(this.girl, this.terrain2);
+
         // spider
-        this.spider = this.physics.add.sprite(this.sys.game.config.width/3, this.sys.game.config.height*0.4, 'spider');
+        this.spider = this.physics.add.sprite(this.sys.game.config.width*0.16, this.sys.game.config.height*0.3, 'spider');
+        this.spider.angle+=180;
         this.spider.setImmovable();
 
         // place the borders
@@ -77,7 +108,7 @@ class Level2 extends Phaser.Scene {
         this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
         this.borderdown.setImmovable(); 
         
-        // right border
+        //right border
         this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
         this.borderright.displayHeight = this.sys.game.config.height * 1.1;
         this.borderright.setImmovable();
@@ -87,14 +118,12 @@ class Level2 extends Phaser.Scene {
         this.borderup.displayWidth = this.sys.game.config.width * 1.1;
         this.borderup.setImmovable();
 
-        // left border
+        //left border
         this.borderleft = this.physics.add.sprite(32, this.sys.game.config.height/2, 'border_left');
         this.borderleft.displayHeight = this.sys.game.config.height * 1.1;
         this.borderleft.setImmovable();
 
         // add the colliders
-        this.physics.add.collider(this.girl, this.level1_upperGround);
-        this.physics.add.collider(this.girl, this.level1_bottomGround);
         this.physics.add.collider(this.girl, this.borderup);
         this.physics.add.collider(this.girl, this.borderdown);
         this.physics.add.collider(this.girl, this.borderleft);
@@ -128,7 +157,7 @@ class Level2 extends Phaser.Scene {
         this.scoreS = this.add.text(70, 25, this.score, scoreConfig);
         scoreConfig.fontSize = '20px';
         scoreConfig.fixedWidth = 300;
-        this.restart = this.add.text(120, 40, '[R] to restart lvl2', scoreConfig);
+        this.restart = this.add.text(120, 40, '[R] to restart lvl5', scoreConfig);
     }
 
     update() {
@@ -142,7 +171,7 @@ class Level2 extends Phaser.Scene {
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
             this.bgm.stop();
-            this.scene.start("lvl3");
+            this.scene.start("lvl6");
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             this.bgm.stop();
@@ -164,11 +193,7 @@ class Level2 extends Phaser.Scene {
         if( this.score == 1 ){
             this.gameOver = true;
             this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
-        }
-
-        if( this.taizi.body.touching.left ){
-            this.score++;
+            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [N] to Level6 or [M] for Menu', overConfig).setOrigin(0.5);
         }
             
         // move methods 
@@ -238,7 +263,8 @@ class Level2 extends Phaser.Scene {
 
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider)){
-            this.rotate(this.spider);
+            //this.rotate(this.spider);
+
         }
 
         // candy collect method
@@ -307,17 +333,4 @@ class Level2 extends Phaser.Scene {
         this.score += 1;
         this.scoreS.text = this.score;
     }
-
-    /*transfer(flower1,flower2, x, y){
-        flower1.destroy();
-        flower2.destroy();
-        this.girl.setPosition(x, y);
-        if(x == this.sys.game.config.width*0.35){
-            this.girl.setFlipY(false);
-        }else{
-            this.girl.setFlipY(true);
-        }
-        this.gravityYnum = 0 - this.gravityYnum;
-        this.girl.setGravityY(this.gravityYnum);      
-    }*/
 }
