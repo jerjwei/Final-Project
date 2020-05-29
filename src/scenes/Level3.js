@@ -12,6 +12,7 @@ class Level3 extends Phaser.Scene {
         this.load.image('candy', './assets/candy.png');
         this.load.image('ci_2', './assets/lvl3_sprites/ci_2.png');
         this.load.image('plat', './assets/lvl1_terrain/ground_short.png');
+        this.load.image('gameover', './assets/game over.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -147,6 +148,11 @@ class Level3 extends Phaser.Scene {
         this.physics.add.collider(this.girl, this.borderleft);
         this.physics.add.collider(this.girl, this.borderright);
 
+        // game over image
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        //this.gameoverImage.setVisible(false);
+        this.gameoverImage.alpha = 0;
+
         // animations
         // walk animation
         /*this.anims.create({
@@ -193,15 +199,15 @@ class Level3 extends Phaser.Scene {
 
         // text configuration setting
         let overConfig = {
-            fontFamily: 'Bradley Hand',
+            fontFamily: 'Courier',
             fontSize: '25px',
-            color: '#3E5CA3',
-            align: 'right',
+            color: '#FFF',
+            align: 'center',
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            fixedWidth: 500
+            fixedWidth: 600
         }
 
         // check key input for restart
@@ -209,8 +215,12 @@ class Level3 extends Phaser.Scene {
             this.physics.pause();
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width/2, game.config.height/2+60, 'You Died!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2+110, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
+            this.gameoverImage.alpha += .01;
+            if(this.gameoverImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
+            }
         }
         if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
             this.cameras.main.fadeOut(1000);
@@ -247,8 +257,8 @@ class Level3 extends Phaser.Scene {
             this.physics.pause();
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [N] to level4 or [M] for Menu', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width*2/3, game.config.height*3/4-50, 'You have got all three candies!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width*2/3, game.config.height*3/4, 'Press [N] to level4 or [M] for Menu', overConfig).setOrigin(0.5);
         }
 
         // move methods 
