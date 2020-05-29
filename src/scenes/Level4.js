@@ -138,16 +138,16 @@ class Level4 extends Phaser.Scene {
         }
 
         // game over settings
-        let overConfigconfig = {
-            fontFamily: 'Bradley Hand',
+        let overConfig = {
+            fontFamily: 'Courier',
             fontSize: '25px',
-            color: '#3E5CA3',
-            align: 'right',
+            color: '#FFF',
+            align: 'center',
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            fixedWidth: 500
+            fixedWidth: 600
         }
         if( this.score == 1 ){
             this.gameOver = true;
