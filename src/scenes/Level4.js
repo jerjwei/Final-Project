@@ -29,7 +29,9 @@ class Level4 extends Phaser.Scene {
         this.DRAG = 500;
         this.score = 0;
         this.gravityYnum = 2000;
+        this.gravityXnum = 2000;
         this.anglenum = 0;
+        this.collidecheck = false;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -116,6 +118,9 @@ class Level4 extends Phaser.Scene {
     }
 
     update() {
+        // switch once until the girl collide with something
+        this.checkswitch();
+
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
@@ -222,8 +227,8 @@ class Level4 extends Phaser.Scene {
         }
         
         // gravity-change method
-        if( Phaser.Input.Keyboard.JustDown(keyS) ){
-            //this.arrowUp.destroy();
+        if(  !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyS) ){
+            this.collidecheck = true;
             this.changeGravity();
             this.sound.play('jse');
             this.sound.volume = 0.4;
@@ -276,5 +281,17 @@ class Level4 extends Phaser.Scene {
 
     walk(){
         //this.girl.anims.play('walking', true);
+    }
+
+    checkswitch(){
+        if(this.anglenum == 0 && this.girl.body.touching.down){
+            this.collidecheck = false;
+        }else if(this.anglenum == 180 && this.girl.body.touching.up){
+            this.collidecheck = false;
+        }else if(this.anglenum == 90 && this.girl.body.touching.left){
+            this.collidecheck = false;
+        }else if(this.anglenum == 270 && this.girl.body.touching.right){
+            this.collidecheck = false;
+        }
     }
 }
