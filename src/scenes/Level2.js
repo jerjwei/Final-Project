@@ -19,7 +19,6 @@ class Level2 extends Phaser.Scene {
 
         // preload.music
         this.load.audio('jse', './assets/jumpsoundeffect.mp3');
-        this.load.audio('bgm', './assets/bgm.mp3');
     }
 
     create() {

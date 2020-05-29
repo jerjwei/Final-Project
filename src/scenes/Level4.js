@@ -20,7 +20,6 @@ class Level4 extends Phaser.Scene {
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
-        this.load.audio('playscenebackground', './assets/bgm.mp3');
         this.load.audio('jse', './assets/jumpsoundeffect.mp3');
     }
 
@@ -41,12 +40,6 @@ class Level4 extends Phaser.Scene {
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
-    
-        // background music
-        this.bgm = this.sound.add('playscenebackground', {config});
-        this.bgm.play();
-        this.bgm.loop = true;
-        this.bgm.volume = 0.6;
     
         // game over flag
         this.gameOver = false;
@@ -167,6 +160,9 @@ class Level4 extends Phaser.Scene {
         }
         if( this.score == 1 ){
             this.gameOver = true;
+            this.physics.pause();
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
             this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to level5 or [M] for Menu', overConfig).setOrigin(0.5);
         }
