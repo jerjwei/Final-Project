@@ -26,7 +26,6 @@ class Level2 extends Phaser.Scene {
         // variables and settings
         this.cameras.main.backgroundColor.setTo(0,0,0);
         this.DRAG = 500;
-        this.jumpTime = 0;
         this.score = 0;
         this.gravityYnum = 2000;
         this.gravityXnum = 2000;
