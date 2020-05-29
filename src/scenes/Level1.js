@@ -1,3 +1,4 @@
+
 class Level1 extends Phaser.Scene {
     constructor() {
         super("lvl1");
@@ -70,12 +71,12 @@ class Level1 extends Phaser.Scene {
         this.level1_bottomGround.setImmovable();
 
         // place the borders
-        // down border
-        this.realB = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.95, 'real_border_down');
-        this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
-        this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
-        this.borderdown.displayHeight = this.borderdown.height * 1.5;
-        this.realB.setImmovable(); 
+       // down border
+       this.realB = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.95, 'real_border_down');
+       this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
+       this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
+       this.borderdown.displayHeight = this.borderdown.height * 1.5;
+       this.realB.setImmovable(); 
         
         // right border
         this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
