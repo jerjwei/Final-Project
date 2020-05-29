@@ -14,6 +14,7 @@ class Level2 extends Phaser.Scene {
         this.load.image('candy', './assets/candy.png');
         this.load.image('door', './assets/lvl2_sprites/door.png');
         this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
+        this.load.image('doorOpen', './assets/door_opened.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -42,22 +43,26 @@ class Level2 extends Phaser.Scene {
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
+        // taizi
+        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.94, this.sys.game.config.height*0.5, 'taizi');
+        this.taizi.setImmovable();
+
         // door
-        this.door = this.physics.add.sprite(this.sys.game.config.width*0.917, this.sys.game.config.height*0.2, 'door');
+        this.door = this.physics.add.sprite(this.sys.game.config.width*0.917, this.sys.game.config.height*0.5, 'door');
         this.door.setImmovable();
         this.door.angle += 270;
         this.door.scale = 0.7;
+        this.doorOpen = this.physics.add.sprite(this.sys.game.config.width*0.915, this.sys.game.config.height*0.505, 'doorOpen');
+        this.doorOpen.setVisible(false);
+        this.doorOpen.setImmovable();
+        this.doorOpen.angle += 270;
+        this.doorOpen.scale = 0.7;
 
         // girl
         this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
         this.girl.setCollideWorldBounds(true);
         this.girl.setGravityY(this.gravityYnum);
         this.girl.setFlipX(true);
-
-        // taizi
-        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.94, this.sys.game.config.height*0.2, 'taizi');
-        this.taizi.setImmovable();
-        this.physics.add.collider(this.girl, this.taizi);
 
         // xian
         this.xian = this.physics.add.sprite(this.sys.game.config.width/3, this.sys.game.config.height*0.2, 'xian');
@@ -170,15 +175,13 @@ class Level2 extends Phaser.Scene {
         }
         if( this.score == 1 ){
             this.gameOver = true;
+            this.door.setVisible(false);
+            this.doorOpen.setVisible(true);
             this.physics.pause();
             this.input.keyboard.removeKey('UP');
             this.input.keyboard.removeKey('DOWN');
             this.add.text(game.config.width/2, game.config.height/2, 'You have passed level2!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
-        }
-
-        if( this.taizi.body.touching.left ){
-            this.score++;
         }
             
         // move methods 
@@ -246,6 +249,12 @@ class Level2 extends Phaser.Scene {
             }
         }*/
 
+        // score method
+        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ){
+        //if(this.anglenum == 270 && this.girl.height == this.sys.game.config.height*0.5 && this.girl.body.touching.right){
+            this.score++;
+        }
+
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider)){
             this.rotate(this.spider);
@@ -280,12 +289,14 @@ class Level2 extends Phaser.Scene {
             this.girl.setGravityX(0);
             this.girl.setGravityY(this.gravityYnum);
         }else if(this.anglenum == 90){
+            this.girl.body.setSize(73,50);
             this.girl.setGravityY(0);
             this.girl.setGravityX(-this.gravityXnum);
         }else if(this.anglenum == 180){
             this.girl.setGravityX(0);
             this.girl.setGravityY(-this.gravityYnum);
         }else if(this.anglenum == 270){
+            this.girl.body.setSize(73,50);
             this.girl.setGravityY(0);
             this.girl.setGravityX(this.gravityXnum);
         }
