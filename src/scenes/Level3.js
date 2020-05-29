@@ -150,7 +150,6 @@ class Level3 extends Phaser.Scene {
 
         // game over image
         this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
-        //this.gameoverImage.setVisible(false);
         this.gameoverImage.alpha = 0;
 
         // animations

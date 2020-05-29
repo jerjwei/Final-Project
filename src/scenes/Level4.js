@@ -16,6 +16,7 @@ class Level4 extends Phaser.Scene {
         this.load.image('midPlain', './assets/lvl4_sprites/level4_middle.png');
         this.load.image('mid', './assets/lvl4_sprites/level4_middleUpper.png');
         this.load.image('bottom', './assets/lvl4_sprites/level4_bottomGround.png');
+        this.load.image('gameover', './assets/game over.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -115,26 +116,41 @@ class Level4 extends Phaser.Scene {
         scoreConfigconfig.fontSize = '20px';
         scoreConfigconfig.fixedWidth = 300;
         this.restart = this.add.text(120, 40, '[R] to restart lvl3', scoreConfigconfig);
+
+        // game over image
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        this.gameoverImage.alpha = 0;
     }
 
     update() {
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
-            this.bgm.stop();
             this.scene.restart();
         }
-
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
-            this.bgm.stop();
-            this.scene.start("lvl5");
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("lvl5");
+            });
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
-            this.bgm.stop();
-            this.scene.start("menuScene");
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
         }
         if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
-            this.bgm.stop();
-            this.scene.restart();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.restart();
+            });
+        }else if(this.youDie && Phaser.Input.Keyboard.JustDown(keyM)){
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
         }
 
         // game over settings
@@ -155,11 +171,15 @@ class Level4 extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to level5 or [M] for Menu', overConfig).setOrigin(0.5);
         }
         if( this.youDie ){
-            this.gameOver = true;
+            this.physics.pause();
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You Died!', overConfigconfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
+            this.gameoverImage.alpha += .01;
+            if(this.gameoverImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
+            }
         }
 
         // move methods 

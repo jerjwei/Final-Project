@@ -25,6 +25,7 @@ class Level5 extends Phaser.Scene {
         this.load.image('door', './assets/lvl2_sprites/door.png');
         this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
         this.load.image('girl', './assets/player.png');
+        this.load.image('gameover', './assets/game over.png');
         //this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -218,7 +219,7 @@ class Level5 extends Phaser.Scene {
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
             this.cameras.main.fadeOut(1000);
             this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.start("lvl3");
+                this.scene.start("lvl6");
             });
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {

@@ -23,6 +23,7 @@ class Level6 extends Phaser.Scene {
         this.load.image('flower', './assets/lvl6_sprites/flower_pink.png');
         this.load.image('flower90', './assets/lvl6_sprites/flower_pinkLeft.png');
         this.load.image('dundun', './assets/lvl6_sprites/level6_middle.png');
+        this.load.image('gameover', './assets/game over.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -45,7 +46,6 @@ class Level6 extends Phaser.Scene {
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
-        keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     
         // game over flag
@@ -226,9 +226,11 @@ class Level6 extends Phaser.Scene {
         this.scoreS = this.add.text(70, 25, this.score, scoreConfig);
         scoreConfig.fontSize = '20px';
         scoreConfig.fixedWidth = 300;
-        this.restart = this.add.text(120, 40, '[R] to restart lvl3', scoreConfig);
-        // instruction text
-        //this.arrowUp = this.add.text(this.sys.game.config.width / 4, 290, '↑', scoreConfig);
+        this.restart = this.add.text(120, 40, '[R] to restart lvl6', scoreConfig);
+
+        // game over image
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        this.gameoverImage.alpha = 0;
     }
 
     update() {
@@ -241,12 +243,6 @@ class Level6 extends Phaser.Scene {
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
-        }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
-            this.cameras.main.fadeOut(1000);
-            this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.start("lmenuScene");
-            });
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             game.sound.stopAll();
@@ -283,11 +279,15 @@ class Level6 extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height/2+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
         }
         if( this.youDie ){
-            this.gameOver = true;
+            this.physics.pause();
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You Died!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
+            this.gameoverImage.alpha += .01;
+            if(this.gameoverImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
+            }
         }
         if( this.taizi.body.touching.up ){
             this.score++;
