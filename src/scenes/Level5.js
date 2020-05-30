@@ -44,6 +44,7 @@ class Level5 extends Phaser.Scene {
         this.gravityXnum = 2000;
         this.anglenum = 0;
         this.collidecheck = false;
+        this.finishDelay = 0;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -75,7 +76,6 @@ class Level5 extends Phaser.Scene {
         // taizi
         this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.882-1, this.sys.game.config.height*0.15, 'taizi');
         this.taizi.setImmovable();
-        this.physics.add.collider(this.girl, this.taizi);
 
         // xian
         this.xian = this.physics.add.sprite(this.sys.game.config.width*0.16, this.sys.game.config.height*0.1, 'xian');
@@ -88,6 +88,12 @@ class Level5 extends Phaser.Scene {
         this.ci_1.angle+=180;
         this.ci_1.setImmovable();
         this.physics.add.collider(this.girl, this.ci_1);
+        // ci_left
+        this.ci_left = this.physics.add.sprite(this.sys.game.config.width*0.91, this.sys.game.config.height*0.5, 'ci_3_ver');
+        this.ci_left.displayHeight = this.ci_left.height * 1.2;
+        this.ci_left.displayWidth = this.ci_left.width * 0.82;
+        this.ci_left.setImmovable();
+        this.physics.add.collider(this.girl, this.ci_left);
 
         // implement grasses and terrains
         // terrain1
@@ -189,6 +195,10 @@ class Level5 extends Phaser.Scene {
             repeat: -1
         });
 
+        // game over image
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        this.gameoverImage.alpha = 0;
+
         // score display
         this.playerScore = 0;
         let scoreConfig = {
@@ -215,7 +225,43 @@ class Level5 extends Phaser.Scene {
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
 
+        // game over settings
+        let overConfig = {
+            fontFamily: 'Courier',
+            fontSize: '25px',
+            color: '#FFF',
+            align: 'center',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 600
+        }
+
         // check key input for restart
+        if( this.youDie ){
+            this.physics.pause();
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
+            this.gameoverImage.alpha += .01;
+            if(this.gameoverImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
+            }
+        }
+        if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.restart();
+            });
+        }else if(this.youDie && Phaser.Input.Keyboard.JustDown(keyM)){
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
+        }
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
         }
@@ -234,22 +280,13 @@ class Level5 extends Phaser.Scene {
         }
 
         // win or lose condition
-        if( this.taizi.body.touching.left || this.taizi.body.touching.up || this.taizi.body.touching.down ){
-            this.score++;
-        }
+        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) this.finishDelay+=1;
+        if( this.finishDelay>30 ) this.score++;
 
-        // game over settings
-        let overConfig = {
-            fontFamily: 'Courier',
-            fontSize: '25px',
-            color: '#FFF',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 600
-        }
+        if( this.ci_1.body.touching.down || this.ci_1.body.touching.right  
+            || this.ci_left.body.touching.left)
+            this.youDie = true;
+
         if( this.score == 1 ){
             this.gameOver = true;
             this.physics.pause();
