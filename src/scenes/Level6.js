@@ -226,7 +226,7 @@ class Level6 extends Phaser.Scene {
         this.scoreS = this.add.text(70, 25, this.score, scoreConfig);
         scoreConfig.fontSize = '20px';
         scoreConfig.fixedWidth = 300;
-        this.restart = this.add.text(120, 40, '[R] to restart lvl3', scoreConfig);
+        this.restart = this.add.text(120, 40, '[R] to restart lvl6', scoreConfig);
         // instruction text
         //this.arrowUp = this.add.text(this.sys.game.config.width / 4, 290, '↑', scoreConfig);
     }
@@ -245,7 +245,7 @@ class Level6 extends Phaser.Scene {
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
             this.cameras.main.fadeOut(1000);
             this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.start("lmenuScene");
+                this.scene.start("menuScene");
             });
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {

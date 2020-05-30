@@ -218,7 +218,7 @@ class Level5 extends Phaser.Scene {
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
             this.cameras.main.fadeOut(1000);
             this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.start("lvl3");
+                this.scene.start("lvl6");
             });
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
