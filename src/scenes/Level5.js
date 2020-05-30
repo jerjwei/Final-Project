@@ -35,6 +35,8 @@ class Level5 extends Phaser.Scene {
     create() {
         // variables and settings
         this.scale.setGameSize(1280,720);
+        this.sys.game.config.height = 720;
+        this.sys.game.config.width = 1280;
         this.cameras.main.backgroundColor.setTo(0,0,0);
         this.DRAG = 500;
         this.score = 0;

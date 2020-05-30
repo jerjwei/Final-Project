@@ -258,6 +258,12 @@ class Level6 extends Phaser.Scene {
             this.cameras.main.once('camerafadeoutcomplete', () => {
                 this.scene.start("lvl6");
             });
+        }else if (this.youDie && Phaser.Input.Keyboard.JustDown(keyM)) {
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
         }
 
         // game over settings

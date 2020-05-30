@@ -6,8 +6,8 @@ class Level4 extends Phaser.Scene {
     preload() {
         this.load.image('border_down', './assets/border_down.png');
         this.load.image('border_up', './assets/border_up.png');
-        this.load.image('border_left', './assets/border_left.png');
-        this.load.image('border_right', './assets/border_right.png');
+        this.load.image('border_left', './assets/lvl4_sprites/borderLeft4.png');
+        this.load.image('border_right', './assets/lvl4_sprites/borderRight4.png');
         this.load.image('candy', './assets/candy.png');
         this.load.image('ci_2', './assets/lvl4_sprites/ci_2.png');
         this.load.image('ci_3', './assets/lvl4_sprites/ci_3.png');
@@ -26,6 +26,8 @@ class Level4 extends Phaser.Scene {
     create() {
         // variables and settings
         this.scale.setGameSize(720, 1280);
+        this.sys.game.config.height = 1280;
+        this.sys.game.config.width = 720;
         this.DRAG = 500;
         this.score = 0;
         this.gravityYnum = 2000;
@@ -50,9 +52,8 @@ class Level4 extends Phaser.Scene {
         // define our objects
         // girl
         this.girl = this.physics.add.sprite(720*0.7, 1280*0.2, 'girl');
-        this.girl.setCollideWorldBounds(true);
         this.girl.setGravityY(this.gravityYnum);
-        this.girl.setFlipX(true);
+        //this.girl.setFlipX(true);
 
         // candy
         this.candy1 = this.physics.add.sprite(720/2, 1280*0.4, 'candy');
@@ -65,27 +66,21 @@ class Level4 extends Phaser.Scene {
 
         // place the borders
         // down border
-        this.borderdown = this.physics.add.sprite(720*0.5, 1280-33, 'border_right');
-        this.borderdown.angle+=90;
-        this.borderdown.displayHeight = 720 * 1.1;
-        this.borderdown.setImmovable(); 
+       this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
+       this.borderdown.setImmovable(); 
         
-        //right border
-        this.borderright = this.physics.add.sprite(720-32, 1280/2, 'border_up');
-        this.borderright.angle+=90;
-        this.borderright.displayWidth = 1280 * 1.1;
+        // right border
+        this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
+        this.borderright.displayHeight = this.sys.game.config.height;
         this.borderright.setImmovable();
 
         // up border
-        this.borderup = this.physics.add.sprite(720/2, 32, 'border_left');
-        this.borderup.angle+=90;
-        this.borderup.displayHeight = 720 * 1.1;
+        this.borderup = this.physics.add.sprite(this.sys.game.config.width/2, 32, 'border_up');
         this.borderup.setImmovable();
 
-        //left border
-        this.borderleft = this.physics.add.sprite(32, 1280/2, 'border_down');
-        this.borderleft.angle+=90;
-        this.borderleft.displayWidth = 1280 * 1.1;
+        // left border
+        this.borderleft = this.physics.add.sprite(32, this.sys.game.config.height/2, 'border_left');
+        this.borderleft.displayHeight = this.sys.game.config.height;
         this.borderleft.setImmovable();
 
         // add the colliders
