@@ -25,6 +25,7 @@ class Level5 extends Phaser.Scene {
         this.load.image('door', './assets/lvl2_sprites/door.png');
         this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
         this.load.image('girl', './assets/player.png');
+        this.load.image('gameover', './assets/game over.png');
         //this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -33,6 +34,7 @@ class Level5 extends Phaser.Scene {
 
     create() {
         // variables and settings
+        this.scale.setGameSize(1280,720);
         this.cameras.main.backgroundColor.setTo(0,0,0);
         this.DRAG = 500;
         this.score = 0;
@@ -248,6 +250,9 @@ class Level5 extends Phaser.Scene {
         }
         if( this.score == 1 ){
             this.gameOver = true;
+            this.physics.pause();
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
             this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level6 or [M] for Menu', overConfig).setOrigin(0.5);
         }
@@ -296,8 +301,8 @@ class Level5 extends Phaser.Scene {
         }
         
         // gravity-change method
-        if( Phaser.Input.Keyboard.JustDown(keyS) ){
-            //this.arrowUp.destroy();
+        if(  !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyS) ){
+            this.collidecheck = true;
             this.changeGravity();
             this.sound.play('jse');
             this.sound.volume = 0.4;

@@ -23,6 +23,7 @@ class Level6 extends Phaser.Scene {
         this.load.image('flower', './assets/lvl6_sprites/flower_pink.png');
         this.load.image('flower90', './assets/lvl6_sprites/flower_pinkLeft.png');
         this.load.image('dundun', './assets/lvl6_sprites/level6_middle.png');
+        this.load.image('gameover', './assets/game over.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -31,6 +32,7 @@ class Level6 extends Phaser.Scene {
 
     create() {
         // variables and settings
+        this.scale.setGameSize(1280,720);
         this.DRAG = 500;
         this.score = 0;
         this.gravityYnum = 2000;
@@ -45,7 +47,6 @@ class Level6 extends Phaser.Scene {
         keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
         keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
-        keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     
         // game over flag
@@ -70,38 +71,38 @@ class Level6 extends Phaser.Scene {
         this.physics.add.collider(this.girl, this.taizi);
 
         // xian
-        this.xian_1 = this.physics.add.sprite(this.sys.game.config.width*0.23, this.sys.game.config.height*0.07, 'xian');
+        this.xian_1 = this.physics.add.sprite(this.sys.game.config.width*0.23, this.sys.game.config.height*0.1, 'xian');
         this.xian_1.setImmovable();
-        this.xian_2 = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.2, 'xian');
+        this.xian_2 = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.23, 'xian');
         this.xian_2.setImmovable();
-        this.xian_3 = this.physics.add.sprite(this.sys.game.config.width*0.77, this.sys.game.config.height*0.07, 'xian');
+        this.xian_3 = this.physics.add.sprite(this.sys.game.config.width*0.77, this.sys.game.config.height*0.1, 'xian');
         this.xian_3.setImmovable();
         
         // spider
-        this.spider_1 = this.physics.add.sprite(this.sys.game.config.width*0.23, this.sys.game.config.height*0.24, 'spider');
+        this.spider_1 = this.physics.add.sprite(this.sys.game.config.width*0.23, this.sys.game.config.height*0.27, 'spider');
         this.spider_1.setImmovable();
         this.spider_1.angle+=180;
-        this.spider_2 = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.38, 'spider');
+        this.spider_2 = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.41, 'spider');
         this.spider_2.setImmovable();
         this.spider_2.angle+=180;
-        this.spider_3 = this.physics.add.sprite(this.sys.game.config.width*0.77, this.sys.game.config.height*0.24, 'spider');
+        this.spider_3 = this.physics.add.sprite(this.sys.game.config.width*0.77, this.sys.game.config.height*0.27, 'spider');
         this.spider_3.setImmovable();
         this.spider_3.angle+=180;
 
         // ci_up
-        this.ci_up1 = this.physics.add.sprite(this.sys.game.config.width*0.455, this.sys.game.config.height*0.1, 'ci_2');
-        this.ci_up2 = this.physics.add.sprite(this.sys.game.config.width*0.545, this.sys.game.config.height*0.1, 'ci_2');
+        this.ci_up1 = this.physics.add.sprite(this.sys.game.config.width*0.455, this.sys.game.config.height*0.09, 'ci_2');
+        this.ci_up2 = this.physics.add.sprite(this.sys.game.config.width*0.545, this.sys.game.config.height*0.09, 'ci_2');
         this.ci_up1.angle += 180;
         this.ci_up2.angle += 180;
         this.ci_up1.setImmovable();
         this.ci_up2.setImmovable();
         // ci_down
-        this.ci_down1 = this.physics.add.sprite(this.sys.game.config.width*0.36, this.sys.game.config.height*0.55, 'ci_3');
-        this.ci_down2 = this.physics.add.sprite(this.sys.game.config.width*0.64, this.sys.game.config.height*0.55, 'ci_3');
+        this.ci_down1 = this.physics.add.sprite(this.sys.game.config.width*0.36, this.sys.game.config.height*0.6, 'ci_3');
+        this.ci_down2 = this.physics.add.sprite(this.sys.game.config.width*0.64, this.sys.game.config.height*0.6, 'ci_3');
         this.ci_down1.setImmovable();
         this.ci_down2.setImmovable();
         // ci_left
-        this.ci_left = this.physics.add.sprite(this.sys.game.config.width*0.91, this.sys.game.config.height*0.41, 'ci_3_ver');
+        this.ci_left = this.physics.add.sprite(this.sys.game.config.width*0.91, this.sys.game.config.height*0.46, 'ci_3_ver');
         this.ci_left.displayHeight = this.ci_left.height * 1.1;
         this.ci_left.displayWidth = this.ci_left.width * 1.5;
         this.ci_left.setImmovable();
@@ -113,24 +114,24 @@ class Level6 extends Phaser.Scene {
         this.physics.add.collider(this.girl, this.ci_left);
 
         // flowers
-        this.flower1 = this.physics.add.sprite(this.sys.game.config.width*0.1, this.sys.game.config.height*0.38, 'flower90');
-        this.flower2 = this.physics.add.sprite(this.sys.game.config.width*0.77, this.sys.game.config.height*0.82, 'flower');
+        this.flower1 = this.physics.add.sprite(this.sys.game.config.width*0.1, this.sys.game.config.height*0.43, 'flower90');
+        this.flower2 = this.physics.add.sprite(this.sys.game.config.width*0.77, this.sys.game.config.height*0.87, 'flower');
         this.flower1.setImmovable();
         this.flower2.setImmovable();
 
         // platforms
         // up terrains
-        this.upPlain_1 = this.physics.add.sprite(this.sys.game.config.width*0.18, this.sys.game.config.height*0.05, 'sPlain');
-        this.upPlain_2 = this.physics.add.sprite(this.sys.game.config.width*0.82, this.sys.game.config.height*0.05, 'sPlain');
-        this.terrain1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.15, 'sGrass');
+        this.upPlain_1 = this.physics.add.sprite(this.sys.game.config.width*0.18, this.sys.game.config.height*0.1, 'sPlain');
+        this.upPlain_2 = this.physics.add.sprite(this.sys.game.config.width*0.82, this.sys.game.config.height*0.1, 'sPlain');
+        this.terrain1 = this.physics.add.sprite(this.sys.game.config.width*0.08, this.sys.game.config.height*0.2, 'sGrass');
         this.terrain1.displayHeight = this.terrain1.height*1.8;
-        this.terrain2 = this.physics.add.sprite(this.sys.game.config.width*0.93, this.sys.game.config.height*0.15, 'sGrass');
+        this.terrain2 = this.physics.add.sprite(this.sys.game.config.width*0.93, this.sys.game.config.height*0.2, 'sGrass');
         this.terrain2.displayHeight = this.terrain2.height*1.8;
         this.terrain1.angle += 180;
         this.terrain2.angle += 180;
         // down terrains
-        this.terrain5 = this.physics.add.sprite(this.sys.game.config.width*0-50, this.sys.game.config.height*0.75, 'lGrass');
-        this.terrain6 = this.physics.add.sprite(this.sys.game.config.width*1+50, this.sys.game.config.height*0.75, 'lGrass');
+        this.terrain5 = this.physics.add.sprite(this.sys.game.config.width*0-50, this.sys.game.config.height*0.8, 'lGrass');
+        this.terrain6 = this.physics.add.sprite(this.sys.game.config.width*1+50, this.sys.game.config.height*0.8, 'lGrass');
         this.terrain6.setFlipX(true);
         // longer plat
         this.terrain1.displayWidth *= 1.24;
@@ -140,8 +141,8 @@ class Level6 extends Phaser.Scene {
         this.terrain5.displayWidth *= 1;
         this.terrain6.displayWidth *= 1;
         // dundun
-        this.dundun1 = this.physics.add.sprite(this.sys.game.config.width*0.36, this.sys.game.config.height*0.85, 'dundun');
-        this.dundun2 = this.physics.add.sprite(this.sys.game.config.width*0.64, this.sys.game.config.height*0.85, 'dundun');
+        this.dundun1 = this.physics.add.sprite(this.sys.game.config.width*0.36, this.sys.game.config.height*0.9, 'dundun');
+        this.dundun2 = this.physics.add.sprite(this.sys.game.config.width*0.64, this.sys.game.config.height*0.9, 'dundun');
         this.dundun1.displayHeight *= 1.59;
         this.dundun2.displayHeight *= 1.59;
         // setImmovable
@@ -172,7 +173,7 @@ class Level6 extends Phaser.Scene {
         this.realB.setImmovable(); 
         
         // right border
-        this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
+        this.borderright = this.physics.add.sprite(this.sys.game.config.width-20, this.sys.game.config.height/2, 'border_right');
         this.borderright.displayHeight = this.sys.game.config.height * 1.1;
         this.borderright.setImmovable();
 
@@ -184,7 +185,7 @@ class Level6 extends Phaser.Scene {
         this.realBup.setImmovable();
 
         // left border
-        this.borderleft = this.physics.add.sprite(32, this.sys.game.config.height/2, 'border_left');
+        this.borderleft = this.physics.add.sprite(20, this.sys.game.config.height/2, 'border_left');
         this.borderleft.displayHeight = this.sys.game.config.height * 1.1;
         this.borderleft.setImmovable();
 
@@ -227,8 +228,10 @@ class Level6 extends Phaser.Scene {
         scoreConfig.fontSize = '20px';
         scoreConfig.fixedWidth = 300;
         this.restart = this.add.text(120, 40, '[R] to restart lvl6', scoreConfig);
-        // instruction text
-        //this.arrowUp = this.add.text(this.sys.game.config.width / 4, 290, '↑', scoreConfig);
+
+        // game over image
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        this.gameoverImage.alpha = 0;
     }
 
     update() {
@@ -241,12 +244,6 @@ class Level6 extends Phaser.Scene {
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
-        }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
-            this.cameras.main.fadeOut(1000);
-            this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.start("menuScene");
-            });
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
             game.sound.stopAll();
@@ -279,15 +276,22 @@ class Level6 extends Phaser.Scene {
         // win or lose condition
         if( this.score == 2 ){
             this.gameOver = true;
+            this.physics.pause();
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
             this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
         }
         if( this.youDie ){
-            this.gameOver = true;
+            this.physics.pause();
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You Died!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [R] to replay or [M] for Menu', overConfig).setOrigin(0.5);
+            this.gameoverImage.alpha += .01;
+            if(this.gameoverImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
+            }
         }
         if( this.taizi.body.touching.up ){
             this.score++;
@@ -344,8 +348,8 @@ class Level6 extends Phaser.Scene {
         }
         
         // gravity-change method
-        if( Phaser.Input.Keyboard.JustDown(keyS) ){
-            //this.arrowUp.destroy();
+        if(  !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyS) ){
+            this.collidecheck = true;
             this.changeGravity();
             this.sound.play('jse');
             this.sound.volume = 0.4;

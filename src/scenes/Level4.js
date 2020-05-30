@@ -16,10 +16,10 @@ class Level4 extends Phaser.Scene {
         this.load.image('midPlain', './assets/lvl4_sprites/level4_middle.png');
         this.load.image('mid', './assets/lvl4_sprites/level4_middleUpper.png');
         this.load.image('bottom', './assets/lvl4_sprites/level4_bottomGround.png');
+        this.load.image('gameover', './assets/game over.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
-        this.load.audio('playscenebackground', './assets/bgm.mp3');
         this.load.audio('jse', './assets/jumpsoundeffect.mp3');
     }
 
@@ -29,7 +29,9 @@ class Level4 extends Phaser.Scene {
         this.DRAG = 500;
         this.score = 0;
         this.gravityYnum = 2000;
+        this.gravityXnum = 2000;
         this.anglenum = 0;
+        this.collidecheck = false;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -40,12 +42,6 @@ class Level4 extends Phaser.Scene {
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
-    
-        // background music
-        this.bgm = this.sound.add('playscenebackground', {config});
-        this.bgm.play();
-        this.bgm.loop = true;
-        this.bgm.volume = 0.6;
     
         // game over flag
         this.gameOver = false;
@@ -115,26 +111,44 @@ class Level4 extends Phaser.Scene {
         scoreConfigconfig.fontSize = '20px';
         scoreConfigconfig.fixedWidth = 300;
         this.restart = this.add.text(120, 40, '[R] to restart lvl3', scoreConfigconfig);
+
+        // game over image
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        this.gameoverImage.alpha = 0;
     }
 
     update() {
+        // switch once until the girl collide with something
+        this.checkswitch();
+
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
-            this.bgm.stop();
             this.scene.restart();
         }
-
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
-            this.bgm.stop();
-            this.scene.start("lvl5");
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("lvl5");
+            });
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
-            this.bgm.stop();
-            this.scene.start("menuScene");
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
         }
         if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
-            this.bgm.stop();
-            this.scene.restart();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.restart();
+            });
+        }else if(this.youDie && Phaser.Input.Keyboard.JustDown(keyM)){
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
         }
 
         // game over settings
@@ -151,15 +165,22 @@ class Level4 extends Phaser.Scene {
         }
         if( this.score == 1 ){
             this.gameOver = true;
-            this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfigconfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to level5 or [M] for Menu', overConfigconfig).setOrigin(0.5);
-        }
-        if( this.youDie ){
-            this.gameOver = true;
+            this.physics.pause();
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'You Died!', overConfigconfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4+50, 'Press [R] to replay or [M] for Menu', overConfigconfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to level5 or [M] for Menu', overConfig).setOrigin(0.5);
+        }
+        if( this.youDie ){
+            this.physics.pause();
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
+            this.gameoverImage.alpha += .01;
+            if(this.gameoverImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
+            }
         }
 
         // move methods 
@@ -206,8 +227,8 @@ class Level4 extends Phaser.Scene {
         }
         
         // gravity-change method
-        if( Phaser.Input.Keyboard.JustDown(keyS) ){
-            //this.arrowUp.destroy();
+        if(  !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyS) ){
+            this.collidecheck = true;
             this.changeGravity();
             this.sound.play('jse');
             this.sound.volume = 0.4;
@@ -260,5 +281,17 @@ class Level4 extends Phaser.Scene {
 
     walk(){
         //this.girl.anims.play('walking', true);
+    }
+
+    checkswitch(){
+        if(this.anglenum == 0 && this.girl.body.touching.down){
+            this.collidecheck = false;
+        }else if(this.anglenum == 180 && this.girl.body.touching.up){
+            this.collidecheck = false;
+        }else if(this.anglenum == 90 && this.girl.body.touching.left){
+            this.collidecheck = false;
+        }else if(this.anglenum == 270 && this.girl.body.touching.right){
+            this.collidecheck = false;
+        }
     }
 }

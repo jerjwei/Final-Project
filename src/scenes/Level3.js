@@ -16,7 +16,6 @@ class Level3 extends Phaser.Scene {
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
-        this.load.audio('playscenebackground', './assets/bgm.mp3');
         this.load.audio('jse', './assets/jumpsoundeffect.mp3');
     }
 
@@ -150,7 +149,6 @@ class Level3 extends Phaser.Scene {
 
         // game over image
         this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
-        //this.gameoverImage.setVisible(false);
         this.gameoverImage.alpha = 0;
 
         // animations
