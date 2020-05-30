@@ -112,6 +112,10 @@ class Level1 extends Phaser.Scene {
             repeat: -1
         });
 
+        // game over image
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        this.gameoverImage.alpha = 0;
+
         // score display
         this.playerScore = 0;
         let scoreConfig = {
@@ -140,26 +144,7 @@ class Level1 extends Phaser.Scene {
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
 
-        // check key input for restart
-        if (Phaser.Input.Keyboard.JustDown(keyR)){
-            this.bgm.stop();
-            this.scene.restart();
-        }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
-            this.cameras.main.fadeOut(1000);
-            this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.start("lvl2");
-            });
-        }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
-            this.bgm.stop();
-            this.cameras.main.fadeOut(1000);
-            this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.start("menuScene");
-            });
-        }
-
-        // game over settings
+        // text configuration setting
         let overConfig = {
             fontFamily: 'Courier',
             fontSize: '25px',
@@ -171,6 +156,49 @@ class Level1 extends Phaser.Scene {
             },
             fixedWidth: 600
         }
+
+        // check key input for restart
+        if( this.youDie ){
+            this.physics.pause();
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
+            this.gameoverImage.alpha += .01;
+            if(this.gameoverImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
+            }
+        }
+        if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.restart();
+            });
+        }else if(this.youDie && Phaser.Input.Keyboard.JustDown(keyM)){
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
+        }
+        if (Phaser.Input.Keyboard.JustDown(keyR)){
+            this.scene.restart();
+        }
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("lvl2");
+            });
+        }
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyM)) {
+            game.sound.stopAll();
+            this.cameras.main.fadeOut(1000);
+            this.cameras.main.once('camerafadeoutcomplete', () => {
+                this.scene.start("menuScene");
+            });
+        }
+
+        // game over text
         if( this.score == 1 ){
             this.gameOver = true;
             this.physics.pause();

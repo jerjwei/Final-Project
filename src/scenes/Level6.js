@@ -67,6 +67,8 @@ class Level6 extends Phaser.Scene {
 
         // taizi
         this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.91, 'taizi');
+        this.taizi.angle+=90;
+        this.taizi.displayWidth*=0.2;
         this.taizi.setImmovable();
         this.physics.add.collider(this.girl, this.taizi);
 
@@ -378,7 +380,6 @@ class Level6 extends Phaser.Scene {
 
         // flower method -- touch flower to transfer
         if(this.physics.world.overlap(this.girl, this.flower2)){
-            console.log('1');
             this.transfer(this.flower2, this.flower1, 50, this.sys.game.config.height/2);
         }
     }

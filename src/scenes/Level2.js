@@ -43,6 +43,7 @@ class Level2 extends Phaser.Scene {
 
         // taizi
         this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.94, this.sys.game.config.height*0.5, 'taizi');
+        this.taizi.displayHeight*=0.1;
         this.taizi.setImmovable();
 
         // door
@@ -115,6 +116,10 @@ class Level2 extends Phaser.Scene {
             repeat: -1
         });
 
+        // game over image
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        this.gameoverImage.alpha = 0;
+
         // score display
         this.playerScore = 0;
         let scoreConfig = {
@@ -159,6 +164,10 @@ class Level2 extends Phaser.Scene {
             });
         }
 
+        // win or lose condition
+        // score method
+        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) this.score+=1;
+
         // game over settings
         let overConfig = {
             fontFamily: 'Courier',
@@ -181,7 +190,7 @@ class Level2 extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height/2, 'You have passed level2!', overConfig).setOrigin(0.5);
             this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
         }
-            
+        
         // move methods 
         if(this.anglenum == 0){ // down border
             if( keyLEFT.isDown ){
@@ -235,7 +244,6 @@ class Level2 extends Phaser.Scene {
             this.walk();
         }
         
-        
         // walk animation -- we don't have it now
         /*if( this.girl.flipY ){
             if( this.girl.body.touching.up ){
@@ -246,12 +254,6 @@ class Level2 extends Phaser.Scene {
                 this.walk();
             }
         }*/
-
-        // score method
-        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ){
-        //if(this.anglenum == 270 && this.girl.height == this.sys.game.config.height*0.5 && this.girl.body.touching.right){
-            this.score++;
-        }
 
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider)){
