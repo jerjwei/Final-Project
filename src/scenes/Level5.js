@@ -42,6 +42,7 @@ class Level5 extends Phaser.Scene {
         this.gravityXnum = 2000;
         this.anglenum = 0;
         this.collidecheck = false;
+        this.finishDelay = 0;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -72,9 +73,7 @@ class Level5 extends Phaser.Scene {
 
         // taizi
         this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.882-1, this.sys.game.config.height*0.15, 'taizi');
-        this.taizi.displayHeight*=0.1;
         this.taizi.setImmovable();
-        this.physics.add.collider(this.girl, this.taizi);
 
         // xian
         this.xian = this.physics.add.sprite(this.sys.game.config.width*0.16, this.sys.game.config.height*0.1, 'xian');
@@ -278,10 +277,10 @@ class Level5 extends Phaser.Scene {
             });
         }
 
-        // die condition
-        if( this.taizi.body.touching.left || this.taizi.body.touching.up || this.taizi.body.touching.down ){
-            this.score++;
-        }
+        // win or lose condition
+        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) this.finishDelay+=1;
+        if( this.finishDelay>30 ) this.score++;
+
         if( this.ci_1.body.touching.down || this.ci_1.body.touching.right  
             || this.ci_left.body.touching.left)
             this.youDie = true;

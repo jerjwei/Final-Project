@@ -39,6 +39,7 @@ class Level6 extends Phaser.Scene {
         this.gravityXnum = 2000;
         this.anglenum = 0;
         this.collidecheck = false;
+        this.finishDelay = 0;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -70,7 +71,6 @@ class Level6 extends Phaser.Scene {
         this.taizi.angle+=90;
         this.taizi.displayWidth*=0.2;
         this.taizi.setImmovable();
-        this.physics.add.collider(this.girl, this.taizi);
 
         // xian
         this.xian_1 = this.physics.add.sprite(this.sys.game.config.width*0.23, this.sys.game.config.height*0.1, 'xian');
@@ -295,9 +295,10 @@ class Level6 extends Phaser.Scene {
                 this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
             }
         }
-        if( this.taizi.body.touching.up ){
-            this.score++;
-        }
+        // open door method with delay
+        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) this.finishDelay+=1;
+        if( this.finishDelay>30 ) this.score++;
+
         if( this.ci_up1.body.touching.down || this.ci_up1.body.touching.left 
             || this.ci_up2.body.touching.down || this.ci_up2.body.touching.right 
             || this.ci_down1.body.touching.left || this.ci_down1.body.touching.up 

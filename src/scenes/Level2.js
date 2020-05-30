@@ -30,6 +30,7 @@ class Level2 extends Phaser.Scene {
         this.gravityXnum = 2000;
         this.anglenum = 0;
         this.collidecheck = false;
+        this.finishDelay = 0;
 
         // define keyboard keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -43,7 +44,7 @@ class Level2 extends Phaser.Scene {
 
         // taizi
         this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.94, this.sys.game.config.height*0.5, 'taizi');
-        this.taizi.displayHeight*=0.1;
+        this.taizi.displayHeight*=1;
         this.taizi.setImmovable();
 
         // door
@@ -166,7 +167,8 @@ class Level2 extends Phaser.Scene {
 
         // win or lose condition
         // score method
-        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) this.score+=1;
+        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) this.finishDelay+=1;
+        if( this.finishDelay>30 ) this.score++;
 
         // game over settings
         let overConfig = {
