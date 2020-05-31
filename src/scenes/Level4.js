@@ -16,8 +16,8 @@ class Level4 extends Phaser.Scene {
         this.load.image('midPlain', './assets/lvl4_sprites/level4_middle.png');
         this.load.image('mid', './assets/lvl4_sprites/level4_middleUpper.png');
         this.load.image('bottom', './assets/lvl4_sprites/level4_bottomGround.png');
-        this.load.image('gameover', './assets/lvl4_sprites/gameover90.png');
-        this.load.image('gamewin', './assets/lvl4_sprites/gamewin90.png');
+        this.load.image('gameover1', './assets/lvl4_sprites/gameover90.png');
+        this.load.image('gamewin1', './assets/lvl4_sprites/gamewin90.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -133,10 +133,10 @@ class Level4 extends Phaser.Scene {
         this.restart = this.add.text(120, 40, '[R] to restart lvl3', scoreConfigconfig);
 
         // game over image
-        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover1');
         this.gameoverImage.alpha = 0;
         // gamewin image
-        this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
+        this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin1');
         this.gamewinImage.alpha = 0;
     }
 
