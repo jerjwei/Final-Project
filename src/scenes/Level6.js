@@ -289,22 +289,6 @@ class Level6 extends Phaser.Scene {
         }
 
         // win or lose condition
-        if( this.score == 1 ){
-            this.gameOver = true;
-            this.doorOpen.setVisible(true);
-            this.physics.pause();
-            this.input.keyboard.removeKey('S');
-            this.input.keyboard.removeKey('UP');
-            this.input.keyboard.removeKey('DOWN');
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
-            this.gamewinImage.alpha += .01;
-            if(this.gamewinImage.alpha == 1){
-                overConfig.color = '#000';
-                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level6!', overConfig).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
-            }
-        }
         if( this.youDie ){
             this.physics.pause();
             this.input.keyboard.removeKey('S');
@@ -324,8 +308,23 @@ class Level6 extends Phaser.Scene {
             this.finishDelay++;
             this.scoreS.text = 1;
         }
-        if( this.finishDelay>=30 ) this.score++;
-
+        if( this.finishDelay>=30 ) {
+            this.score++;
+            this.gameOver = true;
+            this.doorOpen.setVisible(true);
+            this.physics.pause();
+            this.input.keyboard.removeKey('S');
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
+            this.gamewinImage.alpha += .01;
+            if(this.gamewinImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level6!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
+            }
+        }
         if( this.ci_up1.body.touching.down || this.ci_up1.body.touching.left 
             || this.ci_up2.body.touching.down || this.ci_up2.body.touching.right 
             || this.ci_down1.body.touching.left || this.ci_down1.body.touching.up 

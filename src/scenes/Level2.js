@@ -151,6 +151,19 @@ class Level2 extends Phaser.Scene {
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
 
+        // game over settings
+        let overConfig = {
+            fontFamily: 'Courier',
+            fontSize: '25px',
+            color: '#FFF',
+            align: 'center',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 600
+        }
+
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
@@ -175,21 +188,9 @@ class Level2 extends Phaser.Scene {
             this.finishDelay+=1;
             this.scoreS.text = 1;
         }
-        if( this.finishDelay>30 ) this.score++;
-
-        // game over settings
-        let overConfig = {
-            fontFamily: 'Courier',
-            fontSize: '25px',
-            color: '#FFF',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 600
-        }
-        if( this.score == 1 ){
+        if( this.finishDelay>30 ) {
+            this.score++;
+            this.gamewinImage.alpha += .01;
             this.gameOver = true;
             this.door.setVisible(false);
             this.doorOpen.setVisible(true);
@@ -199,7 +200,6 @@ class Level2 extends Phaser.Scene {
             this.input.keyboard.removeKey('DOWN');
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.gamewinImage.alpha += .01;
             if(this.gamewinImage.alpha == 1){
                 overConfig.color = '#000';
                 this.add.text(game.config.width/2, game.config.height/2, 'You have passed level2!', overConfig).setOrigin(0.5);

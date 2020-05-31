@@ -17,7 +17,7 @@ class Level4 extends Phaser.Scene {
         this.load.image('mid', './assets/lvl4_sprites/level4_middleUpper.png');
         this.load.image('bottom', './assets/lvl4_sprites/level4_bottomGround.png');
         this.load.image('gameover', './assets/lvl4_sprites/gameover90.png');
-        this.load.image('gamewin', './assets/gamewin.png');
+        this.load.image('gamewin', './assets/lvl4_sprites/gamewin90.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -197,8 +197,8 @@ class Level4 extends Phaser.Scene {
             this.gamewinImage.alpha += .01;
             if(this.gamewinImage.alpha == 1){
                 overConfig.color = '#000';
-                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level4!', overConfig).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level5 or [M] for Menu', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+100, 'You have passed level4!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+150, 'Press [N] to Level5 or [M] for Menu', overConfig).setOrigin(0.5);
             }
         }
         if( this.youDie ){

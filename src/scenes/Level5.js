@@ -10,7 +10,7 @@ class Level5 extends Phaser.Scene {
         this.load.image('border_right', './assets/border_right.png');
         this.load.image('real_border_down', './assets/realBorderdown.png');
         this.load.image('candy', './assets/candy.png');
-        this.load.image('ci_2', './assets/lvl5_terrain/ci_2.png');
+        this.load.image('ci_22', './assets/lvl5_terrain/ci_2.png');
         this.load.image('ci_3', './assets/lvl4_sprites/ci_3.png');
         this.load.image('ci_3_ver', './assets/lvl5_terrain/ci_390.png');
         this.load.image('plat', './assets/lvl1_terrain/ground_short.png');
@@ -94,10 +94,10 @@ class Level5 extends Phaser.Scene {
         this.ci_1.setImmovable();
         this.ci_right = this.physics.add.sprite(this.sys.game.config.width*0.9, this.sys.game.config.height*0.5, 'ci_3_ver');
         this.ci_right.setImmovable();
-        this.ci_midleft = this.physics.add.sprite(this.sys.game.config.width*0.41, this.sys.game.config.height*0.64, 'ci_2');
+        this.ci_midleft = this.physics.add.sprite(this.sys.game.config.width*0.41, this.sys.game.config.height*0.64, 'ci_22');
         this.ci_midleft.angle += 180;
         this.ci_midleft.setImmovable();
-        this.ci_midright = this.physics.add.sprite(this.sys.game.config.width*0.62, this.sys.game.config.height*0.31, 'ci_2');
+        this.ci_midright = this.physics.add.sprite(this.sys.game.config.width*0.62, this.sys.game.config.height*0.31, 'ci_22');
         this.ci_midright.setImmovable();
 
         // implement grasses and terrains
@@ -282,12 +282,8 @@ class Level5 extends Phaser.Scene {
             this.finishDelay++;
             this.scoreS.text = 1;
         }
-        if( this.finishDelay>=30 ) this.score++;
-
-        if( this.physics.world.overlap(this.girl, this.ci_1) || this.physics.world.overlap(this.girl, this.ci_right) || this.physics.world.overlap(this.girl, this.ci_midleft) || this.physics.world.overlap(this.girl, this.ci_midright) )
-            this.youDie = true;
-
-        if( this.score == 1 ){
+        if( this.finishDelay>=30 ) {
+            this.score++;
             this.gameOver = true;
             this.doorOpen.setVisible(true);
             this.physics.pause();
@@ -303,6 +299,8 @@ class Level5 extends Phaser.Scene {
                 this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level6 or [M] for Menu', overConfig).setOrigin(0.5);
             }
         }
+        if( this.physics.world.overlap(this.girl, this.ci_1) || this.physics.world.overlap(this.girl, this.ci_right) || this.physics.world.overlap(this.girl, this.ci_midleft) || this.physics.world.overlap(this.girl, this.ci_midright) )
+            this.youDie = true;
             
         // move methods 
         if(this.anglenum == 0){ // down border
