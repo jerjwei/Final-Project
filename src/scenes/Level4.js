@@ -67,7 +67,7 @@ class Level4 extends Phaser.Scene {
         // place the borders
         // down border
         this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
-        this.borderdown.setImmovable(); 
+        this.borderdown.setImmovable();
         
         // right border
         this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
