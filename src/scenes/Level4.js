@@ -16,7 +16,8 @@ class Level4 extends Phaser.Scene {
         this.load.image('midPlain', './assets/lvl4_sprites/level4_middle.png');
         this.load.image('mid', './assets/lvl4_sprites/level4_middleUpper.png');
         this.load.image('bottom', './assets/lvl4_sprites/level4_bottomGround.png');
-        this.load.image('gameover', './assets/game over.png');
+        this.load.image('gameover', './assets/lvl4_sprites/gameover90.png');
+        this.load.image('gamewin', './assets/lvl4_sprites/gamewin90.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -51,38 +52,62 @@ class Level4 extends Phaser.Scene {
 
         // define our objects
         // girl
-        this.girl = this.physics.add.sprite(720*0.7, 1280*0.2, 'girl');
+        this.girl = this.physics.add.sprite(this.sys.game.config.width*0.15, this.sys.game.config.height*0.7, 'girl');
         this.girl.setGravityY(this.gravityYnum);
         //this.girl.setFlipX(true);
 
         // candy
-        this.candy1 = this.physics.add.sprite(720/2, 1280*0.4, 'candy');
+        this.candy1 = this.physics.add.sprite(this.sys.game.config.width*0.83, this.sys.game.config.height*0.12, 'candy');
         this.candy1.setImmovable();
 
         // implement terrains
-        this.bottom = this.physics.add.sprite(200, 1280*0.9, 'bottom');
+        // bottom
+        this.bottom = this.physics.add.sprite(200, this.sys.game.config.height*0.9, 'bottom');
         this.bottom.setImmovable();
         this.physics.add.collider(this.girl, this.bottom);
+        // upper*2
+        this.up1 = this.physics.add.sprite(this.sys.game.config.width*0.7, this.sys.game.config.height*0.2, 'upPlain');
+        this.up1.setImmovable();
+        this.physics.add.collider(this.girl, this.up1);
+        this.up2 = this.physics.add.sprite(this.sys.game.config.width*0.49, this.sys.game.config.height*0.268, 'mid');
+        this.up2.angle += 180;
+        this.up2.setImmovable();
+        this.physics.add.collider(this.girl, this.up2);
+        // middle*2
+        this.mid1 = this.physics.add.sprite(this.sys.game.config.width*0.327, this.sys.game.config.height*0.6, 'midPlain');
+        this.mid1.setImmovable();
+        this.physics.add.collider(this.girl, this.mid1);
+        this.mid2 = this.physics.add.sprite(this.sys.game.config.width*0.49, this.sys.game.config.height*0.536, 'mid');
+        this.mid2.setImmovable();
+        this.physics.add.collider(this.girl, this.mid2);
+
+        // ci
+        this.ciDown = this.physics.add.sprite(this.sys.game.config.width*0.775, this.sys.game.config.height*0.925, 'ci_3');
+        this.ciMid = this.physics.add.sprite(this.sys.game.config.width*0.215, this.sys.game.config.height*0.536, 'ci_3');
+        this.ciUpleft = this.physics.add.sprite(this.sys.game.config.width*0.72, this.sys.game.config.height*0.268, 'ci_2');
+        this.ciUpright = this.physics.add.sprite(this.sys.game.config.width*0.87, this.sys.game.config.height*0.268, 'ci_2');
+        this.ciUpleft.angle += 180;
+        this.ciUpright.angle += 180;
+        this.ciDown.setImmovable();
+        this.ciMid.setImmovable();
+        this.ciUpleft.setImmovable();
+        this.ciUpright.setImmovable();
 
         // place the borders
         // down border
         this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
-        this.borderdown.setImmovable();
-        
+        this.borderdown.setImmovable();       
         // right border
         this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
         this.borderright.displayHeight = this.sys.game.config.height;
         this.borderright.setImmovable();
-
         // up border
         this.borderup = this.physics.add.sprite(this.sys.game.config.width/2, 32, 'border_up');
         this.borderup.setImmovable();
-
         // left border
         this.borderleft = this.physics.add.sprite(32, this.sys.game.config.height/2, 'border_left');
         this.borderleft.displayHeight = this.sys.game.config.height;
         this.borderleft.setImmovable();
-
         // add the colliders
         this.physics.add.collider(this.girl, this.borderup);
         this.physics.add.collider(this.girl, this.borderdown);
@@ -110,6 +135,9 @@ class Level4 extends Phaser.Scene {
         // game over image
         this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
         this.gameoverImage.alpha = 0;
+        // gamewin image
+        this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
+        this.gamewinImage.alpha = 0;
     }
 
     update() {
@@ -161,13 +189,23 @@ class Level4 extends Phaser.Scene {
         if( this.score == 1 ){
             this.gameOver = true;
             this.physics.pause();
+            this.input.keyboard.removeKey('S');
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to level5 or [M] for Menu', overConfig).setOrigin(0.5);
+            this.gamewinImage.alpha += .01;
+            if(this.gamewinImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2+100, 'You have passed level4!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+150, 'Press [N] to Level5 or [M] for Menu', overConfig).setOrigin(0.5);
+            }
         }
         if( this.youDie ){
             this.physics.pause();
+            this.input.keyboard.removeKey('S');
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
             this.gameoverImage.alpha += .01;
@@ -231,8 +269,8 @@ class Level4 extends Phaser.Scene {
             this.walk();
         }
 
-        /*if( this.ci_up1.body.touching.down || this.ci_up2.body.touching.down || this.ci_up3.body.touching.down || this.ci_down1.body.touching.up || this.ci_down2.body.touching.up || this.ci_down3.body.touching.up)
-            this.youDie = true;*/
+        if (this.physics.world.overlap(this.girl, this.ciDown) || this.physics.world.overlap(this.girl, this.ciMid) || this.physics.world.overlap(this.girl, this.ciUpleft) || this.physics.world.overlap(this.girl, this.ciUpright))
+            this.youDie = true;
 
         // candy collect method
         if(this.physics.world.overlap(this.girl, this.candy1)){
@@ -243,8 +281,6 @@ class Level4 extends Phaser.Scene {
         if(this.physics.world.overlap(this.girl, this.flower1)){
             this.transfer(this.flower1,this.flower2);
         }
-
-        // wrap physics object(s) .wrap(gameObject, padding)
     }
 
     changeGravity() {

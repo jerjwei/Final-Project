@@ -15,6 +15,7 @@ class Level2 extends Phaser.Scene {
         this.load.image('door', './assets/lvl2_sprites/door.png');
         this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
         this.load.image('doorOpen', './assets/door_opened.png');
+        this.load.image('gamewin', './assets/gamewin.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -24,6 +25,9 @@ class Level2 extends Phaser.Scene {
     create() {
         // variables and settings
         this.cameras.main.backgroundColor.setTo(0,0,0);
+        this.scale.setGameSize(1280,720);
+        this.sys.game.config.height = 720;
+        this.sys.game.config.width = 1280;
         this.DRAG = 500;
         this.score = 0;
         this.gravityYnum = 2000;
@@ -117,9 +121,9 @@ class Level2 extends Phaser.Scene {
             repeat: -1
         });
 
-        // game over image
-        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
-        this.gameoverImage.alpha = 0;
+        // gamewin image
+        this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
+        this.gamewinImage.alpha = 0;
 
         // score display
         this.playerScore = 0;
@@ -147,6 +151,19 @@ class Level2 extends Phaser.Scene {
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
 
+        // game over settings
+        let overConfig = {
+            fontFamily: 'Courier',
+            fontSize: '25px',
+            color: '#FFF',
+            align: 'center',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 600
+        }
+
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
@@ -167,30 +184,27 @@ class Level2 extends Phaser.Scene {
 
         // win or lose condition
         // score method
-        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) this.finishDelay+=1;
-        if( this.finishDelay>30 ) this.score++;
-
-        // game over settings
-        let overConfig = {
-            fontFamily: 'Courier',
-            fontSize: '25px',
-            color: '#FFF',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 600
+        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) {
+            this.finishDelay+=1;
+            this.scoreS.text = 1;
         }
-        if( this.score == 1 ){
+        if( this.finishDelay>30 ) {
+            this.score++;
+            this.gamewinImage.alpha += .01;
             this.gameOver = true;
             this.door.setVisible(false);
             this.doorOpen.setVisible(true);
             this.physics.pause();
+            this.input.keyboard.removeKey('S');
             this.input.keyboard.removeKey('UP');
             this.input.keyboard.removeKey('DOWN');
-            this.add.text(game.config.width/2, game.config.height/2, 'You have passed level2!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
+            if(this.gamewinImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level2!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
+            }
         }
         
         // move methods 

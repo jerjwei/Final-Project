@@ -17,6 +17,7 @@ class Level1 extends Phaser.Scene {
         this.load.image('ground_short', './assets/lvl1_terrain/ground_short.png');
         this.load.image('level1_bottomGround', './assets/lvl1_terrain/level1_bottomGround.png');
         this.load.image('level1_upperGround', './assets/lvl1_terrain/level1_upperGround.png');
+        this.load.image('gamewin', './assets/gamewin.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -27,6 +28,9 @@ class Level1 extends Phaser.Scene {
     create() {
         // variables and settings
         this.cameras.main.backgroundColor.setTo(0,0,0);
+        this.scale.setGameSize(1280,720);
+        this.sys.game.config.height = 720;
+        this.sys.game.config.width = 1280;
         this.DRAG = 500;
         this.score = 0;
         this.gravityYnum = 1500;
@@ -112,9 +116,9 @@ class Level1 extends Phaser.Scene {
             repeat: -1
         });
 
-        // game over image
-        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
-        this.gameoverImage.alpha = 0;
+        // gamewin image
+        this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
+        this.gamewinImage.alpha = 0;
 
         // score display
         this.playerScore = 0;
@@ -158,29 +162,6 @@ class Level1 extends Phaser.Scene {
         }
 
         // check key input for restart
-        if( this.youDie ){
-            this.physics.pause();
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
-            this.gameoverImage.alpha += .01;
-            if(this.gameoverImage.alpha == 1){
-                overConfig.color = '#000';
-                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
-            }
-        }
-        if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
-            this.cameras.main.fadeOut(1000);
-            this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.restart();
-            });
-        }else if(this.youDie && Phaser.Input.Keyboard.JustDown(keyM)){
-            game.sound.stopAll();
-            this.cameras.main.fadeOut(1000);
-            this.cameras.main.once('camerafadeoutcomplete', () => {
-                this.scene.start("menuScene");
-            });
-        }
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
         }
@@ -202,10 +183,17 @@ class Level1 extends Phaser.Scene {
         if( this.score == 1 ){
             this.gameOver = true;
             this.physics.pause();
+            this.input.keyboard.removeKey('S');
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width/2, game.config.height/2, 'You have got all the candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level2 or [M] for Menu', overConfig).setOrigin(0.5);
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
+            this.gamewinImage.alpha += .01;
+            if(this.gamewinImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level1!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level2 or [M] for Menu', overConfig).setOrigin(0.5);
+            }
         }
 
         // move methods 

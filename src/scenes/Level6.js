@@ -18,12 +18,14 @@ class Level6 extends Phaser.Scene {
         this.load.image('lPlain', './assets/lvl4_sprites/level4_upper.png');
         this.load.image('sGrass', './assets/lvl4_sprites/level4_middleUpper.png');
         this.load.image('lGrass', './assets/lvl4_sprites/level4_bottomGround.png');
-        this.load.image('taizi', './assets/lvl2_sprites/taizi2.png');
+        this.load.image('taizi', './assets/lvl6_sprites/taizi.png');
         this.load.image('door', './assets/lvl2_sprites/door.png');
+        this.load.image('doorOpen', './assets/door_opened.png');
         this.load.image('flower', './assets/lvl6_sprites/flower_pink.png');
         this.load.image('flower90', './assets/lvl6_sprites/flower_pinkLeft.png');
         this.load.image('dundun', './assets/lvl6_sprites/level6_middle.png');
         this.load.image('gameover', './assets/game over.png');
+        this.load.image('gamewin', './assets/gamewin.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -33,6 +35,8 @@ class Level6 extends Phaser.Scene {
     create() {
         // variables and settings
         this.scale.setGameSize(1280,720);
+        this.sys.game.config.height = 720;
+        this.sys.game.config.width = 1280;
         this.DRAG = 500;
         this.score = 0;
         this.gravityYnum = 2000;
@@ -54,10 +58,18 @@ class Level6 extends Phaser.Scene {
         this.gameOver = false;
         this.youDie = false;
 
+        // taizi
+        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.9, 'taizi');
+        this.taizi.setImmovable();
+
         // door
         this.door = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.84, 'door');
         this.door.setImmovable();
         this.door.scale = 0.8;
+        this.doorOpen = this.physics.add.sprite(this.sys.game.config.width*0.497, this.sys.game.config.height*0.836, 'doorOpen');
+        this.doorOpen.setVisible(false);
+        this.doorOpen.setImmovable();
+        this.doorOpen.scale = 0.8;
 
         // define our objects
         // girl
@@ -65,12 +77,6 @@ class Level6 extends Phaser.Scene {
         this.girl.setCollideWorldBounds(true);
         this.girl.setGravityY(this.gravityYnum);
         this.girl.setFlipX(true);
-
-        // taizi
-        this.taizi = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.91, 'taizi');
-        this.taizi.angle+=90;
-        this.taizi.displayWidth*=0.2;
-        this.taizi.setImmovable();
 
         // xian
         this.xian_1 = this.physics.add.sprite(this.sys.game.config.width*0.23, this.sys.game.config.height*0.1, 'xian');
@@ -116,8 +122,10 @@ class Level6 extends Phaser.Scene {
         this.physics.add.collider(this.girl, this.ci_left);
 
         // flowers
-        this.flower1 = this.physics.add.sprite(this.sys.game.config.width*0.1, this.sys.game.config.height*0.43, 'flower90');
-        this.flower2 = this.physics.add.sprite(this.sys.game.config.width*0.77, this.sys.game.config.height*0.87, 'flower');
+        this.flower1 = this.physics.add.sprite(this.sys.game.config.width*0.07, this.sys.game.config.height*0.4, 'flower90');
+        this.flower2 = this.physics.add.sprite(this.sys.game.config.width*0.78, this.sys.game.config.height*0.87, 'flower');
+        this.flower1.scale = 0.7;
+        this.flower2.scale = 0.7;
         this.flower1.setImmovable();
         this.flower2.setImmovable();
 
@@ -172,25 +180,21 @@ class Level6 extends Phaser.Scene {
         this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
         this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
         this.borderdown.displayHeight = this.borderdown.height * 1.5;
-        this.realB.setImmovable(); 
-        
+        this.realB.setImmovable();        
         // right border
         this.borderright = this.physics.add.sprite(this.sys.game.config.width-20, this.sys.game.config.height/2, 'border_right');
         this.borderright.displayHeight = this.sys.game.config.height * 1.1;
         this.borderright.setImmovable();
-
         // up border
         this.realBup = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.05, 'real_border_down');
         this.borderup = this.physics.add.sprite(this.sys.game.config.width/2, 36, 'border_up');
         this.borderup.displayWidth = this.sys.game.config.width * 1.1;
         this.borderup.displayHeight = this.borderup.height * 1.5;
         this.realBup.setImmovable();
-
         // left border
         this.borderleft = this.physics.add.sprite(20, this.sys.game.config.height/2, 'border_left');
         this.borderleft.displayHeight = this.sys.game.config.height * 1.1;
         this.borderleft.setImmovable();
-
         // add the colliders
         this.physics.add.collider(this.girl, this.realBup);
         this.physics.add.collider(this.girl, this.realB);
@@ -234,6 +238,9 @@ class Level6 extends Phaser.Scene {
         // game over image
         this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
         this.gameoverImage.alpha = 0;
+        // gamewin image
+        this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
+        this.gamewinImage.alpha = 0;
     }
 
     update() {
@@ -282,16 +289,11 @@ class Level6 extends Phaser.Scene {
         }
 
         // win or lose condition
-        if( this.score == 2 ){
-            this.gameOver = true;
-            this.physics.pause();
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
-        }
         if( this.youDie ){
             this.physics.pause();
+            this.input.keyboard.removeKey('S');
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
             this.gameoverImage.alpha += .01;
@@ -302,9 +304,27 @@ class Level6 extends Phaser.Scene {
             }
         }
         // open door method with delay
-        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) this.finishDelay+=1;
-        if( this.finishDelay>30 ) this.score++;
-
+        if( this.anglenum == 0 && this.physics.world.overlap(this.girl, this.taizi) ) {
+            this.finishDelay++;
+            this.scoreS.text = 1;
+        }
+        if( this.finishDelay>=30 ) {
+            this.score++;
+            this.gameOver = true;
+            this.doorOpen.setVisible(true);
+            this.physics.pause();
+            this.input.keyboard.removeKey('S');
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
+            this.input.keyboard.removeKey('LEFT');
+            this.input.keyboard.removeKey('RIGHT');
+            this.gamewinImage.alpha += .01;
+            if(this.gamewinImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level6!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
+            }
+        }
         if( this.ci_up1.body.touching.down || this.ci_up1.body.touching.left 
             || this.ci_up2.body.touching.down || this.ci_up2.body.touching.right 
             || this.ci_down1.body.touching.left || this.ci_down1.body.touching.up 
@@ -366,63 +386,43 @@ class Level6 extends Phaser.Scene {
             this.walk();
         }
 
-        // transfer while collide with flowers
-        if(this.physics.world.overlap(this.girl, this.flower1)){
-            this.transfer(this.flower1,this.flower2);
-        }
-
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider_1)){
             this.xian_1.destroy();
-            this.rotate(this.spider_1);
+            this.rotate();
+            this.spider_1.destroy();
         }
         if(this.physics.world.overlap(this.girl, this.spider_2)){
             this.xian_2.destroy();
-            this.rotate(this.spider_2);
+            this.rotate();
+            this.spider_2.destroy();
         }
         if(this.physics.world.overlap(this.girl, this.spider_3)){
             this.xian_3.destroy();
-            this.rotate(this.spider_3);
+            this.rotate();
+            this.spider_3.destroy();
         }
 
         // flower method -- touch flower to transfer
+        if(this.physics.world.overlap(this.girl, this.flower1)){
+            this.rotate();
+            this.changeGravity();
+            this.transfer(this.flower1, this.flower2, this.sys.game.config.width*0.75, this.sys.game.config.height*0.87);
+        }
         if(this.physics.world.overlap(this.girl, this.flower2)){
-            this.transfer(this.flower2, this.flower1, 50, this.sys.game.config.height/2);
+            this.rotate();
+            this.transfer(this.flower2, this.flower1, this.sys.game.config.width * 0.1, this.sys.game.config.height*0.42);
         }
     }
 
-    transfer(flower1,flower2, x, y){
+    transfer(flower1, flower2, x, y){
         flower1.destroy();
         flower2.destroy();
-        this.rotatePure();
         this.girl.setPosition(x, y);
     }
 
-    rotate(spider){
-        spider.destroy();
-        this.anglenum += 90;
-        if(this.anglenum >= 360){
-            this.anglenum -= 360;
-        }
-        this.girl.angle = this.anglenum;
-        if(this.anglenum == 0){
-            this.girl.setGravityX(0);
-            this.girl.setGravityY(this.gravityYnum);
-        }else if(this.anglenum == 90){
-            this.girl.body.setSize(73,50);
-            this.girl.setGravityY(0);
-            this.girl.setGravityX(-this.gravityXnum);
-        }else if(this.anglenum == 180){
-            this.girl.setGravityX(0);
-            this.girl.setGravityY(-this.gravityYnum);
-        }else if(this.anglenum == 270){
-            this.girl.body.setSize(73,50);
-            this.girl.setGravityY(0);
-            this.girl.setGravityX(this.gravityXnum);
-        }
-    }
-
-    rotatePure(){
+    rotate(){
+        //spider.destroy();
         this.anglenum += 90;
         if(this.anglenum >= 360){
             this.anglenum -= 360;
