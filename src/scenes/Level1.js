@@ -22,7 +22,8 @@ class Level1 extends Phaser.Scene {
 
         // preload.music
         this.load.audio('playscenebackground', './assets/bgm.mp3');
-        this.load.audio('jse', './assets/jumpsoundeffect.mp3');
+        this.load.audio('jse', './assets/changeG.wav');
+        this.load.audio('spiderSound', './assets/spiderG.wav');
     }
 
     create() {

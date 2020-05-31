@@ -29,7 +29,8 @@ class Level6 extends Phaser.Scene {
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
-        this.load.audio('jse', './assets/jumpsoundeffect.mp3');
+        this.load.audio('jse', './assets/changeG.wav');
+        this.load.audio('spiderSound', './assets/spiderG.wav');
     }
 
     create() {
@@ -388,16 +389,22 @@ class Level6 extends Phaser.Scene {
 
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider_1)){
+            this.sound.play('spiderSound');
+            this.sound.volume = 0.4;
             this.xian_1.destroy();
             this.rotate();
             this.spider_1.destroy();
         }
         if(this.physics.world.overlap(this.girl, this.spider_2)){
+            this.sound.play('spiderSound');
+            this.sound.volume = 0.4;
             this.xian_2.destroy();
             this.rotate();
             this.spider_2.destroy();
         }
         if(this.physics.world.overlap(this.girl, this.spider_3)){
+            this.sound.play('spiderSound');
+            this.sound.volume = 0.4;
             this.xian_3.destroy();
             this.rotate();
             this.spider_3.destroy();

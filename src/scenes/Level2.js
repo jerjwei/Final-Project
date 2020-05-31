@@ -19,7 +19,8 @@ class Level2 extends Phaser.Scene {
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
-        this.load.audio('jse', './assets/jumpsoundeffect.mp3');
+        this.load.audio('jse', './assets/changeG.wav');
+        this.load.audio('spiderSound', './assets/spiderG.wav');
     }
 
     create() {
@@ -273,6 +274,8 @@ class Level2 extends Phaser.Scene {
 
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider)){
+            this.sound.play('spiderSound');
+            this.sound.volume = 0.4;
             this.rotate(this.spider);
         }
 

@@ -18,6 +18,7 @@ class Level3 extends Phaser.Scene {
 
         // preload.music
         this.load.audio('jse', './assets/jumpsoundeffect.mp3');
+        this.load.audio('spiderSound', './assets/spiderG.wav');
     }
 
     create() {
@@ -325,6 +326,8 @@ class Level3 extends Phaser.Scene {
 
         // reverse while collide with spiders
         if(this.physics.world.overlap(this.girl, this.spider1)){
+            this.sound.play('spiderSound');
+            this.sound.volume = 0.4;
             this.reverse(this.spider1);
         }
 

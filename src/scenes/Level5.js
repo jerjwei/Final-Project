@@ -31,7 +31,8 @@ class Level5 extends Phaser.Scene {
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
-        this.load.audio('jse', './assets/jumpsoundeffect.mp3');
+        this.load.audio('jse', './assets/changeG.wav');
+        this.load.audio('spiderSound', './assets/spiderG.wav');
     }
 
     create() {
@@ -92,12 +93,15 @@ class Level5 extends Phaser.Scene {
         this.ci_1 = this.physics.add.sprite(this.sys.game.config.width*0.32, this.sys.game.config.height*0.13, 'ci_3');
         this.ci_1.angle+=180;
         this.ci_1.setImmovable();
-        this.ci_right = this.physics.add.sprite(this.sys.game.config.width*0.9, this.sys.game.config.height*0.5, 'ci_3_ver');
+        this.ci_right = this.physics.add.sprite(this.sys.game.config.width*0.91, this.sys.game.config.height*0.5, 'ci_3_ver');
+        this.ci_right.displayWidth *= 0.8;
         this.ci_right.setImmovable();
-        this.ci_midleft = this.physics.add.sprite(this.sys.game.config.width*0.41, this.sys.game.config.height*0.64, 'ci_22');
+        this.ci_midleft = this.physics.add.sprite(this.sys.game.config.width*0.405, this.sys.game.config.height*0.64, 'ci_22');
         this.ci_midleft.angle += 180;
+        this.ci_midleft.displayWidth *= 0.8;
         this.ci_midleft.setImmovable();
-        this.ci_midright = this.physics.add.sprite(this.sys.game.config.width*0.62, this.sys.game.config.height*0.31, 'ci_22');
+        this.ci_midright = this.physics.add.sprite(this.sys.game.config.width*0.63, this.sys.game.config.height*0.35, 'ci_22');
+        this.ci_midright.displayWidth *= 0.8;
         this.ci_midright.setImmovable();
 
         // implement grasses and terrains
@@ -132,14 +136,13 @@ class Level5 extends Phaser.Scene {
         this.grass3.setImmovable();
         this.physics.add.collider(this.girl, this.grass3);
         // grass4 middle right
-        this.grass4 = this.physics.add.sprite(this.sys.game.config.width*0.63, this.sys.game.config.height*0.05, 'grassL');
+        this.grass4 = this.physics.add.sprite(this.sys.game.config.width*0.63, this.sys.game.config.height*0.1, 'grassL');
         this.grass4.displayWidth = this.grass4.width*1.1;
         this.grass4.setImmovable();
         this.physics.add.collider(this.girl, this.grass4);
         // grass5 middle right
-        this.grass5 = this.physics.add.sprite(this.sys.game.config.width*0.63, this.sys.game.config.height*0.57, 'grassL');
+        this.grass5 = this.physics.add.sprite(this.sys.game.config.width*0.63, this.sys.game.config.height*0.585, 'grassL');
         this.grass5.displayWidth = this.grass5.width*1.1;
-        this.grass5.displayHeight = this.grass5.height*1.1;
         this.grass5.setImmovable();
         this.physics.add.collider(this.girl, this.grass5);
         // grass6 rigther most
@@ -357,8 +360,9 @@ class Level5 extends Phaser.Scene {
 
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider)){
+            this.sound.play('spiderSound');
+            this.sound.volume = 0.4;
             this.rotate(this.spider);
-
         }
 
         // candy collect method
