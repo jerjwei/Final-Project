@@ -72,6 +72,14 @@ class Level6 extends Phaser.Scene {
         this.doorOpen.scale = 0.8;
 
         // define our objects
+        // flowers
+        this.flower1 = this.physics.add.sprite(this.sys.game.config.width*0.07, this.sys.game.config.height*0.4, 'flower90');
+        this.flower2 = this.physics.add.sprite(this.sys.game.config.width*0.78, this.sys.game.config.height*0.87, 'flower');
+        this.flower1.scale = 0.7;
+        this.flower2.scale = 0.7;
+        this.flower1.setImmovable();
+        this.flower2.setImmovable();
+        
         // girl
         this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
         this.girl.setCollideWorldBounds(true);
@@ -120,14 +128,6 @@ class Level6 extends Phaser.Scene {
         this.physics.add.collider(this.girl, this.ci_down1);
         this.physics.add.collider(this.girl, this.ci_down2);
         this.physics.add.collider(this.girl, this.ci_left);
-
-        // flowers
-        this.flower1 = this.physics.add.sprite(this.sys.game.config.width*0.07, this.sys.game.config.height*0.4, 'flower90');
-        this.flower2 = this.physics.add.sprite(this.sys.game.config.width*0.78, this.sys.game.config.height*0.87, 'flower');
-        this.flower1.scale = 0.7;
-        this.flower2.scale = 0.7;
-        this.flower1.setImmovable();
-        this.flower2.setImmovable();
 
         // platforms
         // up terrains
@@ -404,12 +404,12 @@ class Level6 extends Phaser.Scene {
         }
 
         // flower method -- touch flower to transfer
-        if(this.physics.world.overlap(this.girl, this.flower1)){
+        if(this.anglenum == 90 && this.physics.world.overlap(this.girl, this.flower1)){
             this.rotate();
             this.changeGravity();
             this.transfer(this.flower1, this.flower2, this.sys.game.config.width*0.75, this.sys.game.config.height*0.87);
         }
-        if(this.physics.world.overlap(this.girl, this.flower2)){
+        if(this.anglenum == 0 && this.physics.world.overlap(this.girl, this.flower2)){
             this.rotate();
             this.transfer(this.flower2, this.flower1, this.sys.game.config.width * 0.1, this.sys.game.config.height*0.42);
         }
