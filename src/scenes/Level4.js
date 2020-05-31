@@ -23,6 +23,7 @@ class Level4 extends Phaser.Scene {
         // preload.music
         this.load.audio('jse', './assets/changeG.wav');
         this.load.audio('spiderSound', './assets/spiderG.wav');
+        this.load.audio('pass', './assets/pass.wav');
     }
 
     create() {
@@ -188,6 +189,8 @@ class Level4 extends Phaser.Scene {
             fixedWidth: 600
         }
         if( this.score == 1 ){
+            this.sound.play('pass');
+            this.sound.volume = 0.4;
             this.gameOver = true;
             this.physics.pause();
             this.input.keyboard.removeKey('S');

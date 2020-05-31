@@ -24,6 +24,7 @@ class Level1 extends Phaser.Scene {
         this.load.audio('playscenebackground', './assets/bgm.mp3');
         this.load.audio('jse', './assets/changeG.wav');
         this.load.audio('spiderSound', './assets/spiderG.wav');
+        this.load.audio('pass', './assets/pass.wav');
     }
 
     create() {
@@ -182,6 +183,8 @@ class Level1 extends Phaser.Scene {
 
         // game over text
         if( this.score == 1 ){
+            this.sound.play('pass');
+            this.sound.volume = 0.4;
             this.gameOver = true;
             this.physics.pause();
             this.input.keyboard.removeKey('S');

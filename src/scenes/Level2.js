@@ -21,6 +21,7 @@ class Level2 extends Phaser.Scene {
         // preload.music
         this.load.audio('jse', './assets/changeG.wav');
         this.load.audio('spiderSound', './assets/spiderG.wav');
+        this.load.audio('pass', './assets/pass.wav');
     }
 
     create() {
@@ -186,6 +187,8 @@ class Level2 extends Phaser.Scene {
         // win or lose condition
         // score method
         if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) {
+            this.sound.play('pass');
+            this.sound.volume = 0.4;
             this.finishDelay+=1;
             this.scoreS.text = 1;
         }
