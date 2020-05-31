@@ -37,6 +37,7 @@ class Level2 extends Phaser.Scene {
         this.anglenum = 0;
         this.collidecheck = false;
         this.finishDelay = 0;
+        this.playPassSound = false;
 
         // define keyboard keys
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -187,11 +188,16 @@ class Level2 extends Phaser.Scene {
         // win or lose condition
         // score method
         if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) {
-            this.sound.play('pass');
-            this.sound.volume = 0.4;
+            this.playPassSound = true;
             this.finishDelay+=1;
             this.scoreS.text = 1;
         }
+        // game over sound
+        if( this.playPassSound = true){
+            this.sound.play('pass');
+            this.sound.volume = 0.4;
+        }
+        
         if( this.finishDelay>30 ) {
             this.score++;
             this.gamewinImage.alpha += .01;

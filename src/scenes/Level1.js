@@ -39,6 +39,7 @@ class Level1 extends Phaser.Scene {
         this.gravityXnum = 1500;
         this.anglenum = 0;
         this.collidecheck = false;
+        this.playPassSound = false;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -183,8 +184,6 @@ class Level1 extends Phaser.Scene {
 
         // game over text
         if( this.score == 1 ){
-            this.sound.play('pass');
-            this.sound.volume = 0.4;
             this.gameOver = true;
             this.physics.pause();
             this.input.keyboard.removeKey('S');
@@ -198,6 +197,12 @@ class Level1 extends Phaser.Scene {
                 this.add.text(game.config.width/2, game.config.height/2, 'You have passed level1!', overConfig).setOrigin(0.5);
                 this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level2 or [M] for Menu', overConfig).setOrigin(0.5);
             }
+        }
+
+        // game over sound
+        if( this.playPassSound = true){
+            this.sound.play('pass');
+            this.sound.volume = 0.4;
         }
 
         // move methods 
