@@ -13,6 +13,7 @@ class Level3 extends Phaser.Scene {
         this.load.image('ci_2', './assets/lvl3_sprites/ci_2.png');
         this.load.image('plat', './assets/lvl1_terrain/ground_short.png');
         this.load.image('gameover', './assets/game over.png');
+        this.load.image('gamewin', './assets/gamewin.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -21,6 +22,9 @@ class Level3 extends Phaser.Scene {
 
     create() {
         // variables and settings
+        this.scale.setGameSize(1280,720);
+        this.sys.game.config.height = 720;
+        this.sys.game.config.width = 1280;
         this.DRAG = 500;
         this.score = 0;
         this.gravityYnum = 1500;
@@ -150,22 +154,9 @@ class Level3 extends Phaser.Scene {
         // game over image
         this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
         this.gameoverImage.alpha = 0;
-
-        // animations
-        // walk animation
-        /*this.anims.create({
-            key: 'walking',
-            frames: 'girl',
-            frameRate: 10,
-            repeat: -1
-        });
-        // jump animation
-        this.anims.create({
-            key: 'jumping',
-            frames: this.anims.generateFrameNumbers('jump', { start: 0, end: 0, first: 0}),
-            frameRate:30,
-            repeat: -1
-        });*/
+        // gamewin image
+        this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
+        this.gamewinImage.alpha = 0;
 
         // score display
         this.playerScore = 0;
@@ -184,8 +175,6 @@ class Level3 extends Phaser.Scene {
         scoreConfig.fontSize = '20px';
         scoreConfig.fixedWidth = 300;
         this.restart = this.add.text(120, 40, '[R] to restart lvl3', scoreConfig);
-        // instruction text
-        //this.arrowUp = this.add.text(this.sys.game.config.width / 4, 290, '↑', scoreConfig);
     }
 
     update() {
@@ -211,6 +200,9 @@ class Level3 extends Phaser.Scene {
         // check key input for restart
         if( this.youDie ){
             this.physics.pause();
+            this.input.keyboard.removeKey('S');
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
             this.gameoverImage.alpha += .01;
@@ -253,10 +245,17 @@ class Level3 extends Phaser.Scene {
         if( this.score == 2 ){
             this.gameOver = true;
             this.physics.pause();
+            this.input.keyboard.removeKey('S');
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width*2/3, game.config.height*3/4-50, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width*2/3, game.config.height*3/4, 'Press [N] to level4 or [M] for Menu', overConfig).setOrigin(0.5);
+            this.gamewinImage.alpha += .01;
+            if(this.gamewinImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level3!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level4 or [M] for Menu', overConfig).setOrigin(0.5);
+            }
         }
 
         // move methods 

@@ -10,7 +10,7 @@ class Level5 extends Phaser.Scene {
         this.load.image('border_right', './assets/border_right.png');
         this.load.image('real_border_down', './assets/realBorderdown.png');
         this.load.image('candy', './assets/candy.png');
-        this.load.image('ci_2', './assets/lvl3_sprites/ci_2.png');
+        this.load.image('ci_2', './assets/lvl5_terrain/ci_2.png');
         this.load.image('ci_3', './assets/lvl4_sprites/ci_3.png');
         this.load.image('ci_3_ver', './assets/lvl5_terrain/ci_390.png');
         this.load.image('plat', './assets/lvl1_terrain/ground_short.png');
@@ -23,10 +23,12 @@ class Level5 extends Phaser.Scene {
         this.load.image('grassR', './assets/lvl5_terrain/level5_shortLeft.png');
         this.load.image('grassL', './assets/lvl5_terrain/level5_shortRight.png');
         this.load.image('door', './assets/lvl2_sprites/door.png');
+        this.load.image('doorOpen', './assets/door_opened.png');
         this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
         this.load.image('girl', './assets/player.png');
         this.load.image('gameover', './assets/game over.png');
-        //this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
+        this.load.image('gamewin', './assets/gamewin.png');
+        this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
         this.load.audio('jse', './assets/jumpsoundeffect.mp3');
@@ -66,6 +68,11 @@ class Level5 extends Phaser.Scene {
         this.door.angle += 270;
         this.door.scale = 0.8;
         this.door.setImmovable();
+        this.doorOpen = this.physics.add.sprite(this.sys.game.config.width*0.838, this.sys.game.config.height*0.16, 'doorOpen');
+        this.doorOpen.setVisible(false);
+        this.doorOpen.setImmovable();
+        this.doorOpen.angle += 270;
+        this.doorOpen.scale = 0.8;
 
         // girl
         this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
@@ -82,18 +89,16 @@ class Level5 extends Phaser.Scene {
         this.xian.setImmovable();
 
         // ci
-        // ci_1
         this.ci_1 = this.physics.add.sprite(this.sys.game.config.width*0.32, this.sys.game.config.height*0.13, 'ci_3');
-        this.ci_1.displayHeight=this.ci_1.height*1.1
         this.ci_1.angle+=180;
         this.ci_1.setImmovable();
-        this.physics.add.collider(this.girl, this.ci_1);
-        // ci_left
-        this.ci_left = this.physics.add.sprite(this.sys.game.config.width*0.91, this.sys.game.config.height*0.5, 'ci_3_ver');
-        this.ci_left.displayHeight = this.ci_left.height * 1.2;
-        this.ci_left.displayWidth = this.ci_left.width * 0.82;
-        this.ci_left.setImmovable();
-        this.physics.add.collider(this.girl, this.ci_left);
+        this.ci_right = this.physics.add.sprite(this.sys.game.config.width*0.9, this.sys.game.config.height*0.5, 'ci_3_ver');
+        this.ci_right.setImmovable();
+        this.ci_midleft = this.physics.add.sprite(this.sys.game.config.width*0.41, this.sys.game.config.height*0.64, 'ci_2');
+        this.ci_midleft.angle += 180;
+        this.ci_midleft.setImmovable();
+        this.ci_midright = this.physics.add.sprite(this.sys.game.config.width*0.62, this.sys.game.config.height*0.31, 'ci_2');
+        this.ci_midright.setImmovable();
 
         // implement grasses and terrains
         // terrain1
@@ -161,22 +166,18 @@ class Level5 extends Phaser.Scene {
         this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
         this.borderdown.displayHeight = this.borderdown.height * 1.5;
         this.realB.setImmovable(); 
-        
         //right border
         this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
         this.borderright.displayHeight = this.sys.game.config.height * 1.1;
         this.borderright.setImmovable();
-
         // up border
         this.borderup = this.physics.add.sprite(this.sys.game.config.width/2, 32, 'border_up');
         this.borderup.displayWidth = this.sys.game.config.width * 1.1;
         this.borderup.setImmovable();
-
         //left border
         this.borderleft = this.physics.add.sprite(32, this.sys.game.config.height/2, 'border_left');
         this.borderleft.displayHeight = this.sys.game.config.height * 1.1;
         this.borderleft.setImmovable();
-
         // add the colliders
         this.physics.add.collider(this.girl, this.borderup);
         this.physics.add.collider(this.girl, this.realB);
@@ -186,18 +187,12 @@ class Level5 extends Phaser.Scene {
         // game over flag
         this.gameOver = false;
 
-        // animations
-        // walk animation
-        this.anims.create({
-            key: 'walking',
-            //frames: 'girl',
-            //frameRate: 10,
-            repeat: -1
-        });
-
         // game over image
         this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
         this.gameoverImage.alpha = 0;
+        // gamewin image
+        this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
+        this.gamewinImage.alpha = 0;
 
         // score display
         this.playerScore = 0;
@@ -241,8 +236,11 @@ class Level5 extends Phaser.Scene {
         // check key input for restart
         if( this.youDie ){
             this.physics.pause();
+            this.input.keyboard.removeKey('S');
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
             this.gameoverImage.alpha += .01;
             if(this.gameoverImage.alpha == 1){
                 overConfig.color = '#000';
@@ -280,20 +278,30 @@ class Level5 extends Phaser.Scene {
         }
 
         // win or lose condition
-        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) this.finishDelay+=1;
-        if( this.finishDelay>30 ) this.score++;
+        if( this.anglenum == 270 && this.physics.world.overlap(this.girl, this.taizi) ) {
+            this.finishDelay++;
+            this.scoreS.text = 1;
+        }
+        if( this.finishDelay>=30 ) this.score++;
 
-        if( this.ci_1.body.touching.down || this.ci_1.body.touching.right  
-            || this.ci_left.body.touching.left)
+        if( this.physics.world.overlap(this.girl, this.ci_1) || this.physics.world.overlap(this.girl, this.ci_right) || this.physics.world.overlap(this.girl, this.ci_midleft) || this.physics.world.overlap(this.girl, this.ci_midright) )
             this.youDie = true;
 
         if( this.score == 1 ){
             this.gameOver = true;
+            this.doorOpen.setVisible(true);
             this.physics.pause();
+            this.input.keyboard.removeKey('S');
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
-            this.add.text(game.config.width/2, game.config.height/2, 'You have got all three candies!', overConfig).setOrigin(0.5);
-            this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level6 or [M] for Menu', overConfig).setOrigin(0.5);
+            this.input.keyboard.removeKey('UP');
+            this.input.keyboard.removeKey('DOWN');
+            this.gamewinImage.alpha += .01;
+            if(this.gamewinImage.alpha == 1){
+                overConfig.color = '#000';
+                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level5!', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level6 or [M] for Menu', overConfig).setOrigin(0.5);
+            }
         }
             
         // move methods 
@@ -348,17 +356,6 @@ class Level5 extends Phaser.Scene {
         }else{
             this.walk();
         }
-        
-        // walk animation -- we don't have it now
-        /*if( this.girl.flipY ){
-            if( this.girl.body.touching.up ){
-                this.walk();
-            }
-        } else{
-            if( this.girl.body.touching.down ){
-                this.walk();
-            }
-        }*/
 
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider)){
@@ -370,13 +367,6 @@ class Level5 extends Phaser.Scene {
         if(this.physics.world.overlap(this.girl, this.candy1)){
             this.candycollect(this.candy1);
         }
-
-        // transfer while collide with flowers
-        /*if(this.physics.world.overlap(this.girl, this.flower1)){
-            this.transfer(this.flower1,this.flower3, this.sys.game.config.width*0.35, this.sys.game.config.height*0.77);
-        }else if(this.physics.world.overlap(this.girl, this.flower4)){
-            this.transfer(this.flower4,this.flower2, this.sys.game.config.width*0.65, this.sys.game.config.height*0.23);
-        }*/
     }
 
     walk(){
