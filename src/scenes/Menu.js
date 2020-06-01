@@ -50,7 +50,8 @@ class Menu extends Phaser.Scene {
         menuConfig.fontSize = '30px';
         this.add.text(centerX*3/2, centerY+textSpacer, 'Touch spider to rotate 90 degrees.', menuConfig).setOrigin(0.5);
         this.add.text(centerX*3/2, centerY+2*textSpacer, 'Touch flower to transfer.', menuConfig).setOrigin(0.5);
-        this.add.text(centerX*3/2, centerY+3*textSpacer, 'Collect all the candies!', menuConfig).setOrigin(0.5);
+        this.add.text(centerX*3/2, centerY+3*textSpacer, 'Collect all the candies', menuConfig).setOrigin(0.5);
+        this.add.text(centerX*3/2, centerY+4*textSpacer, 'Or touch the door to pass the level!', menuConfig).setOrigin(0.5);
         menuConfig.backgroundColor = '#FFFFFF';
         menuConfig.color = '#000';
         this.add.text(centerX/2, centerY+textSpacer, 'Click to start', menuConfig).setOrigin(0.5);
