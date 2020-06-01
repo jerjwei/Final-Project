@@ -186,6 +186,7 @@ class Level1 extends Phaser.Scene {
         // game over text
         if( this.score == 1 ){
             this.gameOver = true;
+            this.playPassSound += 1;
             this.physics.pause();
             this.input.keyboard.removeKey('S');
             this.input.keyboard.removeKey('LEFT');
@@ -200,12 +201,11 @@ class Level1 extends Phaser.Scene {
             }
         }
 
-        // game over sound
-        if( this.playPassSound == 5){
+        // game sound play
+        if( this.playPassSound == 1){
             this.sound.play('pass');
             this.sound.volume = 0.4;
         }
-
         // move methods 
         if(this.anglenum == 0){ // down border
             if( keyLEFT.isDown ){
@@ -259,11 +259,8 @@ class Level1 extends Phaser.Scene {
             this.walk();
         }
 
-        
-
         // candy collect method
         if(this.physics.world.overlap(this.girl, this.candy1)){
-            this.playPassSound++;
             this.candycollect(this.candy1);
             this.gameOver = true;
             this.physics.pause();

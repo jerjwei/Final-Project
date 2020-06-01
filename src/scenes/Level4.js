@@ -209,6 +209,7 @@ class Level4 extends Phaser.Scene {
             this.sound.play('pass');
             this.sound.volume = 0.4;
         }
+        
         if( this.youDie ){
             this.physics.pause();
             this.input.keyboard.removeKey('S');
