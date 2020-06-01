@@ -37,7 +37,7 @@ class Level4 extends Phaser.Scene {
         this.gravityXnum = 2000;
         this.anglenum = 0;
         this.collidecheck = false;
-        this.playPassSound = false;
+        this.playPassSound = 0;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -190,8 +190,7 @@ class Level4 extends Phaser.Scene {
             fixedWidth: 600
         }
         if( this.score == 1 ){
-            this.sound.play('pass');
-            this.playPassSound = true;
+            this.gameOver = true;
             this.physics.pause();
             this.input.keyboard.removeKey('S');
             this.input.keyboard.removeKey('UP');
@@ -206,7 +205,7 @@ class Level4 extends Phaser.Scene {
             }
         }
         // game sound play
-        if( this.playPassSound = true){
+        if( this.playPassSound == 5){
             this.sound.play('pass');
             this.sound.volume = 0.4;
         }
@@ -283,6 +282,8 @@ class Level4 extends Phaser.Scene {
 
         // candy collect method
         if(this.physics.world.overlap(this.girl, this.candy1)){
+            this.sound.play('pass');
+            this.playPassSound += 1;
             this.candycollect(this.candy1);
         }
 

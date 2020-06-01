@@ -46,7 +46,7 @@ class Level6 extends Phaser.Scene {
         this.anglenum = 0;
         this.collidecheck = false;
         this.finishDelay = 0;
-        this.playPassSound = false;
+        this.playPassSound = 1;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -308,12 +308,12 @@ class Level6 extends Phaser.Scene {
         }
         // open door method with delay
         if( this.anglenum == 0 && this.physics.world.overlap(this.girl, this.taizi) ) {
-            this.playPassSound = true;
+            this.playPassSound++;
             this.finishDelay++;
             this.scoreS.text = 1;
         }
         // game sound play
-        if( this.playPassSound = true){
+        if( this.playPassSound == 5){
             this.sound.play('pass');
             this.sound.volume = 0.4;
         }

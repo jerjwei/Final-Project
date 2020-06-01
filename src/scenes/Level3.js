@@ -32,7 +32,7 @@ class Level3 extends Phaser.Scene {
         this.gravityYnum = 1500;
         this.anglenum = 0;
         this.collidecheck = false;
-        this.playPassSound = false;
+        this.playPassSound = 0;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -246,8 +246,8 @@ class Level3 extends Phaser.Scene {
 
         // game over settings
         if( this.score == 2 ){
-            this.playPassSound = true;
             this.gameOver = true;
+            this.playPassSound += 1;
             this.physics.pause();
             this.input.keyboard.removeKey('S');
             this.input.keyboard.removeKey('UP');
@@ -262,7 +262,7 @@ class Level3 extends Phaser.Scene {
             }
         }
         // game sound play
-        if( this.playPassSound = true){
+        if( this.playPassSound == 1 ){
             this.sound.play('pass');
             this.sound.volume = 0.4;
         }
@@ -328,8 +328,6 @@ class Level3 extends Phaser.Scene {
             this.candycollect(this.candy1);
         }else if(this.physics.world.overlap(this.girl, this.candy2)){
             this.candycollect(this.candy2);
-        }else if(this.physics.world.overlap(this.girl, this.candy3)){
-            this.candycollect(this.candy3);
         }
 
         // reverse while collide with spiders
