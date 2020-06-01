@@ -32,6 +32,7 @@ class Level6 extends Phaser.Scene {
         this.load.audio('jse', './assets/changeG.wav');
         this.load.audio('spiderSound', './assets/spiderG.wav');
         this.load.audio('pass', './assets/pass.wav');
+        this.load.audio('flowerSound', './assets/flowerSound.wav');
     }
 
     create() {
@@ -420,11 +421,15 @@ class Level6 extends Phaser.Scene {
 
         // flower method -- touch flower to transfer
         if(this.anglenum == 90 && this.physics.world.overlap(this.girl, this.flower1)){
+            this.sound.play('flowerSound');
+            this.sound.volume = 0.4;
             this.rotate();
             this.changeGravity();
             this.transfer(this.flower1, this.flower2, this.sys.game.config.width*0.75, this.sys.game.config.height*0.87);
         }
         if(this.anglenum == 0 && this.physics.world.overlap(this.girl, this.flower2)){
+            this.sound.play('flowerSound');
+            this.sound.volume = 0.4;
             this.rotate();
             this.transfer(this.flower2, this.flower1, this.sys.game.config.width * 0.1, this.sys.game.config.height*0.42);
         }
