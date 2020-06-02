@@ -195,7 +195,7 @@ class Level2 extends Phaser.Scene {
         // game over sound
         if( this.playPassSound == 5){
             this.sound.play('pass');
-            this.sound.volume = 0.4;
+            this.sound.volume = 0.2;
         }
 
         if( this.finishDelay>30 ) {

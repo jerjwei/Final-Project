@@ -244,7 +244,7 @@ class Level5 extends Phaser.Scene {
         if( this.youDie && this.deathnum == 0) {
             this.deathnum += 1;
             this.sound.play('death');
-            this.sound.volume = 0.05;
+            this.sound.volume = 0.1;
         }
         if( this.youDie ){
             this.physics.pause();
@@ -298,7 +298,7 @@ class Level5 extends Phaser.Scene {
         // game sound play
         if( this.playPassSound == 5){
             this.sound.play('pass');
-            this.sound.volume = 0.4;
+            this.sound.volume = 0.2;
         }
         if( this.finishDelay>=30 ) {
             this.score++;

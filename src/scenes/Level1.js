@@ -204,7 +204,7 @@ class Level1 extends Phaser.Scene {
         // game sound play
         if( this.playPassSound == 1){
             this.sound.play('pass');
-            this.sound.volume = 0.4;
+            this.sound.volume = 0.2;
         }
         // move methods 
         if(this.anglenum == 0){ // down border
