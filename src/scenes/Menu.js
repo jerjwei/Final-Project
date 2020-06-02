@@ -62,8 +62,8 @@ class Menu extends Phaser.Scene {
 
     update() {
         if (pointer.isDown) {
-            this.sound.volume = 0.4;
-            this.sound.play('start');
+            //this.sound.volume = 0.4;
+            //this.sound.play('start');
             this.scene.start("lvl1");    
             this.bgm.stop();
         }
