@@ -24,6 +24,7 @@ class Level4 extends Phaser.Scene {
         this.load.audio('jse', './assets/changeG.wav');
         this.load.audio('spiderSound', './assets/spiderG.wav');
         this.load.audio('pass', './assets/pass.wav');
+        this.load.audio('death', './assets/death.wav');
     }
 
     create() {
@@ -38,6 +39,7 @@ class Level4 extends Phaser.Scene {
         this.anglenum = 0;
         this.collidecheck = false;
         this.playPassSound = 0;
+        this.deathnum = 0;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -209,7 +211,11 @@ class Level4 extends Phaser.Scene {
             this.sound.play('pass');
             this.sound.volume = 0.4;
         }
-        
+        if( this.youDie && this.deathnum == 0) {
+            this.deathnum += 1;
+            this.sound.play('death');
+            this.sound.volume = 0.05;
+        }
         if( this.youDie ){
             this.physics.pause();
             this.input.keyboard.removeKey('S');

@@ -33,6 +33,7 @@ class Level6 extends Phaser.Scene {
         this.load.audio('spiderSound', './assets/spiderG.wav');
         this.load.audio('pass', './assets/pass.wav');
         this.load.audio('flowerSound', './assets/flowerSound.wav');
+        this.load.audio('death', './assets/death.wav');
     }
 
     create() {
@@ -48,6 +49,7 @@ class Level6 extends Phaser.Scene {
         this.collidecheck = false;
         this.finishDelay = 0;
         this.playPassSound = 1;
+        this.deathnum = 0;
 
         // define keyboard keys
         keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
@@ -293,6 +295,11 @@ class Level6 extends Phaser.Scene {
         }
 
         // win or lose condition
+        if( this.youDie && this.deathnum == 0) {
+            this.deathnum += 1;
+            this.sound.play('death');
+            this.sound.volume = 0.05;
+        }
         if( this.youDie ){
             this.physics.pause();
             this.input.keyboard.removeKey('S');
