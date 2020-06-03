@@ -16,7 +16,7 @@ class Level7 extends Phaser.Scene {
         this.load.image('ci_3', './assets/lvl4_sprites/ci_3.png');
         this.load.image('ci_4', './assets/lvl7_sprites/ci_4.png');
         this.load.image('sPlain1', './assets/lvl7_sprites/right_wall.png');
-        this.load.image('lPlain1', './assets/lvl7_sprites/left_wall.png');
+        this.load.image('lPlain1', './assets/lvl7_sprites/Left_wall.png');
         this.load.image('sGrass1', './assets/lvl7_sprites/lv6_rightland.png');
         this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
         this.load.image('door', './assets/lvl2_sprites/door.png');
