@@ -15,9 +15,9 @@ class Level7 extends Phaser.Scene {
         this.load.image('ci_2', './assets/lvl4_sprites/ci_2.png');
         this.load.image('ci_3', './assets/lvl4_sprites/ci_3.png');
         this.load.image('ci_4', './assets/lvl7_sprites/ci_4.png');
-        this.load.image('sPlain', './assets/lvl7_sprites/right_wall.png');
-        this.load.image('lPlain', './assets/lvl7_sprites/left_wall.png');
-        this.load.image('sGrass', './assets/lvl7_sprites/lv6_rightland.png');
+        this.load.image('sPlain1', './assets/lvl7_sprites/right_wall.png');
+        this.load.image('lPlain1', './assets/lvl7_sprites/left_wall.png');
+        this.load.image('sGrass1', './assets/lvl7_sprites/lv6_rightland.png');
         this.load.image('taizi', './assets/lvl2_sprites/taizi.png');
         this.load.image('door', './assets/lvl2_sprites/door.png');
         this.load.image('doorOpen', './assets/door_opened.png');
@@ -33,6 +33,7 @@ class Level7 extends Phaser.Scene {
         this.load.audio('spiderSound', './assets/spiderG.wav');
         this.load.audio('pass', './assets/pass.wav');
         this.load.audio('flowerSound', './assets/flowerSound.wav');
+        this.load.audio('death', './assets/death.wav');
     }
 
     create(){
@@ -47,6 +48,7 @@ class Level7 extends Phaser.Scene {
         this.anglenum = 0;
         this.collidecheck = false;
         this.finishDelay = 0;
+        this.deathnum = 0;
         this.playPassSound = 1;
         this.ghostSpeed1 = 100;
         this.ghostSpeed2 = -100;
@@ -90,25 +92,25 @@ class Level7 extends Phaser.Scene {
         this.girl.setFlipX(true);
 
         // xian
-        this.xian_1 = this.physics.add.sprite(this.sys.game.config.width*0.375, this.sys.game.config.height*0.02, 'xian');
+        this.xian_1 = this.physics.add.sprite(this.sys.game.config.width*0.361, this.sys.game.config.height*0.02, 'xian');
         this.xian_1.setImmovable();
-        this.xian_2 = this.physics.add.sprite(this.sys.game.config.width*0.448, this.sys.game.config.height*0.06, 'xian');
+        this.xian_2 = this.physics.add.sprite(this.sys.game.config.width*0.434, this.sys.game.config.height*0.06, 'xian');
         this.xian_2.setImmovable();
-        this.xian_3 = this.physics.add.sprite(this.sys.game.config.width*0.521, this.sys.game.config.height*0.12, 'xian');
+        this.xian_3 = this.physics.add.sprite(this.sys.game.config.width*0.507, this.sys.game.config.height*0.12, 'xian');
         this.xian_3.setImmovable();
         
         // spider
-        this.spider_1 = this.physics.add.sprite(this.sys.game.config.width*0.375, this.sys.game.config.height*0.19, 'spider');
+        this.spider_1 = this.physics.add.sprite(this.sys.game.config.width*0.361, this.sys.game.config.height*0.19, 'spider');
         this.spider_1.setImmovable();
-        this.spider_1.scale = 0.7;
+        this.spider_1.scale = 0.6;
         this.spider_1.angle+=180;
-        this.spider_2 = this.physics.add.sprite(this.sys.game.config.width*0.448, this.sys.game.config.height*0.25, 'spider');
+        this.spider_2 = this.physics.add.sprite(this.sys.game.config.width*0.434, this.sys.game.config.height*0.25, 'spider');
         this.spider_2.setImmovable();
-        this.spider_2.scale = 0.7;
+        this.spider_2.scale = 0.6;
         this.spider_2.angle+=180;
-        this.spider_3 = this.physics.add.sprite(this.sys.game.config.width*0.521, this.sys.game.config.height*0.31, 'spider');
+        this.spider_3 = this.physics.add.sprite(this.sys.game.config.width*0.507, this.sys.game.config.height*0.31, 'spider');
         this.spider_3.setImmovable();
-        this.spider_3.scale = 0.7;
+        this.spider_3.scale = 0.6;
         this.spider_3.angle+=180;
         
         // flowers
@@ -135,10 +137,10 @@ class Level7 extends Phaser.Scene {
 
         // platforms
         // plains
-        this.lPlain = this.physics.add.sprite(this.sys.game.config.width*0.3, this.sys.game.config.height*0.5, 'lPlain');
-        this.sPlain = this.physics.add.sprite(this.sys.game.config.width*0.6, this.sys.game.config.height*0.25, 'sPlain');
-        this.grassL = this.physics.add.sprite(this.sys.game.config.width*0.675, this.sys.game.config.height*0.457, 'sGrass');
-        this.grassR = this.physics.add.sprite(this.sys.game.config.width*0.925, this.sys.game.config.height*0.457, 'sGrass');
+        this.lPlain1 = this.physics.add.sprite(this.sys.game.config.width*0.3, this.sys.game.config.height*0.5, 'lPlain1');
+        this.sPlain1 = this.physics.add.sprite(this.sys.game.config.width*0.6, this.sys.game.config.height*0.25, 'sPlain1');
+        this.grassL = this.physics.add.sprite(this.sys.game.config.width*0.675, this.sys.game.config.height*0.457, 'sGrass1');
+        this.grassR = this.physics.add.sprite(this.sys.game.config.width*0.925, this.sys.game.config.height*0.457, 'sGrass1');
         // dundun
         this.dundun1 = this.physics.add.sprite(this.sys.game.config.width*0.65, this.sys.game.config.height*0.97, 'dundun');
         this.dundun2 = this.physics.add.sprite(this.sys.game.config.width*0.95, this.sys.game.config.height*0.97, 'dundun');
@@ -147,15 +149,15 @@ class Level7 extends Phaser.Scene {
         this.dundun1.displayHeight *= 1.59;
         this.dundun2.displayHeight *= 1.59;
         // setImmovable
-        this.lPlain.setImmovable();
-        this.sPlain.setImmovable();
+        this.lPlain1.setImmovable();
+        this.sPlain1.setImmovable();
         this.grassL.setImmovable();
         this.grassR.setImmovable();
         this.dundun1.setImmovable();
         this.dundun2.setImmovable();
         // add the colliders
-        this.physics.add.collider(this.girl, this.lPlain);
-        this.physics.add.collider(this.girl, this.sPlain);
+        this.physics.add.collider(this.girl, this.lPlain1);
+        this.physics.add.collider(this.girl, this.sPlain1);
         this.physics.add.collider(this.girl, this.grassL);
         this.physics.add.collider(this.girl, this.grassR);
         this.physics.add.collider(this.girl, this.dundun1);
@@ -292,6 +294,12 @@ class Level7 extends Phaser.Scene {
         }
 
         // lose scene play
+        if( this.youDie && this.deathnum == 0) {
+            this.deathnum += 1;
+            this.sound.play('death');
+            this.sound.volume = 0.1;
+        }
+
         if( this.youDie ){
             this.physics.pause();
             this.input.keyboard.removeKey('S');
@@ -369,14 +377,14 @@ class Level7 extends Phaser.Scene {
         if(!this.youDie){
             this.ghost1.setVelocityX(this.ghostSpeed1);
             this.ghost2.setVelocityX(this.ghostSpeed2);
-            if(this.physics.world.overlap(this.ghost1, this.lPlain)){
+            if(this.physics.world.overlap(this.ghost1, this.lPlain1)){
                 this.ghost1.setVelocityX(this.ghostSpeed1*=-1);
             }else if(this.physics.world.overlap(this.ghost1, this.borderleft)){
                 this.ghost1.setVelocityX(this.ghostSpeed1*=-1);
             }else{
                 this.ghost1.setVelocityX(this.ghostSpeed1);
             }
-            if(this.physics.world.overlap(this.ghost2, this.lPlain)){
+            if(this.physics.world.overlap(this.ghost2, this.lPlain1)){
                 this.ghost2.setVelocityX(this.ghostSpeed2*=-1);
             }else if(this.physics.world.overlap(this.ghost2, this.borderleft)){
                 this.ghost2.setVelocityX(this.ghostSpeed2*=-1);
@@ -388,16 +396,16 @@ class Level7 extends Phaser.Scene {
         if(!this.youDie){
             this.ghost3.setVelocityX(this.ghostSpeed3);
             this.ghost4.setVelocityX(this.ghostSpeed4);
-            if(this.physics.world.overlap(this.ghost3, this.sPlain)){
+            if(this.physics.world.overlap(this.ghost3, this.sPlain1)){
                 this.ghost3.setVelocityX(this.ghostSpeed3*=-1);
-            }else if(this.physics.world.overlap(this.ghost3, this.lPlain)){
+            }else if(this.physics.world.overlap(this.ghost3, this.lPlain1)){
                 this.ghost3.setVelocityX(this.ghostSpeed3*=-1);
             }else{
                 this.ghost3.setVelocityX(this.ghostSpeed3);
             }
-            if(this.physics.world.overlap(this.ghost4, this.sPlain)){
+            if(this.physics.world.overlap(this.ghost4, this.sPlain1)){
                 this.ghost4.setVelocityX(this.ghostSpeed4*=-1);
-            }else if(this.physics.world.overlap(this.ghost4, this.lPlain)){
+            }else if(this.physics.world.overlap(this.ghost4, this.lPlain1)){
                 this.ghost4.setVelocityX(this.ghostSpeed4*=-1);
             }else{
                 this.ghost4.setVelocityX(this.ghostSpeed4);
@@ -408,7 +416,7 @@ class Level7 extends Phaser.Scene {
             this.ghost5.setVelocityX(this.ghostSpeed5);
             if(this.physics.world.overlap(this.ghost5, this.borderright)){
                 this.ghost5.setVelocityX(this.ghostSpeed5*=-1);
-            }else if(this.physics.world.overlap(this.ghost5, this.sPlain)){
+            }else if(this.physics.world.overlap(this.ghost5, this.sPlain1)){
                 this.ghost5.setVelocityX(this.ghostSpeed5*=-1);
             }else{
                 this.ghost5.setVelocityX(this.ghostSpeed5);
