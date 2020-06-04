@@ -18,7 +18,8 @@ class Level1 extends Phaser.Scene {
         this.load.image('level1_bottomGround', './assets/lvl1_terrain/level1_bottomGround.png');
         this.load.image('level1_upperGround', './assets/lvl1_terrain/level1_upperGround.png');
         this.load.image('gamewin', './assets/gamewin.png');
-        this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('girl', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('walk', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 4});
 
         // preload.music
         this.load.audio('playscenebackground', './assets/bgm.mp3');
@@ -78,12 +79,12 @@ class Level1 extends Phaser.Scene {
         this.level1_bottomGround.setImmovable();
 
         // place the borders
-       // down border
-       this.realB = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.95, 'real_border_down');
-       this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
-       this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
-       this.borderdown.displayHeight = this.borderdown.height * 1.5;
-       this.realB.setImmovable(); 
+        // down border
+        this.realB = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height*0.95, 'real_border_down');
+        this.borderdown = this.physics.add.sprite(this.sys.game.config.width/2, this.sys.game.config.height-36, 'border_down');
+        this.borderdown.displayWidth = this.sys.game.config.width * 1.1;
+        this.borderdown.displayHeight = this.borderdown.height * 1.5;
+        this.realB.setImmovable(); 
         
         // right border
         this.borderright = this.physics.add.sprite(this.sys.game.config.width-32, this.sys.game.config.height/2, 'border_right');
@@ -109,15 +110,6 @@ class Level1 extends Phaser.Scene {
         this.physics.add.collider(this.girl, this.realB);
         this.physics.add.collider(this.girl, this.borderleft);
         this.physics.add.collider(this.girl, this.borderright);
-        
-        // animations
-        // walk animation
-        this.anims.create({
-            key: 'walking',
-            frames: 'girl',
-            frameRate: 10,
-            repeat: -1
-        });
 
         // gamewin image
         this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
@@ -140,8 +132,15 @@ class Level1 extends Phaser.Scene {
         scoreConfig.fontSize = '20px';
         scoreConfig.fixedWidth = 300;
         this.restart = this.add.text(120, 40, '[R] to restart lvl1', scoreConfig);
-        // instruction text
-        //this.arrowUp = this.add.text(this.sys.game.config.width / 4, 290, '↑', scoreConfig);
+
+        // animations
+        // walk animation
+        this.anims.create({
+            key: 'walking',
+            frames: this.anims.generateFrameNumbers('walk', { start: 0, end: 4, first: 4}),
+            frameRate: 5,
+            repeat: -1
+        });
     }
 
     update() {
@@ -150,6 +149,9 @@ class Level1 extends Phaser.Scene {
 
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
+
+        // walking animation
+        if( !(keyLEFT.isDown || keyRIGHT.isDown || keyUP.isDown || keyDOWN.isDown) ) this.girl.anims.play('walking');
 
         // text configuration setting
         let overConfig = {
@@ -248,16 +250,14 @@ class Level1 extends Phaser.Scene {
                 this.girl.body.setDragY(this.DRAG);
             }
         }
-        
+
         // gravity-change method
         if( !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyS) ){
             this.collidecheck = true;
             this.changeGravity();
             this.sound.play('jse');
             this.sound.volume = 0.4;
-        }else{
-            this.walk();
-        }
+        }         
 
         // candy collect method
         if(this.physics.world.overlap(this.girl, this.candy1)){
@@ -286,10 +286,6 @@ class Level1 extends Phaser.Scene {
             this.girl.setGravityY(0);
             this.girl.setGravityX(this.gravityXnum);
         }
-    }
-
-    walk(){
-        //this.girl.anims.play('walking', true);
     }
 
     candycollect(candy){
