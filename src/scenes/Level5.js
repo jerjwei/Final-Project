@@ -30,7 +30,8 @@ class Level5 extends Phaser.Scene {
         this.load.image('gamewin', './assets/gamewin.png');
         this.load.image('die', './assets/die.png');
         this.load.image('pass', './assets/pass.png');
-        this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('girl', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('walk', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 4});
 
         // preload.music
         this.load.audio('jse', './assets/changeG.wav');
@@ -220,6 +221,15 @@ class Level5 extends Phaser.Scene {
         scoreConfig.fontSize = '20px';
         scoreConfig.fixedWidth = 300;
         this.restart = this.add.text(120, 40, '[R] to restart lvl5', scoreConfig);
+
+        // animations
+        // walk animation
+        this.anims.create({
+            key: 'walking',
+            frames: this.anims.generateFrameNumbers('walk', { start: 0, end: 4, first: 4}),
+            frameRate: 5,
+            repeat: -1
+        });
     }
 
     update() {
@@ -228,6 +238,9 @@ class Level5 extends Phaser.Scene {
 
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
+
+        // walking animation
+        if( !(keyLEFT.isDown || keyRIGHT.isDown || keyUP.isDown || keyDOWN.isDown) ) this.girl.anims.play('walking');
 
         // game over settings
         let overConfig = {
@@ -370,8 +383,6 @@ class Level5 extends Phaser.Scene {
             this.changeGravity();
             this.sound.play('jse');
             this.sound.volume = 0.4;
-        }else{
-            this.walk();
         }
 
         // spider method -- touch spider to rotate 90 degrees clock-wise
@@ -385,10 +396,6 @@ class Level5 extends Phaser.Scene {
         if(this.physics.world.overlap(this.girl, this.candy1)){
             this.candycollect(this.candy1);
         }
-    }
-
-    walk(){
-        //this.girl.anims.play('walking', true);
     }
 
     rotate(spider){

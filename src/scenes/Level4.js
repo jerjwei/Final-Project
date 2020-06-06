@@ -20,7 +20,8 @@ class Level4 extends Phaser.Scene {
         this.load.image('gamewin1', './assets/lvl4_sprites/gamewin90.png');
         this.load.image('die', './assets/die.png');
         this.load.image('pass', './assets/pass.png');
-        this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('girl', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('walk', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 4});
 
         // preload.music
         this.load.audio('jse', './assets/changeG.wav');
@@ -145,11 +146,26 @@ class Level4 extends Phaser.Scene {
         // gamewin image
         this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin1');
         this.gamewinImage.alpha = 0;
+
+        // animations
+        // walk animation
+        this.anims.create({
+            key: 'walking',
+            frames: this.anims.generateFrameNumbers('walk', { start: 0, end: 4, first: 4}),
+            frameRate: 5,
+            repeat: -1
+        });
     }
 
     update() {
         // switch once until the girl collide with something
         this.checkswitch();
+
+        // check angle within 360 degrees
+        if(this.anglenum >= 360) this.anglenum -= 360;
+
+        // walking animation
+        if( !(keyLEFT.isDown || keyRIGHT.isDown || keyUP.isDown || keyDOWN.isDown) ) this.girl.anims.play('walking');
 
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
@@ -281,8 +297,6 @@ class Level4 extends Phaser.Scene {
             this.changeGravity();
             this.sound.play('jse');
             this.sound.volume = 0.4;
-        }else{
-            this.walk();
         }
 
         if (this.physics.world.overlap(this.girl, this.ciDown) || this.physics.world.overlap(this.girl, this.ciMid) || this.physics.world.overlap(this.girl, this.ciUpleft) || this.physics.world.overlap(this.girl, this.ciUpright))
@@ -326,10 +340,6 @@ class Level4 extends Phaser.Scene {
         candy.destroy();
         this.score += 1;
         this.scoreS.text = this.score;
-    }
-
-    walk(){
-        //this.girl.anims.play('walking', true);
     }
 
     checkswitch(){

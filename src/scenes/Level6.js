@@ -29,7 +29,8 @@ class Level6 extends Phaser.Scene {
         this.load.image('die', './assets/die.png');
         this.load.image('pass', './assets/pass.png');
         this.load.image('flower2', './assets/flower2.png');
-        this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('girl', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('walk', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 4});
 
         // preload.music
         this.load.audio('jse', './assets/changeG.wav');
@@ -214,22 +215,6 @@ class Level6 extends Phaser.Scene {
         this.physics.add.collider(this.girl, this.borderleft);
         this.physics.add.collider(this.girl, this.borderright);
 
-        // animations
-        // walk animation
-        /*this.anims.create({
-            key: 'walking',
-            frames: 'girl',
-            frameRate: 10,
-            repeat: -1
-        });
-        // jump animation
-        this.anims.create({
-            key: 'jumping',
-            frames: this.anims.generateFrameNumbers('jump', { start: 0, end: 0, first: 0}),
-            frameRate:30,
-            repeat: -1
-        });*/
-
         // score display
         this.playerScore = 0;
         let scoreConfig = {
@@ -254,6 +239,15 @@ class Level6 extends Phaser.Scene {
         // gamewin image
         this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
         this.gamewinImage.alpha = 0;
+
+        // animations
+        // walk animation
+        this.anims.create({
+            key: 'walking',
+            frames: this.anims.generateFrameNumbers('walk', { start: 0, end: 4, first: 4}),
+            frameRate: 5,
+            repeat: -1
+        });
     }
 
     update() {
@@ -262,6 +256,9 @@ class Level6 extends Phaser.Scene {
 
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
+
+        // walking animation
+        if( !(keyLEFT.isDown || keyRIGHT.isDown || keyUP.isDown || keyDOWN.isDown) ) this.girl.anims.play('walking');
 
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
@@ -352,7 +349,7 @@ class Level6 extends Phaser.Scene {
             if(this.gamewinImage.alpha == 1){
                 overConfig.color = '#000';
                 this.add.text(game.config.width/2, game.config.height/2, 'You have passed level6!', overConfig).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [M] for Menu', overConfig).setOrigin(0.5);
+                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level7 or [M] for Menu', overConfig).setOrigin(0.5);
             }
         }
         if( this.ci_up1.body.touching.down || this.ci_up1.body.touching.left 
@@ -412,8 +409,6 @@ class Level6 extends Phaser.Scene {
             this.changeGravity();
             this.sound.play('jse');
             this.sound.volume = 0.4;
-        }else{
-            this.walk();
         }
 
         // spider method -- touch spider to rotate 90 degrees clock-wise
@@ -516,9 +511,5 @@ class Level6 extends Phaser.Scene {
         }else if(this.anglenum == 270 && this.girl.body.touching.right){
             this.collidecheck = false;
         }
-    }
-
-    walk(){
-        //this.girl.anims.play('walking', true);
     }
 }

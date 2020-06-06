@@ -28,7 +28,8 @@ class Level7 extends Phaser.Scene {
         this.load.image('gamewin', './assets/gamewin.png');
         this.load.image('die', './assets/die.png');
         this.load.image('win1', './assets/win1.png');
-        this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('girl', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 0});
+        this.load.spritesheet('walk', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 4});
 
         // preload.music
         this.load.audio('jse', './assets/changeG.wav');
@@ -206,15 +207,6 @@ class Level7 extends Phaser.Scene {
         // game over flag
         this.gameOver = false;
 
-        // animations
-        // walk animation
-        this.anims.create({
-            key: 'walking',
-            //frames: 'girl',
-            //frameRate: 10,
-            repeat: -1
-        });
-
         // gamewin image
         this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
         this.gamewinImage.alpha = 0;
@@ -244,6 +236,14 @@ class Level7 extends Phaser.Scene {
         this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
         this.gamewinImage.alpha = 0;
 
+        // animations
+        // walk animation
+        this.anims.create({
+            key: 'walking',
+            frames: this.anims.generateFrameNumbers('walk', { start: 0, end: 4, first: 4}),
+            frameRate: 5,
+            repeat: -1
+        });
     }
 
     update(){
@@ -257,6 +257,9 @@ class Level7 extends Phaser.Scene {
 
         // check angle within 360 degrees
         if(this.anglenum >= 360) this.anglenum -= 360;
+
+        // walking animation
+        if( !(keyLEFT.isDown || keyRIGHT.isDown || keyUP.isDown || keyDOWN.isDown) ) this.girl.anims.play('walking');
 
         // game over settings
         let overConfig = {
@@ -473,21 +476,8 @@ class Level7 extends Phaser.Scene {
             this.changeGravity();
             this.sound.play('jse');
             this.sound.volume = 0.4;
-        }else{
-            this.walk();
         }
         
-        // walk animation -- we don't have it now
-        /*if( this.girl.flipY ){
-            if( this.girl.body.touching.up ){
-                this.walk();
-            }
-        } else{
-            if( this.girl.body.touching.down ){
-                this.walk();
-            }
-        }*/
-
         // spider method -- touch spider to rotate 90 degrees clock-wise
         if(this.physics.world.overlap(this.girl, this.spider_1)){
             this.sound.play('spiderSound');
@@ -519,10 +509,6 @@ class Level7 extends Phaser.Scene {
             this.changeGravity();
             this.transfer(this.flower1, this.flower2, this.sys.game.config.width*0.7, this.sys.game.config.height*0.2);
         }
-    }
-
-    walk(){
-        //this.girl.anims.play('walking', true);
     }
 
     transfer(flower1, flower2, x, y){
