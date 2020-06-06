@@ -26,6 +26,9 @@ class Level6 extends Phaser.Scene {
         this.load.image('dundun', './assets/lvl6_sprites/level6_middle.png');
         this.load.image('gameover', './assets/game over.png');
         this.load.image('gamewin', './assets/gamewin.png');
+        this.load.image('die', './assets/die.png');
+        this.load.image('pass', './assets/pass.png');
+        this.load.image('flower2', './assets/flower2.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -70,10 +73,10 @@ class Level6 extends Phaser.Scene {
         this.taizi.setImmovable();
 
         // door
-        this.door = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.84, 'door');
+        this.door = this.physics.add.sprite(this.sys.game.config.width*0.5, this.sys.game.config.height*0.88, 'door');
         this.door.setImmovable();
         this.door.scale = 0.8;
-        this.doorOpen = this.physics.add.sprite(this.sys.game.config.width*0.497, this.sys.game.config.height*0.836, 'doorOpen');
+        this.doorOpen = this.physics.add.sprite(this.sys.game.config.width*0.497, this.sys.game.config.height*0.88, 'doorOpen');
         this.doorOpen.setVisible(false);
         this.doorOpen.setImmovable();
         this.doorOpen.scale = 0.8;
@@ -86,6 +89,9 @@ class Level6 extends Phaser.Scene {
         this.flower2.scale = 0.7;
         this.flower1.setImmovable();
         this.flower2.setImmovable();
+
+        // instruction
+        this.ins1 = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height*0.5, 'flower2');
         
         // girl
         this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
@@ -304,8 +310,7 @@ class Level6 extends Phaser.Scene {
             this.gameoverImage.alpha += .01;
             if(this.gameoverImage.alpha == 1){
                 overConfig.color = '#000';
-                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
+                this.add.image(game.config.width/2, game.config.height/2, 'pass');
             }
         }
 

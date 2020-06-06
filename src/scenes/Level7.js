@@ -26,6 +26,8 @@ class Level7 extends Phaser.Scene {
         this.load.image('dundun', './assets/lvl6_sprites/level6_middle.png');
         this.load.image('gameover', './assets/game over.png');
         this.load.image('gamewin', './assets/gamewin.png');
+        this.load.image('die', './assets/die.png');
+        this.load.image('win1', './assets/win1.png');
         this.load.spritesheet('girl', './assets/player.png', {frameWidth: 73, frameHeight: 155, startFrame: 0, endFrame: 9});
 
         // preload.music
@@ -241,6 +243,7 @@ class Level7 extends Phaser.Scene {
         // gamewin image
         this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
         this.gamewinImage.alpha = 0;
+
     }
 
     update(){
@@ -310,8 +313,7 @@ class Level7 extends Phaser.Scene {
             this.gameoverImage.alpha += .01;
             if(this.gameoverImage.alpha == 1){
                 overConfig.color = '#000';
-                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
+                this.add.image(game.config.width/2, game.config.height/2, 'die');
             }
         }
 
@@ -354,8 +356,7 @@ class Level7 extends Phaser.Scene {
             this.input.keyboard.removeKey('RIGHT');
             if(this.gamewinImage.alpha == 1){
                 overConfig.color = '#000';
-                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level2!', overConfig).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level3 or [M] for Menu', overConfig).setOrigin(0.5);
+                this.add.image(game.config.width/2, game.config.height/2, 'win1');
             }
         }
 
@@ -516,7 +517,7 @@ class Level7 extends Phaser.Scene {
             this.sound.volume = 0.4;
             this.rotateF();
             this.changeGravity();
-            this.transfer(this.flower1, this.flower2, this.sys.game.config.width*0.7, this.sys.game.config.height*0.15);
+            this.transfer(this.flower1, this.flower2, this.sys.game.config.width*0.7, this.sys.game.config.height*0.2);
         }
     }
 
