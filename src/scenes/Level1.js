@@ -161,7 +161,6 @@ class Level1 extends Phaser.Scene {
 
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
-            this.bgm.stop();
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
@@ -190,7 +189,6 @@ class Level1 extends Phaser.Scene {
             this.input.keyboard.removeKey('D');
             this.gamewinImage.alpha += .01;
             if(this.gamewinImage.alpha == 1){
-                overConfig.color = '#000';
                 this.add.image(game.config.width/2, game.config.height/2, 'pass');
             }
         }

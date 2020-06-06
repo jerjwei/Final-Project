@@ -207,10 +207,6 @@ class Level7 extends Phaser.Scene {
         // game over flag
         this.gameOver = false;
 
-        // gamewin image
-        this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
-        this.gamewinImage.alpha = 0;
-
         // score display
         this.playerScore = 0;
         let scoreConfig = {
@@ -294,6 +290,7 @@ class Level7 extends Phaser.Scene {
             this.input.keyboard.removeKey('A');
             this.input.keyboard.removeKey('S');
             this.input.keyboard.removeKey('D');
+            this.gameoverImage.alpha += .01;
         }
 
         // open door method with delay
@@ -334,7 +331,6 @@ class Level7 extends Phaser.Scene {
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
             if(this.gamewinImage.alpha == 1){
-                overConfig.color = '#000';
                 this.add.image(game.config.width/2, game.config.height/2, 'win1');
             }
         }

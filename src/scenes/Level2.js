@@ -23,6 +23,7 @@ class Level2 extends Phaser.Scene {
         this.load.spritesheet('walk', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 4});
 
         // preload.music
+        this.load.audio('playscenebackground', './assets/bgm.mp3');
         this.load.audio('jse', './assets/changeG.wav');
         this.load.audio('spiderSound', './assets/spiderG.wav');
         this.load.audio('pass', './assets/pass.wav');
@@ -166,6 +167,7 @@ class Level2 extends Phaser.Scene {
 
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
+            this.bgm.stop();
             this.scene.restart();
         }
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyN)) {
@@ -208,7 +210,6 @@ class Level2 extends Phaser.Scene {
             this.input.keyboard.removeKey('S');
             this.input.keyboard.removeKey('D');
             if(this.gamewinImage.alpha == 1){
-                overConfig.color = '#000';
                 this.add.image(game.config.width/2, game.config.height/2, 'pass');
             }
         }

@@ -208,7 +208,6 @@ class Level4 extends Phaser.Scene {
             this.input.keyboard.removeKey('D');
             this.gamewinImage.alpha += .01;
             if(this.gamewinImage.alpha == 1){
-                overConfig.color = '#000';
                 this.add.image(game.config.width/2, game.config.height/3.5, 'pass');
             }
         }
@@ -230,11 +229,6 @@ class Level4 extends Phaser.Scene {
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
             this.gameoverImage.alpha += .01;
-            if(this.gameoverImage.alpha == 1){
-                overConfig.color = '#000';
-                this.add.text(game.config.width/2, game.config.height/2+260, 'You Died!', overConfig).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2+300, 'Press [R] to replay or [M] for Menu.', overConfig).setOrigin(0.5);
-            }
         }
 
         // move methods 

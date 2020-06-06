@@ -18,7 +18,7 @@ class Menu extends Phaser.Scene {
         this.bgm = this.sound.add('menuscenebackground', {config});
         this.bgm.play();
         this.bgm.loop = true;
-        this.bgm.volume = 0.4;
+        this.bgm.volume = 0.6;
 
         // menu image
         this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamestart');

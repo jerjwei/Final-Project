@@ -309,7 +309,6 @@ class Level5 extends Phaser.Scene {
             this.input.keyboard.removeKey('DOWN');
             this.gamewinImage.alpha += .01;
             if(this.gamewinImage.alpha == 1){
-                overConfig.color = '#000';
                 this.add.image(game.config.width/2, game.config.height/2, 'pass');
             }
         }
