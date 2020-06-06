@@ -299,27 +299,14 @@ class Level6 extends Phaser.Scene {
         }
         if( this.youDie ){
             this.physics.pause();
+            this.input.keyboard.removeKey('J');
+            this.input.keyboard.removeKey('W');
+            this.input.keyboard.removeKey('A');
             this.input.keyboard.removeKey('S');
-            this.input.keyboard.removeKey('UP');
-            this.input.keyboard.removeKey('DOWN');
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
+            this.input.keyboard.removeKey('D');
             this.gameoverImage.alpha += .01;
         }
-
-        // game over settings
-        let overConfig = {
-            fontFamily: 'Courier',
-            fontSize: '25px',
-            color: '#FFF',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 600
-        }
-
+        
         // open door method with delay
         if( this.anglenum == 0 && this.physics.world.overlap(this.girl, this.taizi) ) {
             this.playPassSound++;

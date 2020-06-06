@@ -159,19 +159,6 @@ class Level1 extends Phaser.Scene {
         // walking animation
         if( !(keyA.isDown || keyD.isDown || keyW.isDown || keyS.isDown) ) this.girl.anims.play('walking');
 
-        // text configuration setting
-        let overConfig = {
-            fontFamily: 'Courier',
-            fontSize: '25px',
-            color: '#FFF',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 600
-        }
-
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.bgm.stop();
@@ -196,11 +183,11 @@ class Level1 extends Phaser.Scene {
             this.gameOver = true;
             this.playPassSound += 1;
             this.physics.pause();
+            this.input.keyboard.removeKey('J');
+            this.input.keyboard.removeKey('W');
+            this.input.keyboard.removeKey('A');
             this.input.keyboard.removeKey('S');
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
-            this.input.keyboard.removeKey('UP');
-            this.input.keyboard.removeKey('DOWN');
+            this.input.keyboard.removeKey('D');
             this.gamewinImage.alpha += .01;
             if(this.gamewinImage.alpha == 1){
                 overConfig.color = '#000';

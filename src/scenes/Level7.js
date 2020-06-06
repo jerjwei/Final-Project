@@ -247,12 +247,6 @@ class Level7 extends Phaser.Scene {
     }
 
     update(){
-        
-        /*this.ghost2.setVelocityX(100);
-        this.ghost3.setVelocityX(100);
-        this.ghost4.setVelocityX(100);
-        this.ghost5.setVelocityX(100);*/
-        // switch once until the girl collide with something
         this.checkswitch();
 
         // check angle within 360 degrees
@@ -260,19 +254,6 @@ class Level7 extends Phaser.Scene {
 
         // walking animation
         if( !(keyA.isDown || keyD.isDown || keyW.isDown || keyS.isDown) ) this.girl.anims.play('walking');
-
-        // game over settings
-        let overConfig = {
-            fontFamily: 'Courier',
-            fontSize: '25px',
-            color: '#FFF',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 600
-        }
 
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
@@ -308,12 +289,11 @@ class Level7 extends Phaser.Scene {
 
         if( this.youDie ){
             this.physics.pause();
+            this.input.keyboard.removeKey('J');
+            this.input.keyboard.removeKey('W');
+            this.input.keyboard.removeKey('A');
             this.input.keyboard.removeKey('S');
-            this.input.keyboard.removeKey('UP');
-            this.input.keyboard.removeKey('DOWN');
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
-            this.gameoverImage.alpha += .01;
+            this.input.keyboard.removeKey('D');
         }
 
         // open door method with delay

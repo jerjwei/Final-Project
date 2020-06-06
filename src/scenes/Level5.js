@@ -242,19 +242,6 @@ class Level5 extends Phaser.Scene {
         // walking animation
         if( !(keyA.isDown || keyD.isDown || keyW.isDown || keyS.isDown) ) this.girl.anims.play('walking');
 
-        // game over settings
-        let overConfig = {
-            fontFamily: 'Courier',
-            fontSize: '25px',
-            color: '#FFF',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 600
-        }
-
         // check key input for restart
         if( this.youDie && this.deathnum == 0) {
             this.deathnum += 1;
@@ -263,11 +250,11 @@ class Level5 extends Phaser.Scene {
         }
         if( this.youDie ){
             this.physics.pause();
+            this.input.keyboard.removeKey('J');
+            this.input.keyboard.removeKey('W');
+            this.input.keyboard.removeKey('A');
             this.input.keyboard.removeKey('S');
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
-            this.input.keyboard.removeKey('UP');
-            this.input.keyboard.removeKey('DOWN');
+            this.input.keyboard.removeKey('D');
             this.gameoverImage.alpha += .01;
         }
         if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){

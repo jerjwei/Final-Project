@@ -164,19 +164,6 @@ class Level2 extends Phaser.Scene {
         // walking animation
         if( !(keyA.isDown || keyD.isDown || keyW.isDown || keyS.isDown) ) this.girl.anims.play('walking');
 
-        // game over settings
-        let overConfig = {
-            fontFamily: 'Courier',
-            fontSize: '25px',
-            color: '#FFF',
-            align: 'center',
-            padding: {
-                top: 5,
-                bottom: 5,
-            },
-            fixedWidth: 600
-        }
-
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart();
@@ -215,11 +202,11 @@ class Level2 extends Phaser.Scene {
             this.door.setVisible(false);
             this.doorOpen.setVisible(true);
             this.physics.pause();
+            this.input.keyboard.removeKey('J');
+            this.input.keyboard.removeKey('W');
+            this.input.keyboard.removeKey('A');
             this.input.keyboard.removeKey('S');
-            this.input.keyboard.removeKey('UP');
-            this.input.keyboard.removeKey('DOWN');
-            this.input.keyboard.removeKey('LEFT');
-            this.input.keyboard.removeKey('RIGHT');
+            this.input.keyboard.removeKey('D');
             if(this.gamewinImage.alpha == 1){
                 overConfig.color = '#000';
                 this.add.image(game.config.width/2, game.config.height/2, 'pass');
@@ -354,17 +341,4 @@ class Level2 extends Phaser.Scene {
             this.collidecheck = false;
         }
     }
-
-    /*transfer(flower1,flower2, x, y){
-        flower1.destroy();
-        flower2.destroy();
-        this.girl.setPosition(x, y);
-        if(x == this.sys.game.config.width*0.35){
-            this.girl.setFlipY(false);
-        }else{
-            this.girl.setFlipY(true);
-        }
-        this.gravityYnum = 0 - this.gravityYnum;
-        this.girl.setGravityY(this.gravityYnum);      
-    }*/
 }
