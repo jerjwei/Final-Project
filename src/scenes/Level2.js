@@ -43,12 +43,12 @@ class Level2 extends Phaser.Scene {
         this.finishDelay = 0;
         this.playPassSound = 0;
 
-        // define keyboard keys
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        // define keyboard keyJ
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        keyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -162,7 +162,7 @@ class Level2 extends Phaser.Scene {
         if(this.anglenum >= 360) this.anglenum -= 360;
 
         // walking animation
-        if( !(keyLEFT.isDown || keyRIGHT.isDown || keyUP.isDown || keyDOWN.isDown) ) this.girl.anims.play('walking');
+        if( !(keyA.isDown || keyD.isDown || keyW.isDown || keyS.isDown) ) this.girl.anims.play('walking');
 
         // game over settings
         let overConfig = {
@@ -228,40 +228,40 @@ class Level2 extends Phaser.Scene {
         
         // move methods 
         if(this.anglenum == 0){ // down border
-            if( keyLEFT.isDown ){
+            if( keyA.isDown ){
                 this.girl.body.setVelocityX(-200);
                 this.girl.setFlipX(true);
-            }else if ( keyRIGHT.isDown ){
+            }else if ( keyD.isDown ){
                 this.girl.body.setVelocityX(200);
                 this.girl.setFlipX(false);
             }else {
                 this.girl.body.setDragX(this.DRAG);
             }
         }else if(this.anglenum == 180){ // up border
-            if( keyLEFT.isDown ){
+            if( keyA.isDown ){
                 this.girl.body.setVelocityX(-200);
                 this.girl.setFlipX(false);
-            }else if ( keyRIGHT.isDown ){
+            }else if ( keyD.isDown ){
                 this.girl.body.setVelocityX(200);
                 this.girl.setFlipX(true);
             }else {
                 this.girl.body.setDragX(this.DRAG);
             }
         }else if(this.anglenum == 90){ // left border
-            if( keyUP.isDown ){
+            if( keyW.isDown ){
                 this.girl.body.setVelocityY(-200);
                 this.girl.setFlipX(true);
-            }else if ( keyDOWN.isDown ){
+            }else if ( keyS.isDown ){
                 this.girl.body.setVelocityY(200);
                 this.girl.setFlipX(false);
             }else {
                 this.girl.body.setDragY(this.DRAG);
             }
         }else if(this.anglenum == 270){ // right border
-            if( keyUP.isDown ){
+            if( keyW.isDown ){
                 this.girl.body.setVelocityY(-200);
                 this.girl.setFlipX(false);
-            }else if ( keyDOWN.isDown ){
+            }else if ( keyS.isDown ){
                 this.girl.body.setVelocityY(200);
                 this.girl.setFlipX(true);
             }else {
@@ -270,7 +270,7 @@ class Level2 extends Phaser.Scene {
         }
         
         // gravity-change method
-        if( !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyS) ){
+        if( !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyJ) ){
             this.collidecheck = true;
             this.changeGravity();
             this.sound.play('jse');

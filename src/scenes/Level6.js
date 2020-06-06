@@ -28,7 +28,7 @@ class Level6 extends Phaser.Scene {
         this.load.image('gamewin', './assets/gamewin.png');
         this.load.image('die', './assets/die.png');
         this.load.image('pass', './assets/pass.png');
-        this.load.image('flower2', './assets/flower2.png');
+        this.load.image('flowerInstr', './assets/flower2.png');
         this.load.spritesheet('girl', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 0});
         this.load.spritesheet('walk', './assets/playerWalk.png', {frameWidth: 48, frameHeight: 98, startFrame: 0, endFrame: 4});
 
@@ -55,12 +55,12 @@ class Level6 extends Phaser.Scene {
         this.playPassSound = 1;
         this.deathnum = 0;
 
-        // define keyboard keys
-        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        // define keyboard keyJ
+        keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        keyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -92,7 +92,7 @@ class Level6 extends Phaser.Scene {
         this.flower2.setImmovable();
 
         // instruction
-        this.ins1 = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height*0.5, 'flower2');
+        this.ins1 = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height*0.5, 'flowerInstr');
         
         // girl
         this.girl = this.physics.add.sprite(this.sys.game.config.width/4, this.sys.game.config.height*0.7, 'girl');
@@ -234,7 +234,7 @@ class Level6 extends Phaser.Scene {
         this.restart = this.add.text(120, 40, '[R] to restart lvl6', scoreConfig);
 
         // game over image
-        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'die');
         this.gameoverImage.alpha = 0;
         // gamewin image
         this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
@@ -258,7 +258,7 @@ class Level6 extends Phaser.Scene {
         if(this.anglenum >= 360) this.anglenum -= 360;
 
         // walking animation
-        if( !(keyLEFT.isDown || keyRIGHT.isDown || keyUP.isDown || keyDOWN.isDown) ) this.girl.anims.play('walking');
+        if( !(keyA.isDown || keyD.isDown || keyW.isDown || keyS.isDown) ) this.girl.anims.play('walking');
 
         // check key input for restart
         if (Phaser.Input.Keyboard.JustDown(keyR)){
@@ -305,10 +305,6 @@ class Level6 extends Phaser.Scene {
             this.input.keyboard.removeKey('LEFT');
             this.input.keyboard.removeKey('RIGHT');
             this.gameoverImage.alpha += .01;
-            if(this.gameoverImage.alpha == 1){
-                overConfig.color = '#000';
-                this.add.image(game.config.width/2, game.config.height/2, 'pass');
-            }
         }
 
         // game over settings
@@ -348,8 +344,7 @@ class Level6 extends Phaser.Scene {
             this.gamewinImage.alpha += .01;
             if(this.gamewinImage.alpha == 1){
                 overConfig.color = '#000';
-                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level6!', overConfig).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level7 or [M] for Menu', overConfig).setOrigin(0.5);
+                this.add.image(game.config.width/2, game.config.height/2, 'pass');
             }
         }
         if( this.ci_up1.body.touching.down || this.ci_up1.body.touching.left 
@@ -362,40 +357,40 @@ class Level6 extends Phaser.Scene {
 
         // move methods 
         if(this.anglenum == 0){ // down border
-            if( keyLEFT.isDown ){
+            if( keyA.isDown ){
                 this.girl.body.setVelocityX(-200);
                 this.girl.setFlipX(true);
-            }else if ( keyRIGHT.isDown ){
+            }else if ( keyD.isDown ){
                 this.girl.body.setVelocityX(200);
                 this.girl.setFlipX(false);
             }else {
                 this.girl.body.setDragX(this.DRAG);
             }
         }else if(this.anglenum == 180){ // up border
-            if( keyLEFT.isDown ){
+            if( keyA.isDown ){
                 this.girl.body.setVelocityX(-200);
                 this.girl.setFlipX(false);
-            }else if ( keyRIGHT.isDown ){
+            }else if ( keyD.isDown ){
                 this.girl.body.setVelocityX(200);
                 this.girl.setFlipX(true);
             }else {
                 this.girl.body.setDragX(this.DRAG);
             }
         }else if(this.anglenum == 90){ // left border
-            if( keyUP.isDown ){
+            if( keyW.isDown ){
                 this.girl.body.setVelocityY(-200);
                 this.girl.setFlipX(true);
-            }else if ( keyDOWN.isDown ){
+            }else if ( keyS.isDown ){
                 this.girl.body.setVelocityY(200);
                 this.girl.setFlipX(false);
             }else {
                 this.girl.body.setDragY(this.DRAG);
             }
         }else if(this.anglenum == 270){ // right border
-            if( keyUP.isDown ){
+            if( keyW.isDown ){
                 this.girl.body.setVelocityY(-200);
                 this.girl.setFlipX(false);
-            }else if ( keyDOWN.isDown ){
+            }else if ( keyS.isDown ){
                 this.girl.body.setVelocityY(200);
                 this.girl.setFlipX(true);
             }else {
@@ -404,7 +399,7 @@ class Level6 extends Phaser.Scene {
         }
         
         // gravity-change method
-        if(  !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyS) ){
+        if(  !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyJ) ){
             this.collidecheck = true;
             this.changeGravity();
             this.sound.play('jse');

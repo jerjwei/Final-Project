@@ -56,12 +56,12 @@ class Level5 extends Phaser.Scene {
         this.playPassSound = 0;
         this.deathnum = 0;
 
-        // define keyboard keys
-        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+        // define keyboard keyJ
+        keyW = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         keyS = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        keyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
         keyM = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
         keyN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -198,7 +198,7 @@ class Level5 extends Phaser.Scene {
         this.gameOver = false;
 
         // game over image
-        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gameover');
+        this.gameoverImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'die');
         this.gameoverImage.alpha = 0;
         // gamewin image
         this.gamewinImage = this.add.image(this.sys.game.config.width/2, this.sys.game.config.height/2, 'gamewin');
@@ -240,7 +240,7 @@ class Level5 extends Phaser.Scene {
         if(this.anglenum >= 360) this.anglenum -= 360;
 
         // walking animation
-        if( !(keyLEFT.isDown || keyRIGHT.isDown || keyUP.isDown || keyDOWN.isDown) ) this.girl.anims.play('walking');
+        if( !(keyA.isDown || keyD.isDown || keyW.isDown || keyS.isDown) ) this.girl.anims.play('walking');
 
         // game over settings
         let overConfig = {
@@ -269,10 +269,6 @@ class Level5 extends Phaser.Scene {
             this.input.keyboard.removeKey('UP');
             this.input.keyboard.removeKey('DOWN');
             this.gameoverImage.alpha += .01;
-            if(this.gameoverImage.alpha == 1){
-                overConfig.color = '#000';
-                this.add.image(game.config.width/2, game.config.height/2, 'pass');
-            }
         }
         if (this.youDie && Phaser.Input.Keyboard.JustDown(keyR)){
             this.cameras.main.fadeOut(1000);
@@ -327,8 +323,7 @@ class Level5 extends Phaser.Scene {
             this.gamewinImage.alpha += .01;
             if(this.gamewinImage.alpha == 1){
                 overConfig.color = '#000';
-                this.add.text(game.config.width/2, game.config.height/2, 'You have passed level5!', overConfig).setOrigin(0.5);
-                this.add.text(game.config.width/2, game.config.height/2+50, 'Press [N] to Level6 or [M] for Menu', overConfig).setOrigin(0.5);
+                this.add.image(game.config.width/2, game.config.height/2, 'pass');
             }
         }
         if( this.physics.world.overlap(this.girl, this.ci_1) || this.physics.world.overlap(this.girl, this.ci_right) || this.physics.world.overlap(this.girl, this.ci_midleft) || this.physics.world.overlap(this.girl, this.ci_midright) )
@@ -336,40 +331,40 @@ class Level5 extends Phaser.Scene {
             
         // move methods 
         if(this.anglenum == 0){ // down border
-            if( keyLEFT.isDown ){
+            if( keyA.isDown ){
                 this.girl.body.setVelocityX(-200);
                 this.girl.setFlipX(true);
-            }else if ( keyRIGHT.isDown ){
+            }else if ( keyD.isDown ){
                 this.girl.body.setVelocityX(200);
                 this.girl.setFlipX(false);
             }else {
                 this.girl.body.setDragX(this.DRAG);
             }
         }else if(this.anglenum == 180){ // up border
-            if( keyLEFT.isDown ){
+            if( keyA.isDown ){
                 this.girl.body.setVelocityX(-200);
                 this.girl.setFlipX(false);
-            }else if ( keyRIGHT.isDown ){
+            }else if ( keyD.isDown ){
                 this.girl.body.setVelocityX(200);
                 this.girl.setFlipX(true);
             }else {
                 this.girl.body.setDragX(this.DRAG);
             }
         }else if(this.anglenum == 90){ // left border
-            if( keyUP.isDown ){
+            if( keyW.isDown ){
                 this.girl.body.setVelocityY(-200);
                 this.girl.setFlipX(true);
-            }else if ( keyDOWN.isDown ){
+            }else if ( keyS.isDown ){
                 this.girl.body.setVelocityY(200);
                 this.girl.setFlipX(false);
             }else {
                 this.girl.body.setDragY(this.DRAG);
             }
         }else if(this.anglenum == 270){ // right border
-            if( keyUP.isDown ){
+            if( keyW.isDown ){
                 this.girl.body.setVelocityY(-200);
                 this.girl.setFlipX(false);
-            }else if ( keyDOWN.isDown ){
+            }else if ( keyS.isDown ){
                 this.girl.body.setVelocityY(200);
                 this.girl.setFlipX(true);
             }else {
@@ -378,7 +373,7 @@ class Level5 extends Phaser.Scene {
         }
         
         // gravity-change method
-        if(  !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyS) ){
+        if(  !this.collidecheck && Phaser.Input.Keyboard.JustDown(keyJ) ){
             this.collidecheck = true;
             this.changeGravity();
             this.sound.play('jse');

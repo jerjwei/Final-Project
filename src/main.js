@@ -14,12 +14,12 @@ let config = {
             debug: false
         }
     },
-    scene: [ Menu, Level1, Level2, Level3, Level4, Level5, Level6, Level7 ]
+    scene: [ Menu, LevelSelection, Level1, Level2, Level3, Level4, Level5, Level6, Level7 ]
 }
 
 // main game object
 let game = new Phaser.Game(config);
 
 // reserve keyboard vars
-let keyUP, keyLEFT, keyDOWN, keyRIGHT, keyM, keyN, keyR, keyS;
+let keyW, keyA, keyS, keyD, keyM, keyN, keyR, keyJ;
 let pointer;
